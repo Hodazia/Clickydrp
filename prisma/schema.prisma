@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(cuid())
+  username     String?       @unique
+  email        String?       @unique
+  emailVerified DateTime?
+  image        String?       // this image will be if u signed in via google or github then this will be the profile url
+  password     String?      // hashed password
+  profileimg   String?        // user's profile image stored in cloudinary and extract the url
+  description  String?        // a little bio 
+  accounts     Account[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  links        Link[]
+  socials      Social[]
+}
+
+
+model Account {
+  id                String     @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+}
+ 
+
+model Link {
+  id            String     @id @default(cuid())
+  userId        String      // link of which user,
+  linkUrl       String    // url of the link to be given
+  linkThumbnail String?     // link thumbnail stored in the Cloudinary , extract the url
+  description   String?    // brief description of what this link is
+  createdAt     DateTime @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relation
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+model Social {
+  id        String     @id @default(cuid())
+  userId    String
+  platform  String   // ENUM alternative below
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relation
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
