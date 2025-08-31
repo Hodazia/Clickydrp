@@ -10,6 +10,10 @@ import z from "zod";
 import { signupSchema } from "@/lib/schema";
 import { useRouter } from "next/navigation";
 import  { toast } from "sonner"
+import { Button } from "@/components/ui/button";
+import { FcGoogle } from "react-icons/fc";
+import { SiGithub } from "react-icons/si";
+import { signIn } from "next-auth/react"
 
 // logo should be therenext to ClickyDrop
 export default  function Signup() {
@@ -42,7 +46,7 @@ export default  function Signup() {
         const toastId = toast.loading('Signing up...');
         
         try {
-            const response = await fetch(`http://localhost:3000/signup`, {
+            const response = await fetch(`http://localhost:3000/api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,6 +80,46 @@ export default  function Signup() {
         }
     };
 
+    const GoogleRegisterhandle =async () => {
+        try {
+            console.log("Google button clicked ! ")
+            const res = await signIn("google", {
+              redirect: false, // prevent auto redirect
+              callbackUrl: "/dashboard", // where to go after login
+            });
+        
+            if (res?.error) {
+              toast.error("Google registration failed!");
+              console.error("Google registration error:", res.error);
+            } else {
+              toast.success("Signed in with Google!");
+              router.push("/dashboard");
+            }
+          } catch (error) {
+            console.error("Unexpected Google registration error:", error);
+            toast.error("Something went wrong. Try again!");
+          }
+    }
+
+    const handlegitRegister = async () => {
+        try {
+            const res = await signIn("github", {
+              redirect: false, // prevent auto redirect
+              callbackUrl: "/dashboard", // where to go after login
+            });
+        
+            if (res?.error) {
+              toast.error("GitHub registration failed!");
+              console.error("GitHub registration error:", res.error);
+            } else {
+              toast.success("Signed in with GitHub!");
+              router.push("/dashboard");
+            }
+          } catch (error) {
+            console.error("Unexpected GitHub Registration error:", error);
+            toast.error("Something went wrong. Try again!");
+          }
+    }
 
 
     return (
@@ -142,6 +186,24 @@ export default  function Signup() {
                            >Signin</a>
                         </span>
                     </div>
+                    <div className="flex flex-col gap-4">
+                {/*add socials here like google and github */}
+                <div className="flex justify-between w-full">
+                    <Button variant="outline" className="w-[75px] h-[40px]"
+                    onClick={GoogleRegisterhandle}><FcGoogle 
+                    className="h-10 w-10" /></Button>
+                    <Button variant="outline" className="w-[75px] h-[40px]"
+                    onClick={handlegitRegister}><SiGithub
+                    className="h-10 w-10" /></Button>
+                </div>
+                <div className="w-full flex justify-center items-center">
+                    <Button>
+                        <a href="/login">
+                        Already have an account Sign IN
+                        </a>
+                    </Button>
+                </div>
+            </div>
                 </div>
 
                 {/* Right Side: Image Collage */}
