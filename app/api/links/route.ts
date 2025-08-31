@@ -1,9 +1,23 @@
-// api/links
+// app/api/links/route.ts -> GET and POST
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 
-import { NextResponse } from "next/server";
+import { authConfig } from "../auth/[...nextauth]/route";
+
 import { db } from "@/lib/prisma";
+import { v2 as cloudinary } from "cloudinary";
 import { requireUser } from "@/lib/auth";
 
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
+
+
+
+// get all the links of a user with id, the id will be from the session id, which is the userId of the user table
 export async function GET() {
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -16,20 +30,72 @@ export async function GET() {
   return NextResponse.json(links);
 }
 
-export async function POST(req: Request) {
-  const sessionUser = await requireUser();
-  if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const body = await req.json();
-  const { link_url, description } = body;
+export async function POST(req: NextRequest) {
+  try {
+    const session = await getServerSession(authConfig);
 
-  const link = await db.link.create({
-    data: {
-      userId: sessionUser.id,
-      linkUrl:link_url,
-      description,
-    },
-  });
+    if (!session || !session.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-  return NextResponse.json(link);
+    const formData = await req.formData();
+
+    const linkUrl = formData.get("linkUrl") as string;
+    const description = formData.get("description") as string;
+    const file = formData.get("file") as File | null;
+
+    if (!linkUrl) {
+      return NextResponse.json({ error: "Link URL required" }, { status: 400 });
+    }
+
+    let imageUrl: string | null = null;
+
+    if (file) {
+      // Convert File to Buffer
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      // Upload to Cloudinary
+      const uploadResponse = await new Promise<any>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "linktree-thumbnails",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(buffer);
+      });
+
+      imageUrl = uploadResponse.secure_url;
+    }
+
+    // Find user
+    const user = await db.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Save link in DB
+    const newLink = await db.link.create({
+      data: {
+        userId: user.id,
+        linkUrl: linkUrl,
+        linkThumbnail: imageUrl,
+        description,
+      },
+    });
+
+    return NextResponse.json(newLink, { status: 201 });
+  } catch (error: any) {
+    console.error("Error creating link:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
