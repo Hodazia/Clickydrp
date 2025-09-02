@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 import login from "../assets/LogIN.png"
-import { useRouter } from "next/navigation";
+
 import axios from "axios";
 
 import  { toast } from "sonner"
@@ -12,59 +12,66 @@ import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { SiGithub } from "react-icons/si";
+import { useRouter } from "next/navigation";
+import React from "react";
 
+// interface SigninProps {
+//     setIsAuthenticated: (isAuthenticated: boolean) => void;
+// }
 
-interface SigninProps {
-    setIsAuthenticated: (isAuthenticated: boolean) => void;
-}
-
-export default function Signin({ setIsAuthenticated }:SigninProps)  {
-    const [password,setpassword] = useState('');
-    const [email,setemail] = useState("");
+export default function Signin()  {
     const router = useRouter();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
 
-    const handleSubmit = async (e:any) => {
+    const handleChange = (e:any) => {
+        // console.log("I am getting changed ! ")
+        const { id, value } = e.target;
+        setFormData(prevData => ({
+            ...prevData,
+            [id]: value
+        }));
+    };
+
+    const handleSubmit = async (e:React.SyntheticEvent) => {
         e.preventDefault();
-        console.log("Signup submitted:", { email, password });
-        
-        if (!email|| !password) {
-            toast.error("All fields are required!");
-            return;
-        }
+        const toastId = toast.loading("Signing in...");
+        console.log("Signup submitted:",);
 
-        const {success,data,error} = signinSchema.safeParse({password,email});
+
+        const {success,data,error} = signinSchema.safeParse(formData);
 
 
         if(!success)
         {
-            toast.error("The Data you enter is invalid");
+            toast.error("The Data you enter is invalid", { id: toastId});
+            return;
         }
-        const toastId = toast.loading('Signing in...');
+
         try {
-            const response = await fetch(`http://localhost:3001/signin`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email,password }),
+            const res = await signIn("credentials", {
+                redirect: false, // prevent auto redirect
+                email: formData.email,
+                password: formData.password,
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                // If the response is not OK, we throw an error with the message from the backend
-                throw new Error(data.message || 'Signin failed');
+            console.log("Response is ", res);
+        
+            if (res?.error) {
+                toast.error("Invalid email or password!", { id: toastId });
+            } else {
+                toast.success("Successfully signed in!",  { id: toastId });
+                router.push("/dashboard"); // redirect wherever you want
             }
-            
-            // On successful signup, dismiss the loading toast and show a success toast
-            toast.success(`Welcome, ${data.user.username}! You can now signed in.`, {
-                id: toastId, // Dismiss the specific loading toast
-            });
-            
-            setIsAuthenticated(true);
-            setTimeout(() => {
-               router.push("/dashboard")
-            },1500)
+    
+            console.log("Form submitted! ")
+            console.log("The email and password is ", formData.email, "\n Password ",formData.password );
+
+            // setTimeout(() => {
+            //    router.push("/dashboard")
+            // },1500)
 
         } catch (error: any) {
             // On error, dismiss the loading toast and show an error toast
@@ -77,7 +84,9 @@ export default function Signin({ setIsAuthenticated }:SigninProps)  {
 
 
     const GoogleLoginhandle =async () => {
+        const toastId = toast.loading("Signing in with Google...");
         try {
+            
             console.log("Google button clicked ! ")
             const res = await signIn("google", {
               redirect: false, // prevent auto redirect
@@ -85,19 +94,20 @@ export default function Signin({ setIsAuthenticated }:SigninProps)  {
             });
         
             if (res?.error) {
-              toast.error("Google registration failed!");
+              toast.error("Google registration failed!",{ id: toastId });
               console.error("Google registration error:", res.error);
             } else {
-              toast.success("Signed in with Google!");
+              toast.success("Successfully Signed in with Google!", { id: toastId });
               router.push("/dashboard");
             }
           } catch (error) {
             console.error("Unexpected Google registration error:", error);
-            toast.error("Something went wrong. Try again!");
+            toast.error("Something went wrong. Try again!", { id: toastId });
           }
     }
 
     const handlegitlogin = async () => {
+        const toastId = toast.loading("Signing in with Google...");
         try {
             const res = await signIn("github", {
               redirect: false, // prevent auto redirect
@@ -105,15 +115,15 @@ export default function Signin({ setIsAuthenticated }:SigninProps)  {
             });
         
             if (res?.error) {
-              toast.error("GitHub registration failed!");
+              toast.error("GitHub registration failed!", { id: toastId });
               console.error("GitHub registration error:", res.error);
             } else {
-              toast.success("Signed in with GitHub!");
+              toast.success("Signed in with GitHub!",{ id: toastId });
               router.push("/dashboard");
             }
           } catch (error) {
             console.error("Unexpected GitHub Registration error:", error);
-            toast.error("Something went wrong. Try again!");
+            toast.error("Something went wrong. Try again!",{ id: toastId });
           }
     }
 
@@ -143,16 +153,18 @@ export default function Signin({ setIsAuthenticated }:SigninProps)  {
                     <form onSubmit={handleSubmit} className="space-y-6 
                     flex flex-col mt-10 text-black">
                         <input
-                            type="text"
+                            id="email"
+                            type="email"
                             placeholder="Email"
-                            value={email}
-                            onChange={(e) => setemail(e.target.value)}
+                            value={formData.email}
+                            onChange={handleChange}
                         />
                         <input
+                            id="password"
                             type="password"
                             placeholder="Password"
-                            value={password}
-                            onChange={(e) => setpassword(e.target.value)}
+                            value={formData.password}
+                            onChange={handleChange}
                         />
                         <button
                             type="submit"
@@ -186,13 +198,6 @@ export default function Signin({ setIsAuthenticated }:SigninProps)  {
                     <Button variant="outline" className="w-[75px] h-[40px]"
                     onClick={handlegitlogin}><SiGithub
                     className="h-10 w-10" /></Button>
-                </div>
-                <div className="w-full flex justify-center items-center">
-                    <Button>
-                        <a href="/login">
-                        Already have an account Sign IN
-                        </a>
-                    </Button>
                 </div>
             </div>
 

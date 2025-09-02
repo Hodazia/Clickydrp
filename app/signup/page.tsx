@@ -1,7 +1,7 @@
 'use client'
 
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Sparkle } from "lucide-react";
 
 
@@ -17,24 +17,34 @@ import { signIn } from "next-auth/react"
 
 // logo should be therenext to ClickyDrop
 export default  function Signup() {
-    const [email,setemail] = useState('');
-    const [password,setpassword] = useState('');
-    const [username,setusername] = useState("");
+
+    const [formData,setFormData] = useState({
+        username: '',
+        email: '',
+        password: ''
+    })
     const router = useRouter();
+    const handleChange = (e:any) => {
+        const { id, value } = e.target;
+        setFormData(prevData => ({
+            ...prevData,
+            [id]: value
+        }));
+    };
 
     const handleSubmit = async (e:any) => {
         e.preventDefault();
-        console.log("Signup submitted:", { username, email, password });
+        // console.log("Signup submitted:", { username, email, password });
         // Add your signup logic here
 
 
         // Check if all fields are filled
-        if (!username || !email || !password) {
+        if (!formData.username || !formData.email || !formData.password) {
             toast.error("All fields are required!");
             return;
         }
 
-        const {success,data,error} = signupSchema.safeParse({email,password,username});
+        const {success,data,error} = signupSchema.safeParse(formData);
 
 
         if(!success)
@@ -42,40 +52,33 @@ export default  function Signup() {
             toast.error("The Data you enter is invalid");
         }
 
-        // Show a loading toast
-        const toastId = toast.loading('Signing up...');
         
         try {
-            const response = await fetch(`http://localhost:3000/api/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, email, password }),
-            });
 
-            const data = await response.json();
+            const response = await axios.post("http://localhost:3000/api/register",formData,
+                {
+                    headers: {
+                        "Content-Type":"Application/json"
+                    }
+                }
+            );
+            console.log("REsponse Data is ", response.data);
 
-            if (!response.ok) {
-                // If the response is not OK, we throw an error with the message from the backend
-                throw new Error(data.message || 'Signup failed');
-            }
-            
-            // On successful signup, dismiss the loading toast and show a success toast
-            toast.success(`Welcome, ${data.user.username}! You can now sign in.`, {
-                id: toastId, // Dismiss the specific loading toast
-            });
+            if(response.data.exists)
+                {
+                    toast.error("The user already exists, Enter new credentials! ");
+                   
+                }
+                else {
+                    toast.success("Successfully registered! ")
+                    router.push("/signin");
+                }
 
-            // Navigate to the signin page after a short delay
-            setTimeout(() => {
-                router.push("/signin")
-            }, 1500);
 
         } catch (error: any) {
             // On error, dismiss the loading toast and show an error toast
             toast.error(error.message ||
                  "Network error. Please try again.", {
-                id: toastId, // Dismiss the specific loading toast
             });
         }
     };
@@ -148,22 +151,26 @@ export default  function Signup() {
                     <form onSubmit={handleSubmit} className="space-y-6 
                     flex flex-col mt-10 text-black">
                         <input
+                            id="username"
                             type="text"
                             placeholder="Username"
-                            value={username}
-                            onChange={(e) => setusername(e.target.value)}
+                            value={formData.username}
+                            onChange={handleChange}
+                            
                         />
                         <input
+                            id="email"
                             type="email"
                             placeholder="Email Address"
-                            value={email}
-                            onChange={(e) => setemail(e.target.value)}
+                            value={formData.email}
+                            onChange={handleChange}
                         />
                         <input
+                            id="password"
                             type="password"
                             placeholder="Password"
-                            value={password}
-                            onChange={(e) => setpassword(e.target.value)}
+                            value={formData.password}
+                            onChange={handleChange}
                         />
                         <button
                             type="submit"

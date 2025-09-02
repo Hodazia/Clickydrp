@@ -47,7 +47,6 @@ export async function POST(req:NextRequest)
 
     return new Response(JSON.stringify({
         "username":username,
-        "password":password,
         "message":"Succesfully created! "
     }),{
         status:200

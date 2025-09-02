@@ -19,23 +19,29 @@ cloudinary.config({
 
 // get all the links of a user with id, the id will be from the session id, which is the userId of the user table
 export async function GET() {
-  const sessionUser = await requireUser();
-  if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await getServerSession(authConfig);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-  const links = await db.link.findMany({
-    where: { userId: sessionUser.id },
-    orderBy: { createdAt: "asc" },
-  });
+    const links = await db.link.findMany({
+      where: { userId: session.user.id as string },
+      orderBy: { createdAt: "asc" },
+    });
 
-  return NextResponse.json(links);
+    return NextResponse.json(links);
+  } catch (err) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 }
 
-
+// these api should be protected, not public,
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authConfig);
-
-    if (!session || !session.user?.email) {
+    console.log("Sesson id is ", session, " ID is ", session?.user)
+    if (!session || !session.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -43,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     const linkUrl = formData.get("linkUrl") as string;
     const description = formData.get("description") as string;
-    const file = formData.get("file") as File | null;
+    const file = formData.get("file") as File | null;   // this is the link thumbnail
 
     if (!linkUrl) {
       return NextResponse.json({ error: "Link URL required" }, { status: 400 });
@@ -74,19 +80,10 @@ export async function POST(req: NextRequest) {
       imageUrl = uploadResponse.secure_url;
     }
 
-    // Find user
-    const user = await db.user.findUnique({
-      where: { email: session.user.email },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     // Save link in DB
     const newLink = await db.link.create({
       data: {
-        userId: user.id,
+        userId: session.user.id as string,
         linkUrl: linkUrl,
         linkThumbnail: imageUrl,
         description,

@@ -4,6 +4,7 @@ import NextAuth from "next-auth";
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { signinSchema } from "@/lib/schema";
+import { User } from "next-auth";
 
 import { db } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
@@ -17,7 +18,27 @@ export const authConfig: AuthOptions = {
         strategy: 'jwt'
     },
     pages: {
-        'signIn': '/login' // Now when u go to /api/auth/signin -> basically to login page
+        'signIn': '/signin' // Now when u go to /api/auth/signin -> basically to login page
+    },
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.email = user.email || "";
+                token.name = user.name || "";
+                
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            if (token) {
+                (session.user as any).id = token.id;
+                (session.user as any).email = token.email;
+                (session.user as any).name = token.name;
+                
+            }
+            return session;
+        },
     },
     providers: [  
         GitHubProvider({
@@ -36,46 +57,64 @@ export const authConfig: AuthOptions = {
           password: { label: "Password", type: "password" }
         },
         
-        async authorize(credentials, req) {
+        async authorize(credentials) {
             // Your logic goes here. This function's job is to validate the credentials
             // and return a user object or null.
             
-            // Validate the credentials with the Zod schema
+            console.log("Attempting to authorize credentials...");
             const validatedCredentials = signinSchema.safeParse(credentials);
+            
             if (!validatedCredentials.success) {
-                // Return null on validation failure
+                console.error("Credentials validation failed:", validatedCredentials.error);
                 return null;
             }
+            console.log("Credentials validation succeeded.");
 
-            const { username, password } = validatedCredentials.data;
-            
+            const { email, password } = validatedCredentials.data;
+
             // Find the user by email using Prisma
             const user = await db.user.findUnique({
                 where: {
-                    username: username
+                    email: email
                 }
             });
             
             // If the user doesn't exist or the password doesn't match, return null.
             // This is the correct way to handle failures in `authorize`.
             if (!user) {
+                console.log("Authorization failed: User not found for email:", email);
                 return null; // User not found
             }
             
             // Compare the submitted password with the hashed password from the database
-            const passwordMatch = await bcrypt.compare(password, user.password as string);
+            // Ensure user.password exists before attempting comparison
+            if (!user.password) {
+              console.log("Authorization failed: User found but no password set.");
+              return null;
+            }
+            console.log("User found, attempting to compare passwords...");
+            const passwordMatch = await bcrypt.compare(password, user.password);
             
             if (!passwordMatch) {
+                console.log("Authorization failed: Password mismatch for user:", email);
                 return null; // Password mismatch
             }
+            console.log("Password matched. Authorization successful.");
 
             // If we reach this point, authentication was successful.
-            // Return a sanitized user object. Do NOT include the password!
+            // Explicitly cast the returned object to the User type to satisfy the type checker.
             return {
                 id: user.id,
-                username: user.username,
                 email: user.email,
-            };
+                name: user.username,
+            } as User;
+            // Validate the credentials with the Zod schema
+            // const validatedCredentials = signinSchema.safeParse(credentials);
+            // if (!validatedCredentials.success) {
+            //     // Return null on validation failure
+            //     return null;
+            // }
+
         }
       })
     ]
