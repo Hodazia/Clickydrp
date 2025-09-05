@@ -144,18 +144,19 @@ export default function App() {
                       className="w-16 h-16 object-cover rounded-lg mr-4"
                     />
                   )}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 text-center min-w-0">
                     <a
                       href={link.linkUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block truncate font-semibold text-indigo-600 hover:underline"
                     >
-                      {link.linkUrl}
-                    </a>
+
                     {link.description && (
                       <p className="mt-1 text-sm text-gray-600 truncate">{link.description}</p>
                     )}
+
+                    </a>
                   </div>
                 </li>
               ))}
