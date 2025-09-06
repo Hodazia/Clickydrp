@@ -31,7 +31,7 @@ interface ItemProps  {
 const mainItems: ItemProps[] = [
     { title: "Profile", url: "/dashboard/profile", Icon: User },
     { title: "Links", url: "/dashboard/links", Icon: Link2 },
-    { title: "Themes", url: "/dashboard/themes", Icon: Palette },
+    { title: "Themes", url: "/dashboard/theme", Icon: Palette },
     { title: "Share", url: "/dashboard/share", Icon: Share },
 ];
 
