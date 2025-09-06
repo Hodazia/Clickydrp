@@ -14,7 +14,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface ProfileEditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { username: string; email: string; profileImage: string , description:string}) => void;
+  onSubmit: (data: { username: string; email: string; profileimg: string , description:string}) => void;
+  username:string,
+  email:string,
+  profileimg:string,
+  description:string
 }
 
 // the intial data shall be from the api fetching from the be, 
@@ -45,12 +49,16 @@ export function ProfileEditModal({
   isOpen, 
   onClose, 
   onSubmit, 
+  username,
+  email,
+  profileimg,
+  description
 }: ProfileEditModalProps) {
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    profileImage: "",
-    description:""
+    username: username,
+    email: email,
+    profileimg: profileimg,
+    description:description
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -66,7 +74,7 @@ export function ProfileEditModal({
       reader.onload = (e) => {
         setFormData(prev => ({
           ...prev,
-          profileImage: e.target?.result as string
+          profileimg: e.target?.result as string
         }));
       };
       reader.readAsDataURL(file);
@@ -97,17 +105,17 @@ export function ProfileEditModal({
             <div className="relative">
               <Avatar className="h-20 w-20 ring-2 ring-accent/30">
                 <AvatarImage 
-                  src={formData.profileImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"} 
+                  src={formData.profileimg} 
                 />
                 <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
                   {formData.username.split(' ').map(n => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
-              <label htmlFor="profile-upload" className="absolute bottom-0 right-0 p-1 rounded-full bg-primary hover:bg-primary/90 cursor-pointer glow-shadow">
+              <label htmlFor="profileimage" className="absolute bottom-0 right-0 p-1 rounded-full bg-primary hover:bg-primary/90 cursor-pointer glow-shadow">
                 <Upload className="h-3 w-3 text-primary-foreground" />
               </label>
               <input
-                id="profile-upload"
+                id="profileimage"
                 type="file"
                 accept="image/*"
                 className="hidden"
@@ -148,6 +156,20 @@ export function ProfileEditModal({
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="description" className="text-sm font-medium">
+              Description
+            </Label>
+            <Input
+              id="description"
+              type="text"
+              value={formData.description}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              className="glass-card border-accent/20 focus:border-accent"
+              placeholder="Write something about yourself"
+              required
+            />
+          </div>
           {/* Submit Button */}
           <Button
             type="submit"

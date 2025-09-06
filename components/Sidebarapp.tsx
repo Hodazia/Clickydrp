@@ -14,6 +14,14 @@ import { Sidebar,SidebarContent,SidebarFooter,SidebarGroup,
 import { Avatar,AvatarFallback,AvatarImage, } from "@radix-ui/react-avatar";
 
 
+interface Sidebarprop {
+  username:string,
+  email:string,
+  description:string,
+  profileimg:string
+}
+
+
 interface ItemProps  {
     title: string,
     url: string;
@@ -32,7 +40,7 @@ const bottomItems = [
     { title: "Settings", url: "/dashboard/settings", icon: Settings },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({username,email,profileimg,description}: Sidebarprop) {
     // The collapsed state is now managed directly with useState
     const [collapsed, setCollapsed] = useState(false);
     const pathname = usePathname();
@@ -55,21 +63,21 @@ export function AppSidebar() {
         {!collapsed && (
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10 ring-2 ring-accent/30">
-              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" />
+              <AvatarImage src={profileimg}/>
               <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground">
                 AS
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">Andrew Smith</p>
-              <p className="text-xs text-muted-foreground truncate">Product Designer</p>
+              <p className="text-sm font-medium text-foreground truncate">{username}</p>
+              <p className="text-xs text-muted-foreground truncate">{description}</p>
             </div>
           </div>
         )}
         {collapsed && (
           <div className="flex justify-center">
             <Avatar className="h-8 w-8 ring-2 ring-accent/30">
-              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" />
+              <AvatarImage src={profileimg} />
               <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xs">
                 AS
               </AvatarFallback>

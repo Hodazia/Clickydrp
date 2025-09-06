@@ -18,10 +18,11 @@ interface Social {
   url: string;
 }
 
+// this is the schema in the DB too
 interface Profile {
   username: string;
   email: string;
-  profileImage: string; // ✅ required
+  profileimg: string; // ✅ required
   description: string;
 }
 
@@ -33,12 +34,7 @@ export default function Dashboard() {
   const { session, status } = useProtectedRoute();
   const router = useRouter();
 
-  // if no session, it should be signin, 
-  if (status === "loading") return <p>Loading...</p>;
-  if (!session) {
-    router.push("/signin");
-    return null;
-  }
+
 
   // Fetch socials
   const fetchSocials = async () => {
@@ -73,9 +69,9 @@ export default function Dashboard() {
 
   // Handle profile update
   const handleProfileUpdate = async (data: 
-    { username: string; email: string; profileImage: string, description:string }) => {
+    { username: string; email: string; profileimg: string, description:string }) => {
     try {
-      if (!data.profileImage) {
+      if (!data.profileimg) {
         toast.error("Profile image is required.");
         return;
       }
@@ -86,14 +82,14 @@ export default function Dashboard() {
       formData.append("description",data.description);
 
       // Convert base64 → File
-      if (data.profileImage.startsWith("data:")) {
-        const res = await fetch(data.profileImage);
+      if (data.profileimg.startsWith("data:")) {
+        const res = await fetch(data.profileimg);
         const blob = await res.blob();
         const file = new File([blob], "profile.png", { type: blob.type });
         formData.append("profileImage", file);
       } else {
         // In case it's already a URL from Cloudinary
-        formData.append("profileImage", data.profileImage);
+        formData.append("profileImage", data.profileimg);
       }
 
       const res = await fetch("http://localhost:3000/api/profile", {
@@ -111,13 +107,28 @@ export default function Dashboard() {
     }
   };
 
+    // ✅ Instead of early return, handle loading and redirect via render logic
+    if (status === "loading") {
+      return <p>Loading...</p>;
+    }
+  
+    if (!session) {
+      // router.push runs inside useEffect to avoid hook mismatch
+      useEffect(() => {
+        router.push("/signin");
+      }, [router]);
+  
+      return null; // still render null here safely
+    }
+
+    
   return (
 
     <SidebarProvider>
 
     <div className="flex h-screen">
     {/* Sidebar */}
-    <AppSidebar />
+    <AppSidebar username={profile?.username || ""} email={profile?.email || ""} profileimg={profile?.profileimg || ""} description={profile?.description || ""}/>
 
 
     {/*Main Content */}
@@ -139,7 +150,7 @@ export default function Dashboard() {
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                   <div className="relative">
                     <Avatar className="h-24 w-24 ring-4 ring-accent/30">
-                      <AvatarImage src={profile.profileImage} />
+                      <AvatarImage src={profile.profileimg} />
                       <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-2xl">
                         {profile.username.split(" ").map((n) => n[0]).join("")}
                       </AvatarFallback>
@@ -212,6 +223,10 @@ export default function Dashboard() {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         onSubmit={handleProfileUpdate}
+        username={profile?.username || ""}
+        email={profile?.email || "" }
+        profileimg={profile?.profileimg || ""}
+        description={profile?.description || ""}
       />
     </main>
     </div>
