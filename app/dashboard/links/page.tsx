@@ -1,234 +1,442 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { toast, Toaster } from 'sonner';
-import { LucidePlus, LucideX } from 'lucide-react';
-import { useProtectedRoute } from '@/lib/hooks/useprotected';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2, Trash2, Save, Plus, Edit, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
+import { toast } from "sonner";
+import { useProtectedRoute } from "@/lib/hooks/useprotected";
+import { AppSidebar } from "@/components/Sidebarapp";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { useRouter } from "next/navigation";
 
-
-// Define the type for a Link object
 interface Link {
-    id: string;
-    linkUrl: string;
-    linkThumbnail: string | null;
-    description: string | null;
-  }
-
-
-interface FormDataProps {
-    linkUrl: string;
-    description: string;
-    file: File | null;
+  id: string;
+  linkUrl: string;
+  description: string;
+  linkThumbnail?: string | null;
 }
 
-// Main application component for the links dashboard
-export default function App() {
-    const { session,status} = useProtectedRoute();
-    console.log("Session is " , session);
-    console.log("Status is ", status)
-    const router = useRouter();
+interface Profile {
+  username: string;
+  email: string;
+  profileimg: string;
+  description: string;
+}
 
-    if (status === "loading") return <p>Loading...</p>;
-    if (!session) return null; 
-  const [links, setLinks] = useState<Link []>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState<FormDataProps>({
-    linkUrl: '',
-    description: '',
-    file: null,
-  });
-  const [isLoading, setIsLoading] = useState(false);
+export default function LinksManager() {
+  const [links, setLinks] = useState<Link[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [expandedLinks, setExpandedLinks] = useState<Set<string>>(new Set());
+  const [editingLinks, setEditingLinks] = useState<Set<string>>(new Set());
 
-  // Function to fetch links from the API
-  const fetchLinks = async () => {
+  const { session, status } = useProtectedRoute();
+  const router = useRouter();
+
+  // Fetch profile
+  const fetchProfile = async () => {
     try {
-        // get the links
-      const response = await fetch('http://localhost:3000/api/links',{
-        method:'GET'
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch links');
-      }
-      const data = await response.json();
-      console.log("Data is ", data);
-      setLinks(data);
-    } catch (error) {
-      toast.error('Could not load links. Please try again.');
+      const response = await fetch("http://localhost:3000/api/profile");
+      if (!response.ok) throw new Error("Failed to fetch profile.");
+      const data: Profile = await response.json();
+      setProfile(data);
+    } catch {
+      toast.error("Could not load profile.");
     }
   };
 
-  // Fetch links on component mount
+  // Fetch links
   useEffect(() => {
-    fetchLinks();
-  }, []);
+    const fetchLinks = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/links");
+        const data = await res.json();
+        setLinks(data || []);
+      } catch {
+        toast.error("Failed to load links");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Handle input changes for the form
-  const handleInputChange = (e:any) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  // Handle file input change
-  const handleFileChange = (e:any) => {
-    setFormData((prevData) => ({ ...prevData, file: e.target.files[0] }));
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e:any) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const toastId = toast.loading('Adding your link...');
-
-    const data = new FormData();
-    data.append('linkUrl', formData.linkUrl);
-    data.append('description', formData.description);
-    if (formData.file) {
-      data.append('file', formData.file);
+    if (session) {
+      fetchLinks();
+      fetchProfile();
     }
+  }, [session]);
 
+  // Save link (create or update)
+  const handleSave = async (link: Link) => {
     try {
-      const response = await fetch('http://localhost:3000/api/links', {
-        method: 'POST',
-        body: data,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to add link');
+      let res;
+      if (link.id.startsWith("temp-")) {
+        // new link -> POST
+        const formData = new FormData();
+        formData.append("linkUrl", link.linkUrl || "");
+        formData.append("description", link.description || "");
+        if (link.linkThumbnail && typeof link.linkThumbnail !== "string") {
+          formData.append("file", link.linkThumbnail as any);
+        }
+        res = await fetch("/api/links", { method: "POST", body: formData });
+      } else {
+        // existing link -> PUT
+        res = await fetch(`/api/links/${link.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            linkUrl: link.linkUrl,
+            description: link.description,
+          }),
+        });
       }
 
-      const newLink = await response.json();
-      console.log("The link to be addede is ", newLink);
-      setLinks((prevLinks) => [...prevLinks, newLink]);
-    //   setLinks((prev) => [...prev,newLink]);
-      toast.success('Link added successfully!', { id: toastId });
-      setIsModalOpen(false);
-      setFormData({ linkUrl: '', description: '', file: null }); // Reset form
-    } catch (error:any) {
-      toast.error(error.message, { id: toastId });
-    } finally {
-      setIsLoading(false);
+      if (!res.ok) throw new Error("Save failed");
+      const updated = await res.json();
+
+      setLinks((prev) =>
+        prev.map((l) => (l.id === link.id ? { ...updated } : l))
+      );
+      toast.success("Link saved");
+    } catch {
+      toast.error("Failed to save link");
     }
   };
+
+  // Delete link
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/links/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
+      setLinks((prev) => prev.filter((l) => l.id !== id));
+      toast.success("Link deleted");
+    } catch {
+      toast.error("Failed to delete link");
+    }
+  };
+
+  // Add new link
+  const handleAdd = () => {
+    setLinks((prev) => [
+      ...prev,
+      {
+        id: `temp-${crypto.randomUUID()}`, // temporary ID until saved
+        linkUrl: "",
+        description: "",
+      },
+    ]);
+  };
+
+  // Handle file upload for thumbnail
+  const handleFileChange = (id: string, file: File) => {
+    setLinks((prev) =>
+      prev.map((l) =>
+        l.id === id ? { ...l, linkThumbnail: file as any } : l
+      )
+    );
+  };
+
+  // Toggle expanded state
+  const toggleExpanded = (id: string) => {
+    setExpandedLinks(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  // Toggle editing state
+  const toggleEditing = (id: string) => {
+    setEditingLinks(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  // Handle save and exit editing
+  const handleSaveAndExit = async (link: Link) => {
+    await handleSave(link);
+    setEditingLinks(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(link.id);
+      return newSet;
+    });
+  };
+
+  // Handle loading and redirect logic
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
+
+  if (!session) {
+    useEffect(() => {
+      router.push("/signin");
+    }, [router]);
+    return null;
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 font-sans">
-      <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
-        {/* Header Section */}
-        <div className="p-6 sm:p-8 flex justify-between items-center border-b border-gray-200">
-          <h1 className="text-3xl font-bold text-gray-800">Your Links</h1>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-full shadow-lg transform transition-all hover:scale-105 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            <LucidePlus size={20} />
-            <span className="font-medium">Add Link</span>
-          </button>
-        </div>
+    <SidebarProvider>
+      <div className="flex h-screen w-full">
+        {/* Sidebar */}
+        <AppSidebar 
+          username={profile?.username || ""} 
+          email={profile?.email || ""} 
+          profileimg={profile?.profileimg || ""} 
+          description={profile?.description || ""}
+        />
 
-        {/* Links Display Section */}
-        <div className="p-6 sm:p-8 space-y-4">
-          {links.length === 0 ? (
-            <div className="text-center text-gray-500 py-10">
-              <p>No links added yet. Click "Add Link" to get started!</p>
+        {/* Main Content */}
+        <main className="flex-1 p-6 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100">
+          <div className="max-w-4xl mx-auto space-y-8">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold gradient-text">Link Manager</h1>
+                <p className="text-muted-foreground mt-1">Create and manage your links</p>
+              </div>
+              <Button
+                onClick={handleAdd}
+                className="glass-card border-accent/30 hover:border-accent/50"
+                size="lg"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Add New Link
+              </Button>
             </div>
-          ) : (
-            <ul className="space-y-4">
-              {links.map((link) => (
-                <li key={link.id} className="flex items-center bg-gray-100 p-4 rounded-lg shadow-sm">
-                  {link.linkThumbnail && (
-                    <img
-                      src={link.linkThumbnail}
-                      alt="Link Thumbnail"
-                      className="w-16 h-16 object-cover rounded-lg mr-4"
-                    />
-                  )}
-                  <div className="flex-1 text-center min-w-0">
-                    <a
-                      href={link.linkUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block truncate font-semibold text-indigo-600 hover:underline"
-                    >
 
-                    {link.description && (
-                      <p className="mt-1 text-sm text-gray-600 truncate">{link.description}</p>
-                    )}
+            {loading && (
+              <div className="flex items-center justify-center py-12">
+                <div className="flex items-center space-x-3">
+                  <Loader2 className="animate-spin w-6 h-6 text-accent" />
+                  <span className="text-muted-foreground">Loading your links...</span>
+                </div>
+              </div>
+            )}
 
-                    </a>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
+            {/* Links Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {links.map((link) => {
+                const isExpanded = expandedLinks.has(link.id);
+                const isEditing = editingLinks.has(link.id);
+                const isNewLink = link.id.startsWith("temp-");
 
-      {/* Add Link Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Add New Link</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-800">
-                <LucideX size={24} />
-              </button>
+                return (
+                  <Card
+                    key={link.id}
+                    className={`glass-card border-accent/20 transition-all duration-300 hover:shadow-lg ${
+                      isNewLink ? 'ring-2 ring-accent/30' : ''
+                    }`}
+                  >
+                    <CardContent className="p-6">
+                      {/* Link Header */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          {link.linkThumbnail && typeof link.linkThumbnail === "string" && (
+                            <img
+                              src={link.linkThumbnail}
+                              alt="Link thumbnail"
+                              className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
+                            />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-foreground truncate">
+                              {link.description || "Untitled Link"}
+                            </h3>
+                            <p className="text-sm text-muted-foreground truncate">
+                              {link.linkUrl || "No URL set"}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          {link.linkUrl && !isNewLink && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => window.open(link.linkUrl, '_blank')}
+                              className="h-8 w-8 p-0"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </Button>
+                          )}
+                          
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleExpanded(link.id)}
+                            className="h-8 w-8 p-0"
+                          >
+                            {isExpanded ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Expanded Content */}
+                      {isExpanded && (
+                        <div className="space-y-4 border-t pt-4">
+                          {isEditing ? (
+                            // Edit Mode
+                            <div className="space-y-4">
+                              <div>
+                                <Label className="text-sm font-medium text-foreground">Title</Label>
+                                <Input
+                                  placeholder="Follow me on Instagram!"
+                                  value={link.description || ""}
+                                  onChange={(e) =>
+                                    setLinks((prev) =>
+                                      prev.map((l) =>
+                                        l.id === link.id
+                                          ? { ...l, description: e.target.value }
+                                          : l
+                                      )
+                                    )
+                                  }
+                                  className="mt-1"
+                                />
+                              </div>
+
+                              <div>
+                                <Label className="text-sm font-medium text-foreground">URL</Label>
+                                <Input
+                                  placeholder="https://yourlink.com"
+                                  value={link.linkUrl || ""}
+                                  onChange={(e) =>
+                                    setLinks((prev) =>
+                                      prev.map((l) =>
+                                        l.id === link.id
+                                          ? { ...l, linkUrl: e.target.value }
+                                          : l
+                                      )
+                                    )
+                                  }
+                                  className="mt-1"
+                                />
+                              </div>
+
+                              <div>
+                                <Label className="text-sm font-medium text-foreground">Thumbnail</Label>
+                                <div className="flex items-center space-x-3 mt-1">
+                                  <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) =>
+                                      e.target.files?.[0] &&
+                                      handleFileChange(link.id, e.target.files[0])
+                                    }
+                                    className="flex-1"
+                                  />
+                                  {link.linkThumbnail &&
+                                    typeof link.linkThumbnail === "string" && (
+                                      <img
+                                        src={link.linkThumbnail}
+                                        alt="Thumbnail"
+                                        className="w-12 h-12 rounded-lg object-cover"
+                                      />
+                                    )}
+                                </div>
+                              </div>
+
+                              <div className="flex gap-2 pt-2">
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleSaveAndExit(link)}
+                                  className="flex-1"
+                                >
+                                  <Save className="w-4 h-4 mr-2" />
+                                  Save
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => toggleEditing(link.id)}
+                                  className="flex-1"
+                                >
+                                  Cancel
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            // View Mode
+                            <div className="space-y-3">
+                              <div>
+                                <Label className="text-sm font-medium text-muted-foreground">Title</Label>
+                                <p className="text-foreground mt-1">{link.description || "No title set"}</p>
+                              </div>
+                              
+                              <div>
+                                <Label className="text-sm font-medium text-muted-foreground">URL</Label>
+                                <p className="text-foreground mt-1 break-all">{link.linkUrl || "No URL set"}</p>
+                              </div>
+
+                              <div className="flex gap-2 pt-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => toggleEditing(link.id)}
+                                  className="flex-1"
+                                >
+                                  <Edit className="w-4 h-4 mr-2" />
+                                  Edit
+                                </Button>
+                                {!isNewLink && (
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    onClick={() => handleDelete(link.id)}
+                                    className="flex-1"
+                                  >
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Delete
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="linkUrl">Link URL</label>
-                <input
-                  type="url"
-                  id="linkUrl"
-                  name="linkUrl"
-                  value={formData.linkUrl}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="description">Description</label>
-                <input
-                  type="text"
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="file">Thumbnail (Optional)</label>
-                <input
-                  type="file"
-                  id="file"
-                  name="file"
-                  onChange={handleFileChange}
-                  className="w-full block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                />
-              </div>
-              <div className="flex justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+
+            {/* Empty State */}
+            {!loading && links.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                  <Plus className="w-12 h-12 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mb-2">No links yet</h3>
+                <p className="text-muted-foreground mb-6">Get started by adding your first link</p>
+                <Button
+                  onClick={handleAdd}
+                  className="glass-card border-accent/30 hover:border-accent/50"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-indigo-400"
-                >
-                  {isLoading ? 'Adding...' : 'Add Link'}
-                </button>
+                  <Plus className="w-5 h-5 mr-2" />
+                  Add Your First Link
+                </Button>
               </div>
-            </form>
+            )}
           </div>
-        </div>
-      )}
-    </div>
+        </main>
+      </div>
+    </SidebarProvider>
   );
 }

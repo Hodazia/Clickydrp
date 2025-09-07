@@ -80,18 +80,48 @@ model Social {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Theme {
-  id            String     @id @default(cuid())
-  userId        String      // assuming themes belong to a user
-  background    String?
-  backgroundImg String?
-  textColor     String?
-  linkColor     String?
-  cardColor     String?
-  fontFamily    String?
-  fontSize      Int?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 
-  user  User   @relation(fields: [userId], references: [id]) 
+
+model Theme {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  // VIEWPORT
+  viewportType     String   @default("color")  // "color" | "gradient" | "image"
+  viewportColor    String? 
+  viewportImage    String? 
+  viewportGradient String? 
+
+  // CARD
+  cardType         String   @default("color")  // "color" | "gradient" | "image"
+  cardColor        String? 
+  cardImage        String? 
+  cardGradient     String? 
+  cardBlur         Int?     // 0–100 (%)
+
+  // LINKS
+  linksBackground   String?
+  linksFontColor    String?
+  linksBorderRadius Int?     // px (1–25)
+  linksSpacing      Int?     // px (1–25)
+  linksHoverColor   String?
+
+  // BIO
+  bioFontColor   String?
+  bioFontSize    Int?        // px
+  bioFontFamily  String?     // e.g., "Inter", "Roboto"
+
+  // SOCIALS
+  socialsIconColor      String?
+  socialsIconHoverColor String?
+  socialsSize           Int?      // px
+
+  // PROFILE IMAGE
+  profileShape       String   @default("circle")  // "circle" | "rounded" | "square"
+  profileBorderColor String?
+  profileBorderWidth Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
