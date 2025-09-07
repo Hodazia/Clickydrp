@@ -3,24 +3,38 @@
 import ThemeEditor from "@/components/theme-editor"
 import { useProtectedRoute } from "@/lib/hooks/useprotected"
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-export default function ThemePage() {
+import { AppSidebar } from "@/components/Sidebarapp";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
+export default function ThemePage() {
     const { session,status} = useProtectedRoute();
-    console.log("Session is " , session);
-    console.log("Status is ", status)
     const router = useRouter();
 
     if (status === "loading") return <p>Loading...</p>;
     if (!session) return null; 
 
   return (
-    <>
-        <main className="min-h-dvh bg-background">
-      <ThemeEditor />
-    </main>
-    <p className="p-10 ">Hey {session.user.name} welcome back!</p>
-</>
+    <SidebarProvider>
+      <div className="flex h-screen w-full">
+        <AppSidebar 
+          username={session?.user?.name || ''}
+          email={session?.user?.email || ''}
+          profileimg={session?.user?.image || ''}
+          description={"Customize your page theme"}
+        />
 
+        <main className="flex-1 p-6 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100">
+          <div className="max-w-6xl mx-auto space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold gradient-text">Theme Editor</h1>
+                <p className="text-muted-foreground mt-1">Customize the appearance of your link page</p>
+              </div>
+            </div>
+            <ThemeEditor />
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
   )
 }

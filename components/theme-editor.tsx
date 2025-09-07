@@ -1,372 +1,485 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { PhoneFrame } from "./phone-frame"
-import { ProfilePreview, defaultUser } from "./profile-preview"
-import { cn } from "@/lib/utils"
+import { useEffect, useMemo, useState } from 'react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { toast } from 'sonner'
+import { ChevronRight } from 'lucide-react'
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Slider } from "@/components/ui/slider"
-import { Switch } from "@/components/ui/switch"
-import { Button } from "@/components/ui/button"
-
-type ThemeState = {
-  bgType: "image" | "color"
-  bgColor: string
-  bgImageUrl: string
-  textColor: string
-  linkTextColor: string
-  cardColorHex: string
-  cardOpacity: number // 0..100
-  cardBorderColor: string
-  cardBorderWidth: number
-  radius: number
-  blurCards: boolean
-  shadow: boolean
-  overlayDarken: number // 0..80
+type Theme = {
+  id?: string
+  viewportType: string
+  viewportColor?: string | null
+  viewportImage?: string | null
+  viewportGradient?: string | null
+  cardType: string
+  cardColor?: string | null
+  cardImage?: string | null
+  cardGradient?: string | null
+  cardBlur?: number | null
+  linksBackground?: string | null
+  linksFontColor?: string | null
+  linksBorderRadius?: number | null
+  linksSpacing?: number | null
+  linksHoverColor?: string | null
+  bioFontColor?: string | null
+  bioFontSize?: number | null
+  bioFontFamily?: string | null
+  socialsIconColor?: string | null
+  socialsIconHoverColor?: string | null
+  socialsSize?: number | null
+  profileShape: string
+  profileBorderColor?: string | null
+  profileBorderWidth?: number | null
 }
 
-const defaultTheme: ThemeState = {
-  bgType: "image",
-  bgColor: "#0ea5e9",
-  bgImageUrl: "/subtle-abstract-background.png",
-  textColor: "#ffffff",
-  linkTextColor: "#111827",
-  cardColorHex: "#ffffff",
-  cardOpacity: 70,
-  cardBorderColor: "#111827",
-  cardBorderWidth: 1,
-  radius: 9999,
-  blurCards: true,
-  shadow: false,
-  overlayDarken: 12,
+const defaultTheme: Theme = {
+  viewportType: 'color',
+  viewportColor: '#ffffff',
+  viewportImage: '',
+  viewportGradient: 'linear-gradient(135deg,#e9efff,#fff0f5)',
+  cardType: 'color',
+  cardColor: '#ffffff',
+  cardImage: '',
+  cardGradient: 'linear-gradient(135deg,#ffffff,#fafafa)',
+  cardBlur: 0,
+  linksBackground: '#111827',
+  linksFontColor: '#ffffff',
+  linksBorderRadius: 16,
+  linksSpacing: 12,
+  linksHoverColor: '#1f2937',
+  bioFontColor: '#111827',
+  bioFontSize: 16,
+  bioFontFamily: 'Inter',
+  socialsIconColor: '#111827',
+  socialsIconHoverColor: '#000000',
+  socialsSize: 18,
+  profileShape: 'circle',
+  profileBorderColor: '#e5e7eb',
+  profileBorderWidth: 2,
 }
 
-function hexToRgba(hex: string, opacityPct: number) {
-  const o = Math.max(0, Math.min(100, opacityPct)) / 100
-  let c = hex.replace("#", "")
-  if (c.length === 3)
-    c = c
-      .split("")
-      .map((ch) => ch + ch)
-      .join("")
-  const bigint = Number.parseInt(c, 16)
-  const r = (bigint >> 16) & 255
-  const g = (bigint >> 8) & 255
-  const b = bigint & 255
-  return `rgba(${r}, ${g}, ${b}, ${o})`
-}
-
-const STORAGE_KEY = "v0-theme-editor"
+const tabs = ['Background', 'Text', 'Buttons', 'Cards', 'Socials', 'Profile'] as const
+type Tab = typeof tabs[number]
 
 export default function ThemeEditor() {
-  const [theme, setTheme] = React.useState<ThemeState>(defaultTheme)
-  const [device, setDevice] = React.useState<"mobile" | "tablet" | "desktop">("mobile")
-  const objectUrlRef = React.useRef<string | null>(null)
+  const [theme, setTheme] = useState<Theme>(defaultTheme)
+  const [activeTab, setActiveTab] = useState<Tab>('Background')
+  const [submitting, setSubmitting] = useState(false)
 
-  React.useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) setTheme((t) => ({ ...t, ...(JSON.parse(raw) as ThemeState) }))
-    } catch {}
+  // Load existing theme
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/api/themes', { credentials: 'include' })
+        if (!res.ok) throw new Error('Failed to load theme')
+        const data: Theme = await res.json()
+        setTheme({ ...defaultTheme, ...data })
+      } catch {
+        toast.error('Could not load theme')
+      }
+    }
+    load()
   }, [])
 
-  React.useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(theme))
-    } catch {}
+  const previewStyle = useMemo<React.CSSProperties>(() => {
+    let background = '#ffffff'
+    if (theme.viewportType === 'color') background = theme.viewportColor || '#ffffff'
+    if (theme.viewportType === 'gradient') background = theme.viewportGradient || 'linear-gradient(135deg,#e9efff,#fff0f5)'
+    if (theme.viewportType === 'image') background = `url(${theme.viewportImage}) center/cover no-repeat`
+    return { background }
   }, [theme])
 
-  React.useEffect(() => {
-    return () => {
-      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current)
+  const cardStyle = useMemo<React.CSSProperties>(() => {
+    let background = theme.cardColor || '#ffffff'
+    if (theme.cardType === 'gradient') background = theme.cardGradient || defaultTheme.cardGradient!
+    if (theme.cardType === 'image') background = `url(${theme.cardImage}) center/cover no-repeat`
+    return {
+      background,
+      filter: theme.cardBlur ? `blur(${theme.cardBlur}px)` : undefined,
     }
-  }, [])
+  }, [theme])
 
-  const cardBg = React.useMemo(
-    () => hexToRgba(theme.cardColorHex, theme.cardOpacity),
-    [theme.cardColorHex, theme.cardOpacity],
-  )
-
-  const handleDownload = () => {
-    const blob = new Blob([JSON.stringify(theme, null, 2)], { type: "application/json" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = "theme.json"
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    URL.revokeObjectURL(url)
+  const handleSubmit = async () => {
+    setSubmitting(true)
+    try {
+      const res = await fetch('http://localhost:3000/api/themes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(theme),
+      })
+      if (!res.ok) throw new Error('Failed to save theme')
+      const saved = await res.json()
+      setTheme({ ...theme, ...saved })
+      toast.success('Theme saved!')
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to save')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
+  const Section = ({ children, title }: { children: React.ReactNode; title: string }) => (
+    <Card className="glass-card border-accent/20">
+      <CardContent className="p-5 md:p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/10 text-accent">✦</span>
+          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+        </div>
+        <div className="grid gap-4">{children}</div>
+      </CardContent>
+    </Card>
+  )
+
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6 md:py-10">
-      <div className="flex gap-6 md:gap-8">
-        {/* Controls */}
-        <aside className="w-[320px] shrink-0 md:sticky md:top-4 md:self-start">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Theme Controls</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <Tabs
-                defaultValue={theme.bgType}
-                onValueChange={(v) => setTheme((t) => ({ ...t, bgType: v as ThemeState["bgType"] }))}
+    <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-8">
+      {/* Controls */}
+      <div className="space-y-6">
+        {/* Tabs */}
+        <div className="flex flex-wrap gap-2">
+          {tabs.map((t) => (
+            <button
+              key={t}
+              onClick={() => setActiveTab(t)}
+              className={`px-4 py-2 rounded-lg border transition ${
+                activeTab === t ? 'border-accent text-accent bg-accent/10' : 'border-border hover:bg-muted'
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === 'Background' && (
+          <Section title="Background Settings">
+            <div>
+              <Label className="text-sm">Background Type</Label>
+              <select
+                value={theme.viewportType}
+                onChange={(e) => setTheme((v) => ({ ...v, viewportType: e.target.value }))}
+                className="mt-1 w-full rounded-md border bg-background p-2"
               >
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="image">Background Image</TabsTrigger>
-                  <TabsTrigger value="color">Background Color</TabsTrigger>
-                </TabsList>
-                <TabsContent value="image" className="space-y-3">
-                  <Label htmlFor="bg-image">Image URL</Label>
-                  <Input
-                    id="bg-image"
-                    aria-label="Background image URL"
-                    value={theme.bgImageUrl}
-                    onChange={(e) => setTheme((t) => ({ ...t, bgImageUrl: e.target.value }))}
-                    placeholder="/images/theme-bg.png"
-                  />
-                  <div className="flex items-center gap-3">
-                    <Label htmlFor="bg-file" className="sr-only">
-                      Upload background
-                    </Label>
-                    <Input
-                      id="bg-file"
-                      type="file"
-                      accept="image/*"
-                      aria-label="Upload background image"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if (!file) return
-                        if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current)
-                        const url = URL.createObjectURL(file)
-                        objectUrlRef.current = url
-                        setTheme((t) => ({ ...t, bgType: "image", bgImageUrl: url }))
-                      }}
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground">Paste a public URL or upload an image file.</p>
-                </TabsContent>
-                <TabsContent value="color" className="space-y-3">
-                  <Label htmlFor="bg-color">Page Background</Label>
-                  <div className="flex items-center gap-3">
-                    <Input
-                      id="bg-color"
-                      type="color"
-                      className="h-10 w-16 p-1"
-                      value={theme.bgColor}
-                      onChange={(e) => setTheme((t) => ({ ...t, bgColor: e.target.value }))}
-                      aria-label="Background color"
-                    />
-                    <Input
-                      value={theme.bgColor}
-                      onChange={(e) => setTheme((t) => ({ ...t, bgColor: e.target.value }))}
-                      aria-label="Background hex color"
-                    />
-                  </div>
-                </TabsContent>
-              </Tabs>
+                <option value="color">Solid Color</option>
+                <option value="gradient">Gradient</option>
+                <option value="image">Image URL</option>
+              </select>
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="text-color">Primary Text</Label>
-                <div className="flex items-center gap-3">
-                  <Input
-                    id="text-color"
+            {theme.viewportType === 'color' && (
+              <div>
+                <Label className="text-sm">Background Color</Label>
+                <div className="mt-1 flex items-center gap-3">
+                  <input
                     type="color"
-                    className="h-10 w-16 p-1"
-                    value={theme.textColor}
-                    onChange={(e) => setTheme((t) => ({ ...t, textColor: e.target.value }))}
+                    value={theme.viewportColor || '#ffffff'}
+                    onChange={(e) => setTheme((v) => ({ ...v, viewportColor: e.target.value }))}
+                    className="h-10 w-10 rounded-md"
                   />
                   <Input
-                    value={theme.textColor}
-                    onChange={(e) => setTheme((t) => ({ ...t, textColor: e.target.value }))}
+                    value={theme.viewportColor || ''}
+                    onChange={(e) => setTheme((v) => ({ ...v, viewportColor: e.target.value }))}
                   />
                 </div>
               </div>
+            )}
 
-              <div className="space-y-2">
-                <Label htmlFor="link-text-color">Link Text</Label>
-                <div className="flex items-center gap-3">
-                  <Input
-                    id="link-text-color"
-                    type="color"
-                    className="h-10 w-16 p-1"
-                    value={theme.linkTextColor}
-                    onChange={(e) => setTheme((t) => ({ ...t, linkTextColor: e.target.value }))}
-                  />
-                  <Input
-                    value={theme.linkTextColor}
-                    onChange={(e) => setTheme((t) => ({ ...t, linkTextColor: e.target.value }))}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Card Color</Label>
-                <div className="flex items-center gap-3">
-                  <Input
-                    type="color"
-                    className="h-10 w-16 p-1"
-                    value={theme.cardColorHex}
-                    onChange={(e) => setTheme((t) => ({ ...t, cardColorHex: e.target.value }))}
-                  />
-                  <Input
-                    value={theme.cardColorHex}
-                    onChange={(e) => setTheme((t) => ({ ...t, cardColorHex: e.target.value }))}
-                  />
-                </div>
-                <div className="pt-2">
-                  <Label className="mb-2 block">Card Opacity: {theme.cardOpacity}%</Label>
-                  <Slider
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={[theme.cardOpacity]}
-                    onValueChange={([v]) => setTheme((t) => ({ ...t, cardOpacity: v }))}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Border</Label>
-                <div className="flex items-center gap-3">
-                  <Input
-                    type="color"
-                    className="h-10 w-16 p-1"
-                    value={theme.cardBorderColor}
-                    onChange={(e) => setTheme((t) => ({ ...t, cardBorderColor: e.target.value }))}
-                    aria-label="Card border color"
-                  />
-                  <div className="flex-1">
-                    <Label className="mb-1 block">Width: {theme.cardBorderWidth}px</Label>
-                    <Slider
-                      min={0}
-                      max={4}
-                      step={1}
-                      value={[theme.cardBorderWidth]}
-                      onValueChange={([v]) => setTheme((t) => ({ ...t, cardBorderWidth: v }))}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Corner Radius: {theme.radius}px</Label>
-                <Slider
-                  min={8}
-                  max={9999}
-                  step={1}
-                  value={[theme.radius]}
-                  onValueChange={([v]) => setTheme((t) => ({ ...t, radius: v }))}
+            {theme.viewportType === 'gradient' && (
+              <div>
+                <Label className="text-sm">CSS Gradient</Label>
+                <Input
+                  placeholder="linear-gradient(135deg,#e9efff,#fff0f5)"
+                  value={theme.viewportGradient || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, viewportGradient: e.target.value }))}
                 />
               </div>
+            )}
 
-              <div className="flex items-center justify-between">
-                <Label htmlFor="blur">Backdrop Blur</Label>
-                <Switch
-                  id="blur"
-                  checked={theme.blurCards}
-                  onCheckedChange={(v) => setTheme((t) => ({ ...t, blurCards: v }))}
+            {theme.viewportType === 'image' && (
+              <div>
+                <Label className="text-sm">Background Image URL</Label>
+                <Input
+                  placeholder="https://..."
+                  value={theme.viewportImage || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, viewportImage: e.target.value }))}
                 />
               </div>
+            )}
+          </Section>
+        )}
 
-              <div className="flex items-center justify-between">
-                <Label htmlFor="shadow">Card Shadow</Label>
-                <Switch
-                  id="shadow"
-                  checked={theme.shadow}
-                  onCheckedChange={(v) => setTheme((t) => ({ ...t, shadow: v }))}
+        {activeTab === 'Text' && (
+          <Section title="Text Settings">
+            <div>
+              <Label className="text-sm">Bio Font Color</Label>
+              <div className="mt-1 flex items-center gap-3">
+                <input
+                  type="color"
+                  value={theme.bioFontColor || '#111827'}
+                  onChange={(e) => setTheme((v) => ({ ...v, bioFontColor: e.target.value }))}
+                  className="h-10 w-10 rounded-md"
+                />
+                <Input
+                  value={theme.bioFontColor || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, bioFontColor: e.target.value }))}
                 />
               </div>
+            </div>
 
-              <div className="pt-2">
-                <Label className="mb-2 block">Background Darken: {theme.overlayDarken}%</Label>
-                <Slider
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm">Font Size (px)</Label>
+                <Input
+                  type="number"
+                  min={10}
+                  max={28}
+                  value={theme.bioFontSize || 16}
+                  onChange={(e) => setTheme((v) => ({ ...v, bioFontSize: Number(e.target.value) }))}
+                />
+              </div>
+              <div>
+                <Label className="text-sm">Font Family</Label>
+                <Input
+                  placeholder="Inter, Roboto, ..."
+                  value={theme.bioFontFamily || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, bioFontFamily: e.target.value }))}
+                />
+              </div>
+            </div>
+          </Section>
+        )}
+
+        {activeTab === 'Buttons' && (
+          <Section title="Links/Button Settings">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm">Background</Label>
+                <Input
+                  value={theme.linksBackground || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, linksBackground: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label className="text-sm">Text Color</Label>
+                <Input
+                  value={theme.linksFontColor || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, linksFontColor: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label className="text-sm">Border Radius</Label>
+                <Input
+                  type="number"
                   min={0}
-                  max={80}
-                  step={1}
-                  value={[theme.overlayDarken]}
-                  onValueChange={([v]) => setTheme((t) => ({ ...t, overlayDarken: v }))}
+                  max={30}
+                  value={theme.linksBorderRadius || 16}
+                  onChange={(e) => setTheme((v) => ({ ...v, linksBorderRadius: Number(e.target.value) }))}
                 />
-                <p className="mt-1 text-xs text-muted-foreground">Adds a subtle dark overlay for readability.</p>
               </div>
-
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <Button
-                  onClick={() => navigator.clipboard?.writeText(JSON.stringify(theme, null, 2)).catch(() => {})}
-                  aria-label="Copy theme JSON to clipboard"
-                >
-                  Copy JSON
-                </Button>
-                <Button variant="secondary" onClick={handleDownload} aria-label="Download theme JSON">
-                  Download JSON
-                </Button>
-                <Button variant="ghost" onClick={() => setTheme(defaultTheme)} aria-label="Reset theme to defaults">
-                  Reset
-                </Button>
+              <div>
+                <Label className="text-sm">Spacing</Label>
+                <Input
+                  type="number"
+                  min={4}
+                  max={32}
+                  value={theme.linksSpacing || 12}
+                  onChange={(e) => setTheme((v) => ({ ...v, linksSpacing: Number(e.target.value) }))}
+                />
               </div>
-            </CardContent>
-          </Card>
-        </aside>
+              <div>
+                <Label className="text-sm">Hover Color</Label>
+                <Input
+                  value={theme.linksHoverColor || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, linksHoverColor: e.target.value }))}
+                />
+              </div>
+            </div>
+          </Section>
+        )}
 
-        {/* Live Preview */}
-        <section
-          className={cn("relative isolate min-h-[720px] flex-1 overflow-hidden rounded-xl border bg-black")}
-          aria-live="polite"
-        >
-          <div className="absolute right-3 top-3 z-10 flex rounded-md border bg-background p-1 shadow-sm">
-            {(["mobile", "tablet", "desktop"] as const).map((d) => (
-              <Button
-                key={d}
-                size="sm"
-                variant={device === d ? "default" : "ghost"}
-                onClick={() => setDevice(d)}
-                aria-label={`Preview ${d}`}
+        {activeTab === 'Cards' && (
+          <Section title="Card Settings">
+            <div>
+              <Label className="text-sm">Card Type</Label>
+              <select
+                value={theme.cardType}
+                onChange={(e) => setTheme((v) => ({ ...v, cardType: e.target.value }))}
+                className="mt-1 w-full rounded-md border bg-background p-2"
               >
-                {d[0].toUpperCase() + d.slice(1)}
-              </Button>
-            ))}
-          </div>
-
-          <div
-            className="absolute inset-0 -z-10 bg-cover bg-center"
-            style={{
-              backgroundColor: theme.bgType === "color" ? theme.bgColor : undefined,
-              backgroundImage:
-                theme.bgType === "image"
-                  ? `url(${theme.bgImageUrl?.trim() ? theme.bgImageUrl : "/subtle-abstract-background.png"})`
-                  : undefined,
-            }}
-            aria-hidden="true"
-          />
-          <div
-            className="absolute inset-0 -z-10"
-            style={{ background: `rgba(0,0,0,${theme.overlayDarken / 100})` }}
-            aria-hidden="true"
-          />
-
-          <div className="mx-auto flex h-full max-w-2xl flex-col items-center justify-start px-4 py-6 md:py-10">
-            <PhoneFrame className="bg-transparent border-0 shadow-none" device={device}>
-              <ProfilePreview
-                user={defaultUser}
-                styles={{
-                  textColor: theme.textColor,
-                  linkTextColor: theme.linkTextColor,
-                  cardBg,
-                }}
-                radius={theme.radius}
-                blurCards={theme.blurCards}
-                borderColor={theme.cardBorderColor}
-                borderWidth={theme.cardBorderWidth}
-                shadow={theme.shadow}
+                <option value="color">Solid Color</option>
+                <option value="gradient">Gradient</option>
+                <option value="image">Image URL</option>
+              </select>
+            </div>
+            {theme.cardType === 'color' && (
+              <div>
+                <Label className="text-sm">Card Color</Label>
+                <Input
+                  value={theme.cardColor || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, cardColor: e.target.value }))}
+                />
+              </div>
+            )}
+            {theme.cardType === 'gradient' && (
+              <div>
+                <Label className="text-sm">Card Gradient</Label>
+                <Input
+                  value={theme.cardGradient || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, cardGradient: e.target.value }))}
+                />
+              </div>
+            )}
+            {theme.cardType === 'image' && (
+              <div>
+                <Label className="text-sm">Card Image URL</Label>
+                <Input
+                  value={theme.cardImage || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, cardImage: e.target.value }))}
+                />
+              </div>
+            )}
+            <div>
+              <Label className="text-sm">Card Blur (px)</Label>
+              <Input
+                type="number"
+                min={0}
+                max={10}
+                value={theme.cardBlur || 0}
+                onChange={(e) => setTheme((v) => ({ ...v, cardBlur: Number(e.target.value) }))}
               />
-            </PhoneFrame>
-          </div>
-        </section>
+            </div>
+          </Section>
+        )}
+
+        {activeTab === 'Socials' && (
+          <Section title="Social Icon Settings">
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label className="text-sm">Icon Color</Label>
+                <Input
+                  value={theme.socialsIconColor || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, socialsIconColor: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label className="text-sm">Hover Color</Label>
+                <Input
+                  value={theme.socialsIconHoverColor || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, socialsIconHoverColor: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label className="text-sm">Size (px)</Label>
+                <Input
+                  type="number"
+                  min={12}
+                  max={28}
+                  value={theme.socialsSize || 18}
+                  onChange={(e) => setTheme((v) => ({ ...v, socialsSize: Number(e.target.value) }))}
+                />
+              </div>
+            </div>
+          </Section>
+        )}
+
+        {activeTab === 'Profile' && (
+          <Section title="Profile Image Settings">
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label className="text-sm">Shape</Label>
+                <select
+                  value={theme.profileShape}
+                  onChange={(e) => setTheme((v) => ({ ...v, profileShape: e.target.value }))}
+                  className="mt-1 w-full rounded-md border bg-background p-2"
+                >
+                  <option value="circle">Circle</option>
+                  <option value="rounded">Rounded</option>
+                  <option value="square">Square</option>
+                </select>
+              </div>
+              <div>
+                <Label className="text-sm">Border Color</Label>
+                <Input
+                  value={theme.profileBorderColor || ''}
+                  onChange={(e) => setTheme((v) => ({ ...v, profileBorderColor: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label className="text-sm">Border Width</Label>
+                <Input
+                  type="number"
+                  min={0}
+                  max={12}
+                  value={theme.profileBorderWidth || 0}
+                  onChange={(e) => setTheme((v) => ({ ...v, profileBorderWidth: Number(e.target.value) }))}
+                />
+              </div>
+            </div>
+          </Section>
+        )}
+
+        <div className="flex justify-end">
+          <Button onClick={handleSubmit} disabled={submitting} className="px-6">
+            Save Changes
+            <ChevronRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Preview */}
+      <div>
+        <Card className="border-accent/20">
+          <CardContent className="p-6">
+            <h3 className="text-lg font-semibold mb-4">Preview</h3>
+            <div
+              className="rounded-2xl border overflow-hidden p-6 flex items-center justify-center"
+              style={{ background: previewStyle.background as any }}
+            >
+              <div className="w-[320px] rounded-[2rem] bg-white shadow-xl border relative overflow-hidden">
+                <div className="h-24" style={{ background: cardStyle.background as any }} />
+                <div className="-mt-10 flex flex-col items-center px-6 pb-6">
+                  <div
+                    className="w-20 h-20 bg-white shadow-md"
+                    style={{
+                      borderRadius:
+                        theme.profileShape === 'circle' ? '9999px' : theme.profileShape === 'rounded' ? '16px' : '0px',
+                      border: `${theme.profileBorderWidth || 0}px solid ${theme.profileBorderColor || 'transparent'}`,
+                    }}
+                  />
+                  <h4 className="mt-3 font-semibold">Goodtime Monty</h4>
+                  <p
+                    className="text-center text-sm mt-1"
+                    style={{ color: theme.bioFontColor || '#111827', fontSize: (theme.bioFontSize || 16) + 'px' }}
+                  >
+                    The perfect host for slow travelers. Say hello to learn what Monty can do for you.
+                  </p>
+
+                  {/* Links */}
+                  <div className="w-full mt-4 space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <button
+                        key={i}
+                        className="w-full h-10 font-medium transition-colors"
+                        style={{
+                          color: theme.linksFontColor || '#ffffff',
+                          background: theme.linksBackground || '#111827',
+                          borderRadius: (theme.linksBorderRadius || 16) + 'px',
+                        }}
+                      >
+                        Link {i}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
