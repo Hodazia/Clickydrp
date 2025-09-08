@@ -94,16 +94,24 @@ export default function ThemeEditor() {
     return { background }
   }, [theme])
 
-  const cardStyle = useMemo<React.CSSProperties>(() => {
-    let background = theme.cardColor || '#ffffff'
-    if (theme.cardType === 'gradient') background = theme.cardGradient || defaultTheme.cardGradient!
-    if (theme.cardType === 'image') background = `url(${theme.cardImage}) center/cover no-repeat`
-    return {
-      background,
-      border: `${theme.profileBorderWidth || 0}px solid ${theme.profileBorderColor || 'transparent'}`,
-      opacity: theme.cardBlur ? 1 - (theme.cardBlur / 10) : 1,// Safari support
+  const cardStyle = useMemo(() => {
+    const backgroundProps: React.CSSProperties = {}
+    if (theme.cardBlur && theme.cardBlur > 0) {
+        backgroundProps.backgroundColor = 'rgba(255,255,255,0.2)'; // Use a semi-transparent color for blur
+        backgroundProps.backdropFilter = `blur(${theme.cardBlur}px)`;
+        backgroundProps.WebkitBackdropFilter = `blur(${theme.cardBlur}px)`;
+    } else {
+        if (theme.cardType === 'color') backgroundProps.backgroundColor = theme.cardColor || '#ffffff';
+        if (theme.cardType === 'gradient') backgroundProps.background = theme.cardGradient || defaultTheme.cardGradient!;
+        if (theme.cardType === 'image') backgroundProps.background = `url(${theme.cardImage}) center/cover no-repeat`;
     }
-  }, [theme])
+
+    return {
+        ...backgroundProps,
+        border: `${theme.profileBorderWidth || 0}px solid ${theme.profileBorderColor || 'transparent'}`,
+    }
+}, [theme]);
+
 
   const handleSubmit = async () => {
     setSubmitting(true)
