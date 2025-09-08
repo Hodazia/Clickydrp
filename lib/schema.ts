@@ -18,6 +18,7 @@ export interface Links {
   }
   
 export interface Social {
+    id:string,
     platform:string,
     url:string
   }
