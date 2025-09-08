@@ -12,6 +12,7 @@ export async function GET(
     include: {
       links: { orderBy: { createdAt: "asc" } },
       socials: true,
+      themes: true,
     },
   });
 

@@ -100,7 +100,8 @@ export default function ThemeEditor() {
     if (theme.cardType === 'image') background = `url(${theme.cardImage}) center/cover no-repeat`
     return {
       background,
-      filter: theme.cardBlur ? `blur(${theme.cardBlur}px)` : undefined,
+      border: `${theme.profileBorderWidth || 0}px solid ${theme.profileBorderColor || 'transparent'}`,
+      opacity: theme.cardBlur ? 1 - (theme.cardBlur / 10) : 1,// Safari support
     }
   }, [theme])
 
@@ -336,17 +337,33 @@ useEffect(() => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="text-sm">Background</Label>
-                <Input
-                  value={theme.linksBackground || ''}
-                  onChange={(e) => setTheme((v) => ({ ...v, linksBackground: e.target.value }))}
-                />
+                <div className="mt-1 flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={theme.linksBackground || '#111827'}
+                    onChange={(e) => setTheme((v) => ({ ...v, linksBackground: e.target.value }))}
+                    className="h-10 w-10 rounded-md"
+                  />
+                  <Input
+                    value={theme.linksBackground || ''}
+                    onChange={(e) => setTheme((v) => ({ ...v, linksBackground: e.target.value }))}
+                  />
+                </div>
               </div>
               <div>
                 <Label className="text-sm">Text Color</Label>
-                <Input
-                  value={theme.linksFontColor || ''}
-                  onChange={(e) => setTheme((v) => ({ ...v, linksFontColor: e.target.value }))}
-                />
+                <div className="mt-1 flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={theme.linksFontColor || '#ffffff'}
+                    onChange={(e) => setTheme((v) => ({ ...v, linksFontColor: e.target.value }))}
+                    className="h-10 w-10 rounded-md"
+                  />
+                  <Input
+                    value={theme.linksFontColor || ''}
+                    onChange={(e) => setTheme((v) => ({ ...v, linksFontColor: e.target.value }))}
+                  />
+                </div>
               </div>
             </div>
 
@@ -373,10 +390,18 @@ useEffect(() => {
               </div>
               <div>
                 <Label className="text-sm">Hover Color</Label>
-                <Input
-                  value={theme.linksHoverColor || ''}
-                  onChange={(e) => setTheme((v) => ({ ...v, linksHoverColor: e.target.value }))}
-                />
+                <div className="mt-1 flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={theme.linksHoverColor || '#1f2937'}
+                    onChange={(e) => setTheme((v) => ({ ...v, linksHoverColor: e.target.value }))}
+                    className="h-10 w-10 rounded-md"
+                  />
+                  <Input
+                    value={theme.linksHoverColor || ''}
+                    onChange={(e) => setTheme((v) => ({ ...v, linksHoverColor: e.target.value }))}
+                  />
+                </div>
               </div>
             </div>
           </Section>
@@ -399,10 +424,18 @@ useEffect(() => {
             {theme.cardType === 'color' && (
               <div>
                 <Label className="text-sm">Card Color</Label>
-                <Input
-                  value={theme.cardColor || ''}
-                  onChange={(e) => setTheme((v) => ({ ...v, cardColor: e.target.value }))}
-                />
+                <div className="mt-1 flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={theme.cardColor || '#ffffff'}
+                    onChange={(e) => setTheme((v) => ({ ...v, cardColor: e.target.value }))}
+                    className="h-10 w-10 rounded-md"
+                  />
+                  <Input
+                    value={theme.cardColor || ''}
+                    onChange={(e) => setTheme((v) => ({ ...v, cardColor: e.target.value }))}
+                  />
+                </div>
               </div>
             )}
             {theme.cardType === 'gradient' && (
@@ -441,17 +474,33 @@ useEffect(() => {
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <Label className="text-sm">Icon Color</Label>
-                <Input
-                  value={theme.socialsIconColor || ''}
-                  onChange={(e) => setTheme((v) => ({ ...v, socialsIconColor: e.target.value }))}
-                />
+                <div className="mt-1 flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={theme.socialsIconColor || '#111827'}
+                    onChange={(e) => setTheme((v) => ({ ...v, socialsIconColor: e.target.value }))}
+                    className="h-10 w-10 rounded-md"
+                  />
+                  <Input
+                    value={theme.socialsIconColor || ''}
+                    onChange={(e) => setTheme((v) => ({ ...v, socialsIconColor: e.target.value }))}
+                  />
+                </div>
               </div>
               <div>
                 <Label className="text-sm">Hover Color</Label>
-                <Input
-                  value={theme.socialsIconHoverColor || ''}
-                  onChange={(e) => setTheme((v) => ({ ...v, socialsIconHoverColor: e.target.value }))}
-                />
+                <div className="mt-1 flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={theme.socialsIconHoverColor || '#000000'}
+                    onChange={(e) => setTheme((v) => ({ ...v, socialsIconHoverColor: e.target.value }))}
+                    className="h-10 w-10 rounded-md"
+                  />
+                  <Input
+                    value={theme.socialsIconHoverColor || ''}
+                    onChange={(e) => setTheme((v) => ({ ...v, socialsIconHoverColor: e.target.value }))}
+                  />
+                </div>
               </div>
               <div>
                 <Label className="text-sm">Size (px)</Label>
@@ -520,10 +569,11 @@ useEffect(() => {
               className="rounded-2xl border overflow-hidden p-6 flex items-center justify-center"
               style={{ background: previewStyle.background as any }}
             >
-              <div className="w-[320px] rounded-[2rem] bg-white shadow-xl border relative 
-              overflow-hidden">
-                <div className="h-24" style={{ background: cardStyle.background as any }} />
-                <div className="-mt-10 flex flex-col items-center px-6 pb-6">
+              <div className="w-[320px] rounded-[2rem] shadow-xl border relative p-2
+              overflow-hidden"
+                     style={
+                      cardStyle}>
+                <div className="flex flex-col items-center px-6 pb-6">
                   <div
                     className="w-20 h-20 bg-white shadow-md"
                     style={{
