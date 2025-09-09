@@ -95,7 +95,7 @@ export function ProfileEditModal({
             className="absolute right-0 top-0 hover:bg-accent/20"
             onClick={onClose}
           >
-            <X className="h-4 w-4" />
+            {/* <X className="h-4 w-4" /> */}
           </Button>
         </DialogHeader>
 
@@ -107,18 +107,20 @@ export function ProfileEditModal({
                 <AvatarImage 
                   src={formData.profileimg} 
                 />
-                <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
-                  {formData.username.split(' ').map(n => n[0]).join('')}
+                <AvatarFallback className="bg-gradient-to-br from-primary to-accent
+                 text-primary-foreground text-xl">
+                  {formData.username.split('')[0]}
                 </AvatarFallback>
               </Avatar>
-              <label htmlFor="profileimage" className="absolute bottom-0 right-0 p-1 rounded-full bg-primary hover:bg-primary/90 cursor-pointer glow-shadow">
+              <label htmlFor="profileimage" className="absolute bottom-0 right-0 p-1 
+              rounded-full bg-primary hover:bg-primary/90 cursor-pointer glow-shadow">
                 <Upload className="h-3 w-3 text-primary-foreground" />
               </label>
               <input
                 id="profileimage"
                 type="file"
                 accept="image/*"
-                className="hidden"
+                className="hidden border-indigo-600 "
                 onChange={handleFileUpload}
               />
             </div>
@@ -134,7 +136,7 @@ export function ProfileEditModal({
               type="text"
               value={formData.username}
               onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
-              className="glass-card border-accent/20 focus:border-accent"
+              className="glass-card border-indigo-200 "
               placeholder="Enter your username"
               required
             />
@@ -150,7 +152,7 @@ export function ProfileEditModal({
               type="email"
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              className="glass-card border-accent/20 focus:border-accent"
+              className="glass-card border-indigo-200 "
               placeholder="Enter your email"
               required
             />
@@ -165,7 +167,7 @@ export function ProfileEditModal({
               type="text"
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="glass-card border-accent/20 focus:border-accent"
+              className="glass-card border-indigo-200"
               placeholder="Write something about yourself"
               required
             />
@@ -173,7 +175,10 @@ export function ProfileEditModal({
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full py-2.5 font-semibold"
+            className="w-full py-2.5 font-semibold
+            bg-indigo-600 text-white  hover:bg-gray-100
+          hover:ring-2 hover:ring-indigo-600 hover:text-black
+            "
           >
             Save Changes
           </Button>

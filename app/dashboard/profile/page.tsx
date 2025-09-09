@@ -9,12 +9,14 @@ import { ProfileEditModal } from "@/components/ProfileEditmodal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AppSidebar } from "@/components/Sidebarapp";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import SocialMoal from "@/components/social-modal";
+import DashboardLoader from "@/components/Loader";
+import ProfileSkeleton from "@/components/ProfileSkeleton";
 
 interface Social {
   id: string;
@@ -148,6 +150,7 @@ export default function Dashboard() {
       const response = await fetch("http://localhost:3000/api/socials");
       if (!response.ok) throw new Error("Failed to fetch social links.");
       const data: Social[] = await response.json();
+      console.log("Social data fetched is ", data);
       setSocials(data);
     } catch {
       toast.error("Could not load social links.");
@@ -308,7 +311,7 @@ export default function Dashboard() {
 
     // ✅ Instead of early return, handle loading and redirect via render logic
     if (status === "loading") {
-      return <p>Loading...</p>;
+      return <DashboardLoader />
     }
   
     if (!session) {
@@ -327,11 +330,15 @@ export default function Dashboard() {
 
     <div className="flex h-screen w-full">
     {/* Sidebar */}
-    <AppSidebar username={profile?.username || ""} email={profile?.email || ""} profileimg={profile?.profileimg || ""} description={profile?.description || ""}/>
+    <AppSidebar username={profile?.username || ""} 
+    email={profile?.email || ""}
+     profileimg={profile?.profileimg || ""} 
+     description={profile?.description || ""}/>
 
 
     {/*Main Content */}
-    <main className="flex-1 overflow-y-auto bg-gradient-to-br from-background via-muted/20 to-background">
+    <main className="flex-1 overflow-y-auto bg-gradient-to-br from-background via-muted/20 
+    to-background">
       <div className="max-w-7xl mx-auto px-6 py-6 md:py-8 space-y-8">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -340,23 +347,26 @@ export default function Dashboard() {
             <p className="text-muted-foreground">Manage your profile and social presence</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => router.push(`/`)}>
-              View Public Page
-            </Button>
-            <Button onClick={() => setIsEditModalOpen(true)}>
+            <Button
+            className="bg-indigo-600 hover:bg-gray-100
+          hover:ring-2 hover:ring-indigo-600 hover:text-black"
+            onClick={() => setIsEditModalOpen(true)}>
               <Edit className="h-4 w-4 mr-2" /> Edit Profile
             </Button>
           </div>
         </div>
 
         {/* Profile Section */}
-        {profile && (
-          <Card className="border border-border/60 shadow-sm bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+
+        {!profile ? <ProfileSkeleton /> : (
+          <Card className="border border-border/60 shadow-sm bg-card/70 
+          backdrop-blur supports-[backdrop-filter]:bg-card/60
+          ">
             <CardContent className="p-6 md:p-8">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                   <div className="relative">
-                    <Avatar className="h-20 w-20 md:h-24 md:w-24 ring-4 ring-accent/20">
+                    <Avatar className="h-20 w-20 md:h-24 md:w-24 ring-1 border-indigo-100">
                       <AvatarImage src={profile.profileimg} />
                       <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-2xl">
                         {profile.username.split(" ").map((n) => n[0]).join("")}
@@ -365,21 +375,26 @@ export default function Dashboard() {
                   </div>
 
                   <div className="flex-1 text-center sm:text-left">
-                    <h2 className="text-2xl font-bold text-foreground">{profile.username}</h2>
-                    <p className="text-muted-foreground">{profile.email}</p>
+                    <h2 className="text-2xl font-bold text-foreground">@{profile.username}</h2>
+                    <p className="text-black text-xl">{profile.email}</p>
                     {profile.description && (
-                      <p className="mt-1 text-sm text-muted-foreground/90 max-w-2xl">{profile.description}</p>
+                      <p className="mt-1 text-black text-xl max-w-2xl">{profile.description}</p>
                     )}
                     <div className="mt-4 flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-                      <span className="inline-flex items-center rounded-full border px-3 py-1 text-xs text-muted-foreground">Member</span>
-                      <span className="inline-flex items-center rounded-full bg-accent/10 text-accent px-3 py-1 text-xs">Active</span>
+                      <span className="inline-flex items-center rounded-full border
+                      border-indigo-200 hover:bg-indigo-600
+                      hover:text-white 
+                      px-3 py-1 text-md text-muted-foreground">Member</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex gap-2 self-center lg:self-start">
-                  <Button variant="outline" onClick={() => navigator.clipboard.writeText(window.location.origin + '/'+ (profile.username || ''))}>Copy URL</Button>
-                  <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
+                  <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}
+                    className="hover:bg-gray-100 bg-indigo-600 text-white
+                              hover:ring-2 hover:ring-indigo-600 
+                              hover:text-black"
+                    >
                     <Edit className="h-4 w-4 mr-2" /> Edit
                   </Button>
                 </div>
@@ -389,12 +404,13 @@ export default function Dashboard() {
         )}
 
         {/* Social Links Section */}
-        <Card className="border border-border/60 shadow-sm bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-          <CardContent className="p-6 md:p-8">
+        <Card className="border border-border/60 shadow-sm bg-card/70
+         backdrop-blur supports-[backdrop-filter]:bg-card/60">
+          <CardContent className="p-6 md:p-3">
             <div className="text-center mb-8">
               <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-4 rounded-full"></div>
               <h3 className="text-2xl font-bold text-foreground mb-2">Social Links</h3>
-              <p className="text-muted-foreground">They will appear on top of your regular Links.</p>
+              <p className="text-xl text-black ">They will appear on top of your regular Links.</p>
             </div>
 
             {/* Social Icons Grid */}
@@ -410,8 +426,8 @@ export default function Dashboard() {
                       onClick={() => existingSocial ? handleEditSocial(existingSocial) : handleSocialClick(platform.key)}
                       className={`w-full h-20 rounded-xl border transition-all duration-200 flex flex-col items-center justify-center gap-2 group-hover:shadow-sm ${
                         isAdded 
-                          ? 'border-emerald-400/60 bg-emerald-50 text-emerald-600' 
-                          : 'border-border hover:border-foreground/20 text-muted-foreground hover:text-foreground'
+                          ? 'border-emerald-400/60 hover:bg-indigo-400 hover:ring-1 bg-indigo-600 text-white' 
+                          : 'border-border hover:border-indigo-200 hover:ring-2 text-muted-foreground hover:text-foreground'
                       }`}
                     >
                       <IconComponent className="w-6 h-6" />
@@ -437,18 +453,19 @@ export default function Dashboard() {
 
             {/* Added Social Links Display */}
             {socials.length > 0 && (
-              <div className="mt-6">
-                <h4 className="text-lg font-semibold text-foreground mb-4">Your Social Links</h4>
+              <div className="mt-5">
+                <h4 className="text-lg font-semibold text-foreground mb-4 ml-2">Your Social Links</h4>
                 <div className="space-y-2">
                   {socials.map((social) => {
                     const IconComponent = getSocialIcon(social.platform);
                     return (
-                      <div key={social.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex items-center gap-3">
-                          {IconComponent && <IconComponent className="w-5 h-5 text-gray-600" />}
-                          <div>
+                      <div key={social.id} className="flex items-center justify-between
+                       p-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-400 hover:ring-1">
+                        <div className="flex items-center gap-3 min-w-0">
+                          {IconComponent && <IconComponent className="w-5 h-5 text-white" />}
+                          <div className="flex-1 overflow-hidden">
                             <p className="font-medium text-sm capitalize">{social.platform}</p>
-                            <p className="text-xs text-muted-foreground truncate max-w-xs">{social.url}</p>
+                            <p className="text-xs text-white w-full h-full truncate">{social.url}</p>
                           </div>
                         </div>
                         <div className="flex gap-2">
@@ -504,8 +521,8 @@ export default function Dashboard() {
               {selectedPlatform && (
                 <div className="flex items-center justify-center gap-3 mb-4">
                   {getSocialIcon(selectedPlatform) && (
-                    <div className="w-12 h-12 rounded-lg border-2 border-gray-200 flex items-center justify-center">
-                      {React.createElement(getSocialIcon(selectedPlatform)!, { className: "w-6 h-6 text-gray-600" })}
+                    <div className="w-12 h-12 rounded-lg border-2 border-gray-200 bg-indigo-600 flex items-center justify-center">
+                      {React.createElement(getSocialIcon(selectedPlatform)!, { className: "w-6 h-6 bg-indigo-600 text-white" })}
                     </div>
                   )}
                   <div>
@@ -524,7 +541,7 @@ export default function Dashboard() {
                   value={selectedPlatform}
                   onChange={(e) => setSelectedPlatform(e.target.value)}
                   placeholder="Select platform"
-                  className="mt-1"
+                  className="mt-1 border-indigo-200"
                 />
               </div>
               
@@ -535,7 +552,7 @@ export default function Dashboard() {
                   value={socialUrl}
                   onChange={(e) => setSocialUrl(e.target.value)}
                   placeholder="https://example.com/your-profile"
-                  className="mt-1"
+                  className="mt-1 border-indigo-200"
                 />
               </div>
             </div>
@@ -549,13 +566,15 @@ export default function Dashboard() {
                   setSocialUrl('');
                   setEditingSocial(null);
                 }}
-                className="flex-1"
+                className="flex-1 hover:bg-gray-100
+          hover:ring-2 hover:ring-indigo-600 hover:text-black"
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleSocialSubmit}
-                className="flex-1"
+                className="flex-1 bg-indigo-600 text-white  hover:bg-gray-100
+          hover:ring-2 hover:ring-indigo-600 hover:text-black"
                 disabled={!selectedPlatform || !socialUrl}
               >
                 {editingSocial ? 'Update' : 'Add'} Link
