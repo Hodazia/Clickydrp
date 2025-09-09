@@ -66,7 +66,7 @@ export default function Username() {
             console.log("Data from the users/me ", resultantData);
             setusermeta(resultantData)
         } catch {
-            console.error('Could not load theme')
+            console.log('Could not load theme')
         }
     }
 
@@ -119,29 +119,32 @@ export default function Username() {
     return (
         <>
             <div
-                className="min-h-screen w-full flex flex-col items-center justify-start px-4 py-10"
+                className="relative min-h-screen w-full flex flex-col items-center justify-start px-4 py-10"
                 style={viewportBgStyle}
             >
+                {/* readability overlay over the background */}
+                <div className="pointer-events-none absolute inset-0 bg-black/20" />
                 {/* Card container */}
                 <div
-                    className="w-full max-w-md flex flex-col items-center rounded-2xl 
-                    p-4 shadow-lg md:max-w-xl"
+                    className="relative w-full max-w-md flex flex-col items-center rounded-3xl p-6 md:p-8 shadow-2xl md:max-w-xl border border-white/10 bg-white/60 backdrop-blur-md"
                     style={cardStyle}
                 >
-                    {/* Fixed Header Section (Profile, Description, Socials) */}
-                    <div className="w-full flex flex-col
-                     items-center rounded-2xl p-3 pb-3
-                       sticky top-0 z-10">
+                    {/* Header Section (Profile, Description, Socials) */}
+                    <div className="w-full flex flex-col items-center rounded-2xl p-2 pb-3">
                         {/* Profile image */}
                         <img
                             src={usermeta.profileimg}
                             alt={usermeta.username}
-                            className="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover md:w-32 md:h-32"
+                            className="w-28 h-28 rounded-full border-4 border-white/80 shadow-xl ring-4 ring-white/20 object-cover md:w-32 md:h-32"
                         />
 
                         {/* Username + description */}
-                        <h1 className="mt-4 text-2xl font-bold text-gray-800 md:text-3xl">{usermeta.username}</h1>
-                        <p className="mt-2 text-center text-gray-600">{usermeta.description}</p>
+                        <h1 className="mt-4 text-2xl md:text-3xl font-semibold tracking-tight text-gray-900/90">
+                            {usermeta.username}
+                        </h1>
+                        <p className="mt-2 text-center text-gray-700/90 max-w-prose">
+                            {usermeta.description}
+                        </p>
 
                         {/* Social icons */}
                         {usermeta?.socials && usermeta.socials.length > 0 && (
@@ -179,9 +182,7 @@ export default function Username() {
                     </div>
 
                     {/* Scrollable Links Section */}
-                    <div className="w-full mt-6 space-y-4
-                     flex flex-col flex-grow overflow-y-auto 
-                     max-h-[60vh]">
+                    <div className="w-full mt-6 space-y-4 flex flex-col flex-grow overflow-y-auto max-h-[60vh]">
                         {usermeta.links?.map((link, idx) => (
                             <a
                                 key={link.description}
@@ -190,7 +191,7 @@ export default function Username() {
                                 rel="noopener noreferrer"
                                 onMouseEnter={() => setHoveredLinkIdx(idx)}
                                 onMouseLeave={() => setHoveredLinkIdx(null)}
-                                className="w-full flex items-center gap-4 p-3 font-medium transition-colors rounded-full shadow-md hover:scale-[1.02] text-white"
+                                className="w-full flex items-center gap-4 p-3 font-medium transition-all rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] text-white"
                                 style={{
                                     color: theme?.linksFontColor || '#ffffff',
                                     background: hoveredLinkIdx === idx ? (theme?.linksHoverColor || '#1f2937') :
@@ -199,12 +200,12 @@ export default function Username() {
                                     marginTop: idx === 0 ? 0 : (theme?.linksSpacing || 12),
                                 }}
                             >
-                                <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-200 flex-shrink-0 md:w-16 md:h-16">
+                                <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-200/80 flex-shrink-0 md:w-16 md:h-16">
                                     {link.linkThumbnail ? (
                                         <img src={link.linkThumbnail} alt="Link Thumbnail" className="w-full h-full object-cover" />
                                     ) : null}
                                 </div>
-                                <div className="flex-1 justify-center  truncate">{link.description || link.linkUrl}</div>
+                                <div className="flex-1 justify-center truncate">{link.description || link.linkUrl}</div>
                             </a>
                         ))}
                     </div>

@@ -1,18 +1,20 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { User, Palette, Share, Settings, LogOut, ChevronLeft,
     Link2, LucideIcon} from "lucide-react";
 import { Button } from "./ui/button";
 import React from "react";
-import { Sidebar,SidebarContent,SidebarFooter,SidebarGroup, 
-    SidebarHeader, SidebarGroupLabel,SidebarGroupContent,SidebarMenu,SidebarMenuAction,
+import { Sidebar,SidebarContent,SidebarGroup, 
+    SidebarHeader, SidebarGroupLabel,SidebarGroupContent,SidebarMenu,
     SidebarMenuItem,SidebarMenuButton,
 } from "./ui/sidebar";
 import { Avatar,AvatarFallback,AvatarImage, } from "@radix-ui/react-avatar";
-
+import { signOut } from "next-auth/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Sidebarprop {
   username:string,
@@ -21,126 +23,163 @@ interface Sidebarprop {
   profileimg:string
 }
 
-
 interface ItemProps  {
     title: string,
     url: string;
     Icon: LucideIcon
 }
+
 // Define menu items and their corresponding icons
 const mainItems: ItemProps[] = [
     { title: "Profile", url: "/dashboard/profile", Icon: User },
     { title: "Links", url: "/dashboard/links", Icon: Link2 },
     { title: "Themes", url: "/dashboard/theme", Icon: Palette },
-    { title: "Share", url: "/dashboard/share", Icon: Share },
 ];
-
 
 const bottomItems = [
     { title: "Settings", url: "/dashboard/settings", icon: Settings },
 ];
 
-export function AppSidebar({username,email,profileimg,description}: Sidebarprop) {
-    // The collapsed state is now managed directly with useState
-    const [collapsed, setCollapsed] = useState(false);
-    const pathname = usePathname();
 
-    // Function to check if a link is active based on the current pathname
+
+export function AppSidebar({username,email,profileimg,description}: Sidebarprop) {
+    const [isMobile, setIsMobile] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768); // Tailwind's 'md' breakpoint
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const isActive = (path:string) => pathname === path;
 
-    // Function to generate dynamic classes for navigation links
     const getNavCls = ({ isActive }: { isActive: boolean }) =>
         isActive 
-          ? "bg-accent/20 text-accent border-accent/30 glow-shadow" 
-          : "hover:bg-accent/10 hover:text-accent-foreground";
+          ? `bg-indigo-50 text-indigo-600 border-indigo-600 hover:bg-gray-100
+          hover:ring-2 hover:ring-indigo-600 active:shadow-none glow-shadow`
+          : `hover:bg-accent/10 hover:text-accent-foreground hover:ring-2 
+          hover:ring-indigo-600`;
 
-  return (
-    <Sidebar
-      className={`${collapsed ? "w-16" : "w-64"} glass-card border-r-accent/20`}
-      collapsible="icon"
-    >
-      <SidebarHeader className="p-4">
-        {!collapsed && (
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10 ring-2 ring-accent/30">
-              <AvatarImage src={profileimg}/>
-              <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground">
-                AS
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{username}</p>
-              <p className="text-xs text-muted-foreground truncate">{description}</p>
+    const handlelogout = async () => {
+      setTimeout(async () => {
+        await signOut({
+          redirect: false
+        });
+        toast.success("You've been successfully logged out!");
+        router.push("/signin");
+      }, 1500);
+    };
+
+    if (isMobile) {
+        return (
+            <div className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 shadow-lg border-t border-indigo-600 z-50 md:hidden">
+                <nav className="flex justify-around items-center h-16">
+                    {mainItems.map((item) => (
+                        <Link 
+                            key={item.title} 
+                            href={item.url}
+                            className={`flex flex-col items-center justify-center p-2 text-sm transition-all duration-200 
+                                ${isActive(item.url) ? 'text-indigo-600' : 'text-gray-500 hover:text-indigo-600'}`}
+                        >
+                            <item.Icon className="h-6 w-6" />
+                            <span className="mt-1 text-xs">{item.title}</span>
+                        </Link>
+                    ))}
+                    <button 
+                        onClick={handlelogout}
+                        className="flex flex-col items-center justify-center p-2 text-sm transition-all duration-200 text-gray-500 hover:text-red-500"
+                    >
+                        <LogOut className="h-6 w-6" />
+                        <span className="mt-1 text-xs">Logout</span>
+                    </button>
+                </nav>
             </div>
-          </div>
-        )}
-        {collapsed && (
-          <div className="flex justify-center">
-            <Avatar className="h-8 w-8 ring-2 ring-accent/30">
-              <AvatarImage src={profileimg} />
-              <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xs">
-                AS
-              </AvatarFallback>
-            </Avatar>
-          </div>
-        )}
-      </SidebarHeader>
+        );
+    }
 
-      <SidebarContent className="px-3">
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-muted-foreground uppercase tracking-wider text-xs">
-            {!collapsed ? "Main" : ""}
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              {mainItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link
-                      href={item.url}
-                      className={`${getNavCls({ isActive: isActive(item.url) })} rounded-lg transition-all duration-200 p-3 ${collapsed ? 'justify-center' : ''}`}
-                    >
-                      <item.Icon className={`h-5 w-5 ${collapsed ? '' : 'mr-3'}`} />
-                      {!collapsed && <span className="font-medium">{item.title}</span>}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+    return (
+        <Sidebar
+            className="w-64 glass-card border-r-indigo-600 md:block hidden"
+            collapsible="icon"
+        >
+            <SidebarHeader className="p-4">
+                <div className="flex items-center gap-3">
+                    <Avatar className="h-20 w-20">
+                        <AvatarImage src={profileimg} className="rounded-full h-full w-full object-cover" />
+                        <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
+                            {username.charAt(0)}{description.charAt(0)}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-lg font-bold text-foreground truncate">{username}</p>
+                        <p className="text-sm text-muted-foreground truncate">{description}</p>
+                    </div>
+                </div>
+            </SidebarHeader>
 
-        <div className="flex-1" />
+            <SidebarContent className="border border-t-indigo-600 px-3 py-4">
+                <SidebarGroup>
+                    <SidebarGroupLabel className="text-muted-foreground 
+                    uppercase tracking-wider text-xl p-3 mb-2">
+                        Main Menu
+                    </SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu className="space-y-2">
+                            {mainItems.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton asChild>
+                                        <Link
+                                            href={item.url}
+                                            className={`${getNavCls({ isActive: isActive(item.url) })} 
+                                            rounded-lg transition-all duration-200 p-3 flex items-center space-x-3`}
+                                        >
+                                            <item.Icon className="h-6 w-6" />
+                                            <span className="font-medium text-base">{item.title}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              {bottomItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link
-                      href={item.url}
-                      className={`${getNavCls({ isActive: isActive(item.url) })} rounded-lg transition-all duration-200 p-3 ${collapsed ? 'justify-center' : ''}`}
-                    >
-                      <item.icon className={`h-5 w-5 ${collapsed ? '' : 'mr-3'}`} />
-                      {!collapsed && <span className="font-medium">{item.title}</span>}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-              <SidebarMenuItem>
-                <Button
-                  variant="ghost"
-                  className={`w-full hover:bg-destructive/20 hover:text-destructive rounded-lg p-3 ${collapsed ? 'justify-center' : 'justify-start'}`}
-                >
-                  <LogOut className={`h-5 w-5 ${collapsed ? '' : 'mr-3'}`} />
-                  {!collapsed && <span className="font-medium">Logout</span>}
-                </Button>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
-  );
+                <div className="flex-1" />
+
+                <SidebarGroup>
+                    <SidebarGroupContent>
+                        <SidebarMenu className="space-y-2">
+                            {bottomItems.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton asChild>
+                                        <Link
+                                            href={item.url}
+                                            className={`${getNavCls({ isActive: isActive(item.url) })} rounded-lg transition-all duration-200 p-3 flex items-center space-x-3`}
+                                        >
+                                            <item.icon className="h-6 w-6" />
+                                            <span className="font-medium text-base">{item.title}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                            <SidebarMenuItem>
+                                <Button
+                                    variant="ghost"
+                                    className="w-full hover:bg-destructive/20 hover:text-destructive rounded-lg p-3 justify-start flex items-center space-x-3"
+                                    onClick={handlelogout}
+                                >
+                                    <LogOut className="h-6 w-6" />
+                                    <span className="font-medium text-base">Logout</span>
+                                </Button>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+            </SidebarContent>
+        </Sidebar>
+    );
 }

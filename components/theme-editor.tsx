@@ -87,30 +87,58 @@ export default function ThemeEditor() {
   }, [])
 
   const previewStyle = useMemo<React.CSSProperties>(() => {
-    let background = '#ffffff'
-    if (theme.viewportType === 'color') background = theme.viewportColor || '#ffffff'
-    if (theme.viewportType === 'gradient') background = theme.viewportGradient || 'linear-gradient(135deg,#e9efff,#fff0f5)'
-    if (theme.viewportType === 'image') background = `url(${theme.viewportImage}) center/cover no-repeat`
-    return { background }
+    if (theme.viewportType === 'image' && theme.viewportImage) {
+      return {
+        backgroundImage: `url(${theme.viewportImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }
+    }
+    if (theme.viewportType === 'gradient' && theme.viewportGradient) {
+      return {
+        // gradient strings are applied as backgroundImage by CSS
+        // but React supports it directly as background as well
+        background: theme.viewportGradient as any,
+      }
+    }
+    return { backgroundColor: theme.viewportColor || '#ffffff' }
   }, [theme])
 
   const cardStyle = useMemo(() => {
-    const backgroundProps: React.CSSProperties = {}
+    const style: React.CSSProperties = {
+      border: `${theme.profileBorderWidth || 0}px solid ${theme.profileBorderColor || 'transparent'}`,
+    }
     if (theme.cardBlur && theme.cardBlur > 0) {
-        backgroundProps.backgroundColor = 'rgba(255,255,255,0.2)'; // Use a semi-transparent color for blur
-        backgroundProps.backdropFilter = `blur(${theme.cardBlur}px)`;
-        backgroundProps.WebkitBackdropFilter = `blur(${theme.cardBlur}px)`;
-    } else {
-        if (theme.cardType === 'color') backgroundProps.backgroundColor = theme.cardColor || '#ffffff';
-        if (theme.cardType === 'gradient') backgroundProps.background = theme.cardGradient || defaultTheme.cardGradient!;
-        if (theme.cardType === 'image') backgroundProps.background = `url(${theme.cardImage}) center/cover no-repeat`;
+      style.backgroundColor = '#ffffff'
+      style.backdropFilter = `blur(${theme.cardBlur}px)`
+      // @ts-ignore
+      style.WebkitBackdropFilter = `blur(${theme.cardBlur}px)`
+      return style
     }
-
-    return {
-        ...backgroundProps,
-        border: `${theme.profileBorderWidth || 0}px solid ${theme.profileBorderColor || 'transparent'}`,
+    if (theme.cardType === 'image' && theme.cardImage) {
+      style.backgroundImage = `url(${theme.cardImage})`
+      style.backgroundSize = 'cover'
+      style.backgroundPosition = 'center'
+      style.backgroundRepeat = 'no-repeat'
+      return style
     }
-}, [theme]);
+    if (theme.cardType === 'gradient' && theme.cardGradient) {
+      // @ts-ignore
+      style.backgroundImage = theme.cardGradient
+      return style
+    }
+    if (theme.cardType === 'gradient' && theme.cardGradient) {
+      style.background = theme.cardGradient
+      return style
+    }
+    if (theme.cardType === 'image' && theme.cardImage) {
+      style.background = `url(${theme.cardImage}) center/cover no-repeat`
+      return style
+    }
+    style.backgroundColor = theme.cardColor || '#ffffff'
+    return style
+  }, [theme])
 
 
   const handleSubmit = async () => {
@@ -225,7 +253,7 @@ useEffect(() => {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-8">
-      {/* Controls */}
+        {/* Controls */}
       <div className="space-y-6">
         {/* Tabs */}
         <div className="flex flex-wrap gap-2">
@@ -278,18 +306,18 @@ useEffect(() => {
             {theme.viewportType === 'gradient' && (
               <div>
                 <Label className="text-sm">CSS Gradient</Label>
-                <Input
+                    <Input
                   placeholder="linear-gradient(135deg,#e9efff,#fff0f5)"
                   value={theme.viewportGradient || ''}
                   onChange={(e) => setTheme((v) => ({ ...v, viewportGradient: e.target.value }))}
-                />
-              </div>
+                    />
+                  </div>
             )}
 
             {theme.viewportType === 'image' && (
               <div>
                 <Label className="text-sm">Background Image URL</Label>
-                <Input
+                    <Input
                   placeholder="https://..."
                   value={theme.viewportImage || ''}
                   onChange={(e) => setTheme((v) => ({ ...v, viewportImage: e.target.value }))}
@@ -305,12 +333,12 @@ useEffect(() => {
               <Label className="text-sm">Bio Font Color</Label>
               <div className="mt-1 flex items-center gap-3">
                 <input
-                  type="color"
+                      type="color"
                   value={theme.bioFontColor || '#111827'}
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontColor: e.target.value }))}
                   className="h-10 w-10 rounded-md"
-                />
-                <Input
+                    />
+                    <Input
                   value={theme.bioFontColor || ''}
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontColor: e.target.value }))}
                 />
@@ -334,8 +362,8 @@ useEffect(() => {
                   placeholder="Inter, Roboto, ..."
                   value={theme.bioFontFamily || ''}
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontFamily: e.target.value }))}
-                />
-              </div>
+                    />
+                  </div>
             </div>
           </Section>
         )}
@@ -372,8 +400,8 @@ useEffect(() => {
                     onChange={(e) => setTheme((v) => ({ ...v, linksFontColor: e.target.value }))}
                   />
                 </div>
+                </div>
               </div>
-            </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div>
@@ -388,7 +416,7 @@ useEffect(() => {
               </div>
               <div>
                 <Label className="text-sm">Spacing</Label>
-                <Input
+                  <Input
                   type="number"
                   min={4}
                   max={32}
@@ -468,7 +496,7 @@ useEffect(() => {
               <Label className="text-sm">Card Blur (px)</Label>
               <Input
                 type="number"
-                min={0}
+                    min={0}
                 max={10}
                 value={theme.cardBlur || 0}
                 onChange={(e) => setTheme((v) => ({ ...v, cardBlur: Number(e.target.value) }))}
@@ -564,24 +592,35 @@ useEffect(() => {
           <Button onClick={handleSubmit} disabled={submitting} className="px-6">
             Save Changes
             <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+                </Button>
+              </div>
+          </div>
 
       {/* Preview */}
       <div>
         <Card className="border-accent/20">
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold mb-4">Preview</h3>
-            <div
-              className="rounded-2xl border overflow-hidden p-6 flex items-center justify-center"
-              style={{ background: previewStyle.background as any }}
-            >
-              <div className="w-[320px] rounded-[2rem] shadow-xl border relative p-2
-              overflow-hidden"
-                     style={
-                      cardStyle}>
-                <div className="flex flex-col items-center px-6 pb-6">
+            {/* Phone frame */}
+            <div className="flex items-center justify-center">
+              <div className="relative w-[340px] h-[720px] md:w-[360px]
+               md:h-[740px] rounded-[2.5rem] border-[10px] border-black/90 
+               shadow-2xl overflow-hidden">
+                {/* Screen area */}
+                <div className="absolute inset-[10px] rounded-[2rem] overflow-hidden">
+                  {/* fixed background layer inside the phone (does not scroll) */}
+          <div
+            className="absolute inset-0 -z-10"
+                    style={previewStyle}
+                  />
+                  {/* Scrollable content layer */}
+                  <div className="relative h-full w-full overflow-y-auto bg-transparent">
+                    <div className="min-h-full w-full px-4 py-5 flex flex-col items-center">
+                      <div
+                        className="w-full rounded-3xl p-4 border"
+                        style={cardStyle}
+                      >
+                        <div className="flex flex-col items-center">
                   <div
                     className="w-20 h-20 bg-white shadow-md"
                     style={{
@@ -668,9 +707,13 @@ useEffect(() => {
                       </a>
                     ))}
                   </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+          </div>
           </CardContent>
         </Card>
       </div>

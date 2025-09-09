@@ -331,24 +331,32 @@ export default function Dashboard() {
 
 
     {/*Main Content */}
-    <main className="flex-1 p-6 overflow-y-auto">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <main className="flex-1 overflow-y-auto bg-gradient-to-br from-background via-muted/20 to-background">
+      <div className="max-w-7xl mx-auto px-6 py-6 md:py-8 space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold gradient-text">Profile Dashboard</h1>
-            <p className="text-muted-foreground mt-1">Manage your profile and social links</p>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-1">
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Profile Dashboard</h1>
+            <p className="text-muted-foreground">Manage your profile and social presence</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => router.push(`/`)}>
+              View Public Page
+            </Button>
+            <Button onClick={() => setIsEditModalOpen(true)}>
+              <Edit className="h-4 w-4 mr-2" /> Edit Profile
+            </Button>
           </div>
         </div>
 
         {/* Profile Section */}
         {profile && (
-          <Card className="glass-card border-accent/20">
-            <CardContent className="p-8">
+          <Card className="border border-border/60 shadow-sm bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+            <CardContent className="p-6 md:p-8">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                   <div className="relative">
-                    <Avatar className="h-24 w-24 ring-4 ring-accent/30">
+                    <Avatar className="h-20 w-20 md:h-24 md:w-24 ring-4 ring-accent/20">
                       <AvatarImage src={profile.profileimg} />
                       <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-2xl">
                         {profile.username.split(" ").map((n) => n[0]).join("")}
@@ -357,29 +365,32 @@ export default function Dashboard() {
                   </div>
 
                   <div className="flex-1 text-center sm:text-left">
-                    <h2 className="text-2xl font-bold text-foreground mb-2">{profile.username}</h2>
-                    <p className="text-muted-foreground mb-1">{profile.email}</p>
-                    {profile.description && <p className="text-sm text-muted-foreground max-w-md">{
-                    profile.description}</p>}
+                    <h2 className="text-2xl font-bold text-foreground">{profile.username}</h2>
+                    <p className="text-muted-foreground">{profile.email}</p>
+                    {profile.description && (
+                      <p className="mt-1 text-sm text-muted-foreground/90 max-w-2xl">{profile.description}</p>
+                    )}
+                    <div className="mt-4 flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+                      <span className="inline-flex items-center rounded-full border px-3 py-1 text-xs text-muted-foreground">Member</span>
+                      <span className="inline-flex items-center rounded-full bg-accent/10 text-accent px-3 py-1 text-xs">Active</span>
+                    </div>
                   </div>
                 </div>
 
-                <Button
-                  variant="secondary"
-                  onClick={() => setIsEditModalOpen(true)}
-                  className="self-center lg:self-start"
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Button>
+                <div className="flex gap-2 self-center lg:self-start">
+                  <Button variant="outline" onClick={() => navigator.clipboard.writeText(window.location.origin + '/'+ (profile.username || ''))}>Copy URL</Button>
+                  <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
+                    <Edit className="h-4 w-4 mr-2" /> Edit
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
         )}
 
         {/* Social Links Section */}
-        <Card className="glass-card border-accent/20">
-          <CardContent className="p-8">
+        <Card className="border border-border/60 shadow-sm bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+          <CardContent className="p-6 md:p-8">
             <div className="text-center mb-8">
               <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-4 rounded-full"></div>
               <h3 className="text-2xl font-bold text-foreground mb-2">Social Links</h3>
@@ -387,7 +398,7 @@ export default function Dashboard() {
             </div>
 
             {/* Social Icons Grid */}
-            <div className="grid grid-cols-5 gap-4 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
               {socialPlatforms.map((platform) => {
                 const IconComponent = platform.icon;
                 const isAdded = isSocialAdded(platform.key);
@@ -397,19 +408,15 @@ export default function Dashboard() {
                   <div key={platform.key} className="relative group">
                     <button
                       onClick={() => existingSocial ? handleEditSocial(existingSocial) : handleSocialClick(platform.key)}
-                      className={`w-full h-16 rounded-lg border-2 transition-all duration-200 flex items-center justify-center group-hover:scale-105 ${
+                      className={`w-full h-20 rounded-xl border transition-all duration-200 flex flex-col items-center justify-center gap-2 group-hover:shadow-sm ${
                         isAdded 
-                          ? 'border-green-500 bg-green-50 text-green-600' 
-                          : 'border-gray-200 hover:border-gray-300 text-gray-600 hover:text-gray-800'
+                          ? 'border-emerald-400/60 bg-emerald-50 text-emerald-600' 
+                          : 'border-border hover:border-foreground/20 text-muted-foreground hover:text-foreground'
                       }`}
                     >
-                      <IconComponent className="w-8 h-8" />
+                      <IconComponent className="w-6 h-6" />
+                      <span className="text-xs">{platform.name}</span>
                     </button>
-                    
-                    {/* Platform name */}
-                    <div className="text-center mt-2">
-                      <p className="text-xs text-muted-foreground">{platform.name}</p>
-                    </div>
 
                     {/* Delete button for added socials */}
                     {isAdded && existingSocial && (
@@ -471,29 +478,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="glass-card border-accent/20">
-            <CardContent className="p-6 text-center">
-              <h4 className="text-2xl font-bold gradient-text">12.5K</h4>
-              <p className="text-sm text-muted-foreground">Total Visits</p>
-            </CardContent>
-          </Card>
-
-          <Card className="glass-card border-accent/20">
-            <CardContent className="p-6 text-center">
-              <h4 className="text-2xl font-bold gradient-text">2.1K</h4>
-              <p className="text-sm text-muted-foreground">Link Clicks</p>
-            </CardContent>
-          </Card>
-
-          <Card className="glass-card border-accent/20">
-            <CardContent className="p-6 text-center">
-              <h4 className="text-2xl font-bold gradient-text">89%</h4>
-              <p className="text-sm text-muted-foreground">Engagement Rate</p>
-            </CardContent>
-          </Card>
-        </div>
       </div>
 
       {/* Profile Edit Modal */}
