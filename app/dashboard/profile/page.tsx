@@ -337,8 +337,7 @@ export default function Dashboard() {
 
 
     {/*Main Content */}
-    <main className="flex-1 overflow-y-auto bg-gradient-to-br from-background via-muted/20 
-    to-background">
+    <main className="flex-1 overflow-y-auto bg-[#FFF1E5]">
       <div className="max-w-7xl mx-auto px-6 py-6 md:py-8 space-y-8">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
