@@ -1,25 +1,17 @@
 'use client'
 
-import { useState } from "react"
-
-import login from "../assets/LogIN.png"
-
-import axios from "axios";
-
-import  { toast } from "sonner"
-import { signinSchema } from "@/lib/schema";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { FcGoogle } from "react-icons/fc";
-import { SiGithub } from "react-icons/si";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { FcGoogle } from "react-icons/fc";
+import { SiGithub } from "react-icons/si";
+import { toast } from "sonner";
+import { signinSchema } from "@/lib/schema";
+import Image from 'next/image'; // Import the Image component
+import prfpng from "@/public/assets/link.png"; // Your image import
 
-// interface SigninProps {
-//     setIsAuthenticated: (isAuthenticated: boolean) => void;
-// }
-
-export default function Signin()  {
+export default function Signin() {
     const router = useRouter();
     const [formData, setFormData] = useState({
         email: '',
@@ -27,7 +19,6 @@ export default function Signin()  {
     });
 
     const handleChange = (e:any) => {
-        // console.log("I am getting changed ! ")
         const { id, value } = e.target;
         setFormData(prevData => ({
             ...prevData,
@@ -35,129 +26,125 @@ export default function Signin()  {
         }));
     };
 
-    const handleSubmit = async (e:React.SyntheticEvent) => {
+    const handleSubmit = async (e:any) => {
         e.preventDefault();
         const toastId = toast.loading("Signing in...");
-        console.log("Signup submitted:",);
 
+        const { success, data, error } = signinSchema.safeParse(formData);
 
-        const {success,data,error} = signinSchema.safeParse(formData);
-
-
-        if(!success)
-        {
-            toast.error("The Data you enter is invalid", { id: toastId});
+        if (!success) {
+            toast.error("The data you entered is invalid", { id: toastId });
             return;
         }
 
         try {
             const res = await signIn("credentials", {
-                redirect: false, // prevent auto redirect
+                redirect: false,
                 email: formData.email,
                 password: formData.password,
             });
 
-            console.log("Response is ", res);
-        
             if (res?.error) {
                 toast.error("Invalid email or password!", { id: toastId });
             } else {
-                toast.success("Successfully signed in!",  { id: toastId });
-                router.push("/dashboard"); // redirect wherever you want
+                toast.success("Successfully signed in!", { id: toastId });
+                router.push("/dashboard");
             }
-    
-            console.log("Form submitted! ")
-            console.log("The email and password is ", formData.email, "\n Password ",formData.password );
 
-            // setTimeout(() => {
-            //    router.push("/dashboard")
-            // },1500)
-
-        } catch (error: any) {
-            // On error, dismiss the loading toast and show an error toast
-            toast.error(error.message ||
-                 "Network error. Please try again.", {
-                id: toastId, // Dismiss the specific loading toast
+        } catch (error:any) {
+            toast.error(error.message || "Network error. Please try again.", {
+                id: toastId,
             });
         }
     };
 
-
-    const GoogleLoginhandle =async () => {
+    const handleGoogleLogin = async () => {
         const toastId = toast.loading("Signing in with Google...");
         try {
-            
-            console.log("Google button clicked ! ")
             const res = await signIn("google", {
-              redirect: false, // prevent auto redirect
-              callbackUrl: "/dashboard", // where to go after login
+                redirect: false,
+                callbackUrl: "/dashboard",
             });
-        
-            if (res?.error) {
-              toast.error("Google registration failed!",{ id: toastId });
-              console.error("Google registration error:", res.error);
-            } else {
-              toast.success("Successfully Signed in with Google!", { id: toastId });
-              router.push("/dashboard");
-            }
-          } catch (error) {
-            console.error("Unexpected Google registration error:", error);
-            toast.error("Something went wrong. Try again!", { id: toastId });
-          }
-    }
 
-    const handlegitlogin = async () => {
-        const toastId = toast.loading("Signing in with Google...");
+            if (res?.error) {
+                toast.error("Google sign-in failed!", { id: toastId });
+            } else {
+                toast.success("Successfully signed in with Google!", { id: toastId });
+                router.push("/dashboard");
+            }
+        } catch (error) {
+            toast.error("Something went wrong. Please try again!", { id: toastId });
+        }
+    };
+
+    const handleGitHubLogin = async () => {
+        const toastId = toast.loading("Signing in with GitHub...");
         try {
             const res = await signIn("github", {
-              redirect: false, // prevent auto redirect
-              callbackUrl: "/dashboard", // where to go after login
+                redirect: false,
+                callbackUrl: "/dashboard",
             });
-        
+
             if (res?.error) {
-              toast.error("GitHub registration failed!", { id: toastId });
-              console.error("GitHub registration error:", res.error);
+                toast.error("GitHub sign-in failed!", { id: toastId });
             } else {
-              toast.success("Signed in with GitHub!",{ id: toastId });
-              router.push("/dashboard");
+                toast.success("Signed in with GitHub!", { id: toastId });
+                router.push("/dashboard");
             }
-          } catch (error) {
-            console.error("Unexpected GitHub Registration error:", error);
-            toast.error("Something went wrong. Try again!",{ id: toastId });
-          }
-    }
+        } catch (error) {
+            toast.error("Something went wrong. Please try again!", { id: toastId });
+        }
+    };
 
     return (
-        <>
-        <div className="min-h-screen bg-white text-white flex 
-        items-center justify-center p-4 sm:p-6 lg:p-8">
-            <div className="w-full max-w-6xl mx-auto bg-white text-black 
-            rounded-3xl shadow-2xl overflow-hidden 
-            grid grid-cols-1 lg:grid-cols-2">
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-6xl mx-auto bg-[#fffbf0] text-[#2c2c2c] rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
                 {/* Left Side: Signup Form */}
-                <div className="flex flex-col p-8 sm:p-12 lg:p-16">
-                    {/* Logo */}
-                    <div className="flex items-center gap-2 mb-8 sm:mb-12">
-
-                        <span className="text-3xl font-bold ">ClickyDrop</span>
+                <div className="flex-1 p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
+                    {/* Logo and Title */}
+                    <div className="flex flex-col mb-8 sm:mb-12">
+                        <span className="text-4xl sm:text-5xl font-extrabold text-[#161615] leading-tight">
+                            Login to <br /> ClickyDrop
+                        </span>
+                        <p className="text-lg text-gray-500 mt-4">
+                            Manage your links & customize your profile.
+                        </p>
                     </div>
 
-                    {/* Title */}
-                    <h1 className="text-4xl sm:text-5xl font-extrabold 
-                     mb-4 animate-fade-in">
-                        LogIn to your ClickyDrop Manage your links
-                        & customize your profile 
-                    </h1>
+                    {/* Social Login Buttons */}
+                    <div className="flex flex-col gap-4 mb-6">
+                        <button
+                            onClick={handleGoogleLogin}
+                            className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                        >
+                            <FcGoogle className="h-6 w-6" />
+                            <span className="font-semibold">Sign in with Google</span>
+                        </button>
+                        <button
+                            onClick={handleGitHubLogin}
+                            className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                        >
+                            <SiGithub className="h-6 w-6" />
+                            <span className="font-semibold">Sign in with GitHub</span>
+                        </button>
+                    </div>
+
+                    <div className="relative flex items-center py-5">
+                        <div className="flex-grow border-t border-gray-300"></div>
+                        <span className="flex-shrink mx-4 text-gray-400">or continue with</span>
+                        <div className="flex-grow border-t border-gray-300"></div>
+                    </div>
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-6 
-                    flex flex-col mt-10 text-black">
+                    <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
                         <input
                             id="email"
                             type="email"
                             placeholder="Email"
                             value={formData.email}
                             onChange={handleChange}
+                            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
+                            required
                         />
                         <input
                             id="password"
@@ -165,14 +152,12 @@ export default function Signin()  {
                             placeholder="Password"
                             value={formData.password}
                             onChange={handleChange}
+                            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
+                            required
                         />
                         <button
                             type="submit"
-                            className="w-full py-3 
-                            text-lg font-semibold text-[#A8AAA2] 
-                            bg-[#161615] 
-                            hover:text-white
-                            hover:bg-indigo-700 transition-all duration-300 rounded-lg shadow-lg transform hover:scale-105"
+                            className="w-full py-4 text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105"
                         >
                             Sign In
                         </button>
@@ -180,40 +165,27 @@ export default function Signin()  {
                     
                     {/* Note to the user */}
                     <div className="text-center mt-6">
-                        <span className="text-gray-400">
-                           Don't have an account?  
-                           <a href={"/signup"}
-                           className="text-[#8129D9]"
-                           >SignUp</a>
+                        <span className="text-gray-500">
+                           Don't have an account? {" "}
+                           <a href="/signup" className="text-indigo-600 font-semibold hover:underline">
+                               Sign Up
+                           </a>
                         </span>
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-4">
-                {/*add socials here like google and github */}
-                <div className="flex justify-between w-full">
-                    <Button variant="outline" className="w-[75px] h-[40px]"
-                    onClick={GoogleLoginhandle}><FcGoogle 
-                    className="h-10 w-10" /></Button>
-                    <Button variant="outline" className="w-[75px] h-[40px]"
-                    onClick={handlegitlogin}><SiGithub
-                    className="h-10 w-10" /></Button>
-                </div>
-            </div>
-
-                {/* Right Side: Image Collage */}
-                {/* <div className="lg:flex p-6 bg-indigo-900 items-center justify-center relative">
-                    <div className="w-full h-full rounded-2xl overflow-hidden
-                     shadow-xl transform scale-95 transition-transform duration-500">
-                        <img
-                            src={login}
-                            alt="App preview collage"
-                            className="w-full h-full object-cover"
+                {/* Right Side: Image */}
+                <div className="lg:flex flex-1 items-center 
+                justify-center p-6 ">
+                     <div className="w-full h-full max-w-lg">
+                        <Image
+                            src={prfpng}
+                            alt="App preview of a bio link page"
+                            className="w-full h-full object-contain rounded-2xl shadow-xl"
                         />
                     </div>
-                </div> */}
+                </div>
             </div>
-            </div>
-        </>
-    )
+        </div>
+    );
 }

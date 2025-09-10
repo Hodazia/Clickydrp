@@ -4,7 +4,7 @@
     - Sections in the landing page, 
     #DONE
 -> Demo, -> Watch a tutorial to get started,
--> Dashboard -> A dashboard photo of theme editor customize ur quickydrop the way u want
+-> Dashboard -> A dashboard photo of theme editor customize ur clickydrop the way u want
 -> Some very beautiful theme portrayals in the mobile preview , give at least 5
   -> How to style which designs to follow look for the inspirations in designs from figma, dribble
 -> Features for the page! , 
@@ -17,6 +17,8 @@
 import Link from "next/link"
 import { Github } from "lucide-react"
 import { useRouter } from "next/navigation"
+import logovector from "@/public/assets/Vector.svg"; 
+import Image from "next/image";
 
 export default function Hero()
 {
@@ -27,7 +29,13 @@ export default function Hero()
       {/* Header */}
       <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 
       flex justify-between items-center">
-        <div className="text-4xl font-bold text-[#e9c882]">✶ <span className="text-3xl">QucikyDrop</span></div>
+        <div className="flex  gap-1 justify-center items-center text-4xl font-bold text-[#e9c882]">
+          <Image 
+          src={logovector}
+          className=""
+          alt="Logo"
+          /> 
+          <span className="text-3xl">ClickyDrop</span></div>
         <nav className="hidden md:flex space-x-6 text-[#6b6b6b] font-medium">
           <a href="#videodemo" 
           className="hover:text-black transition-colors hover:bg-indigo-600
@@ -79,7 +87,7 @@ export default function Hero()
         </div>
 
         <p className="text-base sm:text-lg mt-8 text-[#2c2c2c] leading-relaxed">
-          QuickyDrop is an open-source alternative to <br className="hidden sm:block" />
+          ClickyDrop is an open-source alternative to <br className="hidden sm:block" />
           Linktree for their bio links!
           <br />
           Have one URL for all of your links
@@ -94,7 +102,7 @@ export default function Hero()
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="flex items-center bg-white border border-gray-200 rounded-full p-2 w-full max-w-sm">
             <span className="text-sm sm:text-base text-[#6b6b6b] pl-3 pr-1 whitespace-nowrap">
-                www.quickydrop.vercel.app/</span>
+                www.clickydrop.vercel.app/</span>
             <input 
               type="text" 
               placeholder="username" 
@@ -107,12 +115,19 @@ export default function Hero()
             className="text-white px-8 py-3 rounded-full 
             font-semibold hover:bg-white hover:text-indigo-600
             bg-indigo-600 hover:ring-2
-            transition-colors w-full sm:w-auto text-center"
+            transition-colors w-full sm:w-auto text-center
+            flex justify-center items-center gap-2
+            
+            "
             onClick={() => {
                 router.push("/signup")
                }}
           >
-            Claim your quickydrop
+            Claim your clickydrop
+            <Image 
+            src={logovector}
+            alt="logobutton"
+            />
           </a>
         </div>
       </main>
