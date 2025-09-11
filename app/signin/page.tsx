@@ -48,7 +48,7 @@ export default function Signin() {
                 toast.error("Invalid email or password!", { id: toastId });
             } else {
                 toast.success("Successfully signed in!", { id: toastId });
-                router.push("/dashboard");
+                router.push("/dashboard/profile"); // route to the profile page,
             }
 
         } catch (error:any) {

@@ -15,6 +15,9 @@ import { Avatar,AvatarFallback,AvatarImage, } from "@radix-ui/react-avatar";
 import { signOut } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import logovector from "@/public/assets/Vector.svg"; 
+
 
 interface Sidebarprop {
   username:string,
@@ -110,15 +113,28 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
             <SidebarHeader className="p-4">
                 <div className="flex items-center gap-3">
                     <Avatar className="h-20 w-20">
-                        <AvatarImage src={profileimg} className="rounded-full h-full w-full object-cover" />
-                        <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
-                            {username.charAt(0)}{description.charAt(0)}
-                        </AvatarFallback>
+                        <div className="flex gap-3">
+                            <Image src={logovector} 
+                            alt="logo"
+                            className="rounded-xl p-1 border border-gray-300 border-2 border-ring-2
+                            h-13 w-13 object-cover bg-indigo-600" />
+                            {/* <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
+                                {username.charAt(0)}{description.charAt(0)}
+                            </AvatarFallback> */}
+                            <div className="text-lg font-bold text-foreground flex justify-center items-center
+                            ">
+                                Clickydrop
+                            </div>
+                        </div>
+  
+                        <div className="text-lg mt-2 font-bold text-indigo-500">
+                            DASHBOARD
+                        </div>
                     </Avatar>
-                    <div className="flex-1 min-w-0">
+                    {/* <div className="flex-1 p-2 min-w-0">
                         <p className="text-lg font-bold text-foreground truncate">{username}</p>
                         <p className="text-sm text-muted-foreground truncate">{description}</p>
-                    </div>
+                    </div> */}
                 </div>
             </SidebarHeader>
 
@@ -167,8 +183,22 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
                                 </SidebarMenuItem>
                             ))} */}
                             <SidebarMenuItem>
-                                <div className="text-black text-xl mb-2">
-                                    {email}
+                                <div className="text-black flex flex-col justify-between text-xl mb-2">
+                                    <div className="flex gap-3 border bg-indigo-300 p-1 rounded-xl">
+                                        {profileimg && (
+                                        <Image 
+                                        src={profileimg}
+                                        alt="profileimage"
+                                        width={50}
+                                        height={50}
+                                        className="rounded-full h-12 w-12 object-cover"
+                                        />
+                                        )}
+                                        <div className="flex jusitfy-center text-white items-center">{username}</div>
+                                    </div>
+                                    <div className="mt-1 bg-teal-200 text-gray-500 rounded-xl
+                                    p-1
+                                    ">{email}</div>
                                 </div>
                                 <Button
                                     variant="ghost"
