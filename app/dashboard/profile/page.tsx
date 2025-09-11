@@ -362,9 +362,9 @@ export default function Dashboard() {
         </div>
 
         {/* Main grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {/* Profile Section (denser) */}
-          <div className="space-y-6 lg:col-span-1">
+          <div className="space-y-6 flex justify-center items-center lg:col-span-1">
             {!profile ? <ProfileSkeleton /> : (
               <Card className="border border-border/60 shadow-sm bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
                 <CardContent className="p-6 md:p-6">

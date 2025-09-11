@@ -14,11 +14,6 @@ type Theme = {
   viewportColor?: string | null
   viewportImage?: string | null
   viewportGradient?: string | null
-  cardType: string
-  cardColor?: string | null
-  cardImage?: string | null
-  cardGradient?: string | null
-  cardBlur?: number | null
   linksBackground?: string | null
   linksFontColor?: string | null
   linksBorderRadius?: number | null
@@ -40,11 +35,6 @@ const defaultTheme: Theme = {
   viewportColor: '#ffffff',
   viewportImage: '',
   viewportGradient: 'linear-gradient(135deg,#e9efff,#fff0f5)',
-  cardType: 'color',
-  cardColor: '#ffffff',
-  cardImage: '',
-  cardGradient: 'linear-gradient(135deg,#ffffff,#fafafa)',
-  cardBlur: 0,
   linksBackground: '#111827',
   linksFontColor: '#ffffff',
   linksBorderRadius: 16,
@@ -61,7 +51,7 @@ const defaultTheme: Theme = {
   profileBorderWidth: 2,
 }
 
-const tabs = ['Background', 'Text', 'Buttons', 'Cards', 'Socials', 'Profile'] as const
+const tabs = ['Background', 'Text', 'Buttons', 'Socials', 'Profile'] as const
 type Tab = typeof tabs[number]
 
 export default function ThemeEditor() {
@@ -77,7 +67,9 @@ export default function ThemeEditor() {
       try {
         const res = await fetch('http://localhost:3000/api/themes', { credentials: 'include' })
         if (!res.ok) throw new Error('Failed to load theme')
+
         const data: Theme = await res.json()
+        console.log("The data from api/themes ",data);
         setTheme({ ...defaultTheme, ...data })
       } catch {
         toast.error('Could not load theme')
@@ -108,35 +100,8 @@ export default function ThemeEditor() {
   const cardStyle = useMemo(() => {
     const style: React.CSSProperties = {
       border: `${theme.profileBorderWidth || 0}px solid ${theme.profileBorderColor || 'transparent'}`,
+      backgroundColor: '#ffffff'
     }
-    if (theme.cardBlur && theme.cardBlur > 0) {
-      style.backgroundColor = '#ffffff'
-      style.backdropFilter = `blur(${theme.cardBlur}px)`
-      // @ts-ignore
-      style.WebkitBackdropFilter = `blur(${theme.cardBlur}px)`
-      return style
-    }
-    if (theme.cardType === 'image' && theme.cardImage) {
-      style.backgroundImage = `url(${theme.cardImage})`
-      style.backgroundSize = 'cover'
-      style.backgroundPosition = 'center'
-      style.backgroundRepeat = 'no-repeat'
-      return style
-    }
-    if (theme.cardType === 'gradient' && theme.cardGradient) {
-      // @ts-ignore
-      style.backgroundImage = theme.cardGradient
-      return style
-    }
-    if (theme.cardType === 'gradient' && theme.cardGradient) {
-      style.background = theme.cardGradient
-      return style
-    }
-    if (theme.cardType === 'image' && theme.cardImage) {
-      style.background = `url(${theme.cardImage}) center/cover no-repeat`
-      return style
-    }
-    style.backgroundColor = theme.cardColor || '#ffffff'
     return style
   }, [theme])
 
@@ -252,7 +217,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-8">
+    <div className="bg-[] grid grid-cols-1  gap-8">
         {/* Controls */}
       <div className="space-y-6">
         {/* Tabs */}
@@ -262,7 +227,8 @@ useEffect(() => {
               key={t}
               onClick={() => setActiveTab(t)}
               className={`px-4 py-2 rounded-lg border transition ${
-                activeTab === t ? 'border-accent text-accent bg-accent/10' : 'border-border hover:bg-muted'
+                activeTab === t ? 'bg-white border border-2 border-ring-2 text-indigo-600' : 
+                `border-border hover:bg-indigo-400 bg-indigo-600 text-white `
               }`}
             >
               {t}
@@ -277,7 +243,9 @@ useEffect(() => {
               <select
                 value={theme.viewportType}
                 onChange={(e) => setTheme((v) => ({ ...v, viewportType: e.target.value }))}
-                className="mt-1 w-full rounded-md border bg-background p-2"
+                className="mt-1 w-full rounded-md border border border-2 border-indigo-200
+                  hover:border-ring-2 p-2"
+                                    
               >
                 <option value="color">Solid Color</option>
                 <option value="gradient">Gradient</option>
@@ -293,10 +261,12 @@ useEffect(() => {
                     type="color"
                     value={theme.viewportColor || '#ffffff'}
                     onChange={(e) => setTheme((v) => ({ ...v, viewportColor: e.target.value }))}
-                    className="h-10 w-10 rounded-md"
+                    className="h-10 w-10 rounded-md "
                   />
                   <Input
                     value={theme.viewportColor || ''}
+                    className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, viewportColor: e.target.value }))}
                   />
                 </div>
@@ -309,6 +279,8 @@ useEffect(() => {
                     <Input
                   placeholder="linear-gradient(135deg,#e9efff,#fff0f5)"
                   value={theme.viewportGradient || ''}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, viewportGradient: e.target.value }))}
                     />
                   </div>
@@ -320,6 +292,8 @@ useEffect(() => {
                     <Input
                   placeholder="https://..."
                   value={theme.viewportImage || ''}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, viewportImage: e.target.value }))}
                 />
               </div>
@@ -340,6 +314,8 @@ useEffect(() => {
                     />
                     <Input
                   value={theme.bioFontColor || ''}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontColor: e.target.value }))}
                 />
               </div>
@@ -353,6 +329,8 @@ useEffect(() => {
                   min={10}
                   max={28}
                   value={theme.bioFontSize || 16}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontSize: Number(e.target.value) }))}
                 />
               </div>
@@ -361,6 +339,8 @@ useEffect(() => {
                 <Input
                   placeholder="Inter, Roboto, ..."
                   value={theme.bioFontFamily || ''}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontFamily: e.target.value }))}
                     />
                   </div>
@@ -382,6 +362,8 @@ useEffect(() => {
                   />
                   <Input
                     value={theme.linksBackground || ''}
+                    className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, linksBackground: e.target.value }))}
                   />
                 </div>
@@ -397,6 +379,8 @@ useEffect(() => {
                   />
                   <Input
                     value={theme.linksFontColor || ''}
+                    className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, linksFontColor: e.target.value }))}
                   />
                 </div>
@@ -411,6 +395,8 @@ useEffect(() => {
                   min={0}
                   max={30}
                   value={theme.linksBorderRadius || 16}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, linksBorderRadius: Number(e.target.value) }))}
                 />
               </div>
@@ -421,6 +407,8 @@ useEffect(() => {
                   min={4}
                   max={32}
                   value={theme.linksSpacing || 12}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, linksSpacing: Number(e.target.value) }))}
                 />
               </div>
@@ -435,6 +423,8 @@ useEffect(() => {
                   />
                   <Input
                     value={theme.linksHoverColor || ''}
+                    className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, linksHoverColor: e.target.value }))}
                   />
                 </div>
@@ -443,67 +433,7 @@ useEffect(() => {
           </Section>
         )}
 
-        {activeTab === 'Cards' && (
-          <Section title="Card Settings">
-            <div>
-              <Label className="text-sm">Card Type</Label>
-              <select
-                value={theme.cardType}
-                onChange={(e) => setTheme((v) => ({ ...v, cardType: e.target.value }))}
-                className="mt-1 w-full rounded-md border bg-background p-2"
-              >
-                <option value="color">Solid Color</option>
-                <option value="gradient">Gradient</option>
-                <option value="image">Image URL</option>
-              </select>
-            </div>
-            {theme.cardType === 'color' && (
-              <div>
-                <Label className="text-sm">Card Color</Label>
-                <div className="mt-1 flex items-center gap-3">
-                  <input
-                    type="color"
-                    value={theme.cardColor || '#ffffff'}
-                    onChange={(e) => setTheme((v) => ({ ...v, cardColor: e.target.value }))}
-                    className="h-10 w-10 rounded-md"
-                  />
-                  <Input
-                    value={theme.cardColor || ''}
-                    onChange={(e) => setTheme((v) => ({ ...v, cardColor: e.target.value }))}
-                  />
-                </div>
-              </div>
-            )}
-            {theme.cardType === 'gradient' && (
-              <div>
-                <Label className="text-sm">Card Gradient</Label>
-                <Input
-                  value={theme.cardGradient || ''}
-                  onChange={(e) => setTheme((v) => ({ ...v, cardGradient: e.target.value }))}
-                />
-              </div>
-            )}
-            {theme.cardType === 'image' && (
-              <div>
-                <Label className="text-sm">Card Image URL</Label>
-                <Input
-                  value={theme.cardImage || ''}
-                  onChange={(e) => setTheme((v) => ({ ...v, cardImage: e.target.value }))}
-                />
-              </div>
-            )}
-            <div>
-              <Label className="text-sm">Card Blur (px)</Label>
-              <Input
-                type="number"
-                    min={0}
-                max={10}
-                value={theme.cardBlur || 0}
-                onChange={(e) => setTheme((v) => ({ ...v, cardBlur: Number(e.target.value) }))}
-              />
-            </div>
-          </Section>
-        )}
+        {/* Cards tab removed per new schema */}
 
         {activeTab === 'Socials' && (
           <Section title="Social Icon Settings">
@@ -515,10 +445,12 @@ useEffect(() => {
                     type="color"
                     value={theme.socialsIconColor || '#111827'}
                     onChange={(e) => setTheme((v) => ({ ...v, socialsIconColor: e.target.value }))}
-                    className="h-10 w-10 rounded-md"
+                    className="h-10 w-10 rounded-md "
                   />
                   <Input
                     value={theme.socialsIconColor || ''}
+                    className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, socialsIconColor: e.target.value }))}
                   />
                 </div>
@@ -534,6 +466,8 @@ useEffect(() => {
                   />
                   <Input
                     value={theme.socialsIconHoverColor || ''}
+                    className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, socialsIconHoverColor: e.target.value }))}
                   />
                 </div>
@@ -545,6 +479,8 @@ useEffect(() => {
                   min={12}
                   max={28}
                   value={theme.socialsSize || 18}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, socialsSize: Number(e.target.value) }))}
                 />
               </div>
@@ -560,7 +496,8 @@ useEffect(() => {
                 <select
                   value={theme.profileShape}
                   onChange={(e) => setTheme((v) => ({ ...v, profileShape: e.target.value }))}
-                  className="mt-1 w-full rounded-md border bg-background p-2"
+                  className="mt-1 w-full rounded-md border border-2 border-indigo-200
+                  hover:border-ring-2 p-1"
                 >
                   <option value="circle">Circle</option>
                   <option value="rounded">Rounded</option>
@@ -571,6 +508,8 @@ useEffect(() => {
                 <Label className="text-sm">Border Color</Label>
                 <Input
                   value={theme.profileBorderColor || ''}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, profileBorderColor: e.target.value }))}
                 />
               </div>
@@ -581,6 +520,8 @@ useEffect(() => {
                   min={0}
                   max={12}
                   value={theme.profileBorderWidth || 0}
+                  className='border border-2 border-indigo-200
+                  hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, profileBorderWidth: Number(e.target.value) }))}
                 />
               </div>
@@ -589,7 +530,10 @@ useEffect(() => {
         )}
 
         <div className="flex justify-end">
-          <Button onClick={handleSubmit} disabled={submitting} className="px-6">
+          <Button onClick={handleSubmit} disabled={submitting} className="px-6
+          bg-indigo-600 text-white hover:bg-white hover:text-indigo-600 hover:border-ring-2 
+          hover:border-indigo-600 hover:border-2
+          ">
             Save Changes
             <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -605,19 +549,24 @@ useEffect(() => {
             <div className="flex items-center justify-center">
               <div className="relative w-[340px] h-[720px] md:w-[360px]
                md:h-[740px] rounded-[2.5rem] border-[10px] border-black/90 
-               shadow-2xl overflow-hidden">
+               shadow-2xl overflow-hidden bg-black/5">
                 {/* Screen area */}
                 <div className="absolute inset-[10px] rounded-[2rem] overflow-hidden">
                   {/* fixed background layer inside the phone (does not scroll) */}
           <div
             className="absolute inset-0 -z-10"
-                    style={previewStyle}
+                    style={{
+                      ...previewStyle,
+                      backgroundSize: (theme.viewportType === 'image') ? 'cover' : undefined,
+                      backgroundPosition: (theme.viewportType === 'image') ? 'center' : undefined,
+                      backgroundRepeat: (theme.viewportType === 'image') ? 'no-repeat' : undefined,
+                    }}
                   />
                   {/* Scrollable content layer */}
                   <div className="relative h-full w-full overflow-y-auto bg-transparent">
                     <div className="min-h-full w-full px-4 py-5 flex flex-col items-center">
                       <div
-                        className="w-full rounded-3xl p-4 border"
+                        className="w-full rounded-3xl p-4 border shadow-sm bg-white/80 backdrop-blur"
                         style={cardStyle}
                       >
                         <div className="flex flex-col items-center">

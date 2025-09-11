@@ -71,7 +71,7 @@ export default function ThemePage() {
           description={profile?.description || ''}
         />
 
-        <main className="flex-1 p-6 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100">
+        <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] text-[#2c2c2c]">
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="flex items-center justify-between">
               <div>

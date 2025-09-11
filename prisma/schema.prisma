@@ -94,11 +94,12 @@ model Theme {
   viewportGradient String? 
 
   // CARD
-  cardType         String   @default("color")  // "color" | "gradient" | "image"
-  cardColor        String? 
-  cardImage        String? 
-  cardGradient     String? 
-  cardBlur         Int?     // 0–100 (%)
+  // cardType         String   @default("color")  // "color" | "gradient" | "image"
+  // cardColor        String? 
+  // cardImage        String? 
+  // cardGradient     String? 
+  // cardBlur         Int?     // 0–100 (%)
+  // no need for the above all the links will have a viewport background only no card layout| no card background
 
   // LINKS
   linksBackground   String?
