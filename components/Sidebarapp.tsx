@@ -153,7 +153,7 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu className="space-y-2">
-                            {bottomItems.map((item) => (
+                            {/* {bottomItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <Link
@@ -165,8 +165,11 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-                            ))}
+                            ))} */}
                             <SidebarMenuItem>
+                                <div className="text-black text-xl mb-2">
+                                    {email}
+                                </div>
                                 <Button
                                     variant="ghost"
                                     className="w-full hover:bg-destructive/20 hover:text-destructive rounded-lg p-3 justify-start flex items-center space-x-3"

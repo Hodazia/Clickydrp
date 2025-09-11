@@ -11,6 +11,9 @@ import { useProtectedRoute } from "@/lib/hooks/useprotected";
 import { AppSidebar } from "@/components/Sidebarapp";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import linklogo from "@/public/assets/links-link-svgrepo-com.svg"
+import DashboardLoader from "@/components/Loader";
 
 interface Link {
   id: string;
@@ -30,7 +33,7 @@ export default function LinksManager() {
   const [links, setLinks] = useState<Link[]>([]);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [expandedLinks, setExpandedLinks] = useState<Set<string>>(new Set());
+  const [expandedLinkId, setExpandedLinkId] = useState<string | null>(null);
   const [editingLinks, setEditingLinks] = useState<Set<string>>(new Set());
 
   const { session, status } = useProtectedRoute();
@@ -139,17 +142,10 @@ export default function LinksManager() {
     );
   };
 
-  // Toggle expanded state
-  const toggleExpanded = (id: string) => {
-    setExpandedLinks(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
+  // Toggle expanded state (single expanded card at a time)
+  const toggleExpanded = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Stop the event from bubbling
+    setExpandedLinkId(prev => (prev === id ? null : id));
   };
 
   // Toggle editing state
@@ -177,7 +173,7 @@ export default function LinksManager() {
 
   // Handle loading and redirect logic
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <p><DashboardLoader /></p>;
   }
 
   if (!session) {
@@ -199,17 +195,30 @@ export default function LinksManager() {
         />
 
         {/* Main Content */}
-        <main className="flex-1 p-6 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100">
-          <div className="max-w-4xl mx-auto space-y-8">
+        <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] text-[#2c2c2c]">
+          <div className="max-w-6xl mx-auto space-y-8">
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold gradient-text">Link Manager</h1>
-                <p className="text-muted-foreground mt-1">Create and manage your links</p>
+
+                <div className="flex items-center justify-center">
+                    <Image 
+                    src={linklogo}
+                    className="w-10 h-10"
+                    alt="vector image"
+                    />
+                    <h1 className="text-3xl font-bold gradient-text">
+                    Link Manager</h1>
+                </div>
+
+                <p className="text-muted-foreground text-md mt-1">Create and manage your links</p>
               </div>
               <Button
                 onClick={handleAdd}
-                className="glass-card border-accent/30 hover:border-accent/50"
+                className="glass-card border border-indigo-200 hover:border-accent/50 bg-white
+                text-indigo-600 
+                hover:bg-indigo-600 hover:text-white
+                "
                 size="lg"
               >
                 <Plus className="w-5 h-5 mr-2" />
@@ -221,28 +230,33 @@ export default function LinksManager() {
               <div className="flex items-center justify-center py-12">
                 <div className="flex items-center space-x-3">
                   <Loader2 className="animate-spin w-6 h-6 text-accent" />
-                  <span className="text-muted-foreground">Loading your links...</span>
+                  <span className="text-muted-foreground">
+
+                    <DashboardLoader />
+                  </span>
                 </div>
               </div>
             )}
 
-            {/* Links Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Links Masonry */}
+            <div className="flex flex-wrap -mx-3">
+              {/* Masonry via CSS columns to avoid equal-height rows */}
               {links.map((link) => {
-                const isExpanded = expandedLinks.has(link.id);
+                const isExpanded = expandedLinkId === link.id;
                 const isEditing = editingLinks.has(link.id);
                 const isNewLink = link.id.startsWith("temp-");
 
                 return (
+                  <div key={link.id} className="w-full sm:w-1/2 lg:w-1/3 px-3 mb-6">
                   <Card
-                    key={link.id}
-                    className={`glass-card border-accent/20 transition-all duration-300 hover:shadow-lg ${
+                    className={`glass-card border-indigo-200 transition-all
+                       duration-300 hover:shadow-lg ${
                       isNewLink ? 'ring-2 ring-accent/30' : ''
                     }`}
                   >
                     <CardContent className="p-6">
                       {/* Link Header */}
-                      <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           {link.linkThumbnail && typeof link.linkThumbnail === "string" && (
                             <img
@@ -266,7 +280,10 @@ export default function LinksManager() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => window.open(link.linkUrl, '_blank')}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(link.linkUrl, '_blank', 'noopener,noreferrer');
+                              }}
                               className="h-8 w-8 p-0"
                             >
                               <ExternalLink className="w-4 h-4" />
@@ -276,8 +293,10 @@ export default function LinksManager() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => toggleExpanded(link.id)}
+                            onClick={(e) => toggleExpanded(link.id, e)}
                             className="h-8 w-8 p-0"
+                            aria-expanded={isExpanded}
+                            aria-controls={`link-panel-${link.id}`}
                           >
                             {isExpanded ? (
                               <ChevronUp className="w-4 h-4" />
@@ -290,7 +309,7 @@ export default function LinksManager() {
 
                       {/* Expanded Content */}
                       {isExpanded && (
-                        <div className="space-y-4 border-t pt-4">
+                        <div id={`link-panel-${link.id}`} className="space-y-4 border-t pt-4">
                           {isEditing ? (
                             // Edit Mode
                             <div className="space-y-4">
@@ -357,7 +376,9 @@ export default function LinksManager() {
                                 <Button
                                   size="sm"
                                   onClick={() => handleSaveAndExit(link)}
-                                  className="flex-1"
+                                  className="flex-1 text-indigo-600 bg-white border-2 border-indigo-200
+                                  border-ring-2
+                                  hover:bg-indigo-600 hover:text-white"
                                 >
                                   <Save className="w-4 h-4 mr-2" />
                                   Save
@@ -398,9 +419,9 @@ export default function LinksManager() {
                                 {!isNewLink && (
                                   <Button
                                     size="sm"
-                                    variant="destructive"
                                     onClick={() => handleDelete(link.id)}
-                                    className="flex-1"
+                                    className="flex-1 bg-white border-2 border-indigo-200
+                                     text-indigo-600 hover:bg-indigo-600 hover:text-white"
                                   >
                                     <Trash2 className="w-4 h-4 mr-2" />
                                     Delete
@@ -413,6 +434,7 @@ export default function LinksManager() {
                       )}
                     </CardContent>
                   </Card>
+                  </div>
                 );
               })}
             </div>
@@ -427,7 +449,8 @@ export default function LinksManager() {
                 <p className="text-muted-foreground mb-6">Get started by adding your first link</p>
                 <Button
                   onClick={handleAdd}
-                  className="glass-card border-accent/30 hover:border-accent/50"
+                  className="glass-card border-2 border-indigo-200 bg-white text-indigo-600
+                  hover:text-white hover:bg-indigo-600"
                 >
                   <Plus className="w-5 h-5 mr-2" />
                   Add Your First Link

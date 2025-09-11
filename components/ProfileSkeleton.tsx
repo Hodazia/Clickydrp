@@ -33,9 +33,9 @@ const ProfileSkeleton = () => {
         </div>
 
         </div>
-        <div className='h-10 w-20 rounded-md bg-gray-200 shimmer-bg'>
+        {/* <div className='h-10 w-20 rounded-md bg-gray-200 shimmer-bg'>
 
-        </div>
+        </div> */}
         </div>
         </div>
   );

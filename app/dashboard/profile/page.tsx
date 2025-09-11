@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
-import { Edit, Plus, X, Trash2 } from "lucide-react";
+import { Edit, X, Trash2, Check } from "lucide-react";
 import { useProtectedRoute } from "@/lib/hooks/useprotected";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,6 +17,8 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import SocialMoal from "@/components/social-modal";
 import DashboardLoader from "@/components/Loader";
 import ProfileSkeleton from "@/components/ProfileSkeleton";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Social {
   id: string;
@@ -337,162 +339,171 @@ export default function Dashboard() {
 
 
     {/*Main Content */}
-    <main className="flex-1 overflow-y-auto bg-[#FFF1E5]">
-      <div className="max-w-7xl mx-auto px-6 py-6 md:py-8 space-y-8">
-        {/* Header */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-1">
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Profile Dashboard</h1>
-            <p className="text-muted-foreground">Manage your profile and social presence</p>
+    <main className="flex-1 overflow-y-auto bg-[#fffbf0] text-[#2c2c2c]">
+      <div className="max-w-7xl mx-auto px-6 py-6 md:py-8 space-y-6">
+        {/* Header with hierarchy */}
+        <div className="space-y-4">
+          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-1">
+              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Profile</h1>
+              <p className="text-muted-foreground">Manage your profile and social presence</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => setIsEditModalOpen(true)}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-500 hover:to-purple-500 shadow-md px-5"
+              >
+                <Edit className="h-4 w-4 mr-2" /> Edit profile
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button
-            className="bg-indigo-600 hover:bg-gray-100
-          hover:ring-2 hover:ring-indigo-600 hover:text-black"
-            onClick={() => setIsEditModalOpen(true)}>
-              <Edit className="h-4 w-4 mr-2" /> Edit Profile
-            </Button>
-          </div>
+
+          <Separator className="bg-indigo-100" />
         </div>
 
-        {/* Profile Section */}
-
-        {!profile ? <ProfileSkeleton /> : (
-          <Card className="border border-border/60 shadow-sm bg-card/70 
-          backdrop-blur supports-[backdrop-filter]:bg-card/60
-          ">
-            <CardContent className="p-6 md:p-8">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                  <div className="relative">
-                    <Avatar className="h-20 w-20 md:h-24 md:w-24 ring-1 border-indigo-100">
-                      <AvatarImage src={profile.profileimg} />
-                      <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-2xl">
-                        {profile.username.split(" ").map((n) => n[0]).join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-
-                  <div className="flex-1 text-center sm:text-left">
-                    <h2 className="text-2xl font-bold text-foreground">@{profile.username}</h2>
-                    <p className="text-black text-xl">{profile.email}</p>
-                    {profile.description && (
-                      <p className="mt-1 text-black text-xl max-w-2xl">{profile.description}</p>
-                    )}
-                    <div className="mt-4 flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-                      <span className="inline-flex items-center rounded-full border
-                      border-indigo-200 hover:bg-indigo-600
-                      hover:text-white 
-                      px-3 py-1 text-md text-muted-foreground">Member</span>
+        {/* Main grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Profile Section (denser) */}
+          <div className="space-y-6 lg:col-span-1">
+            {!profile ? <ProfileSkeleton /> : (
+              <Card className="border border-border/60 shadow-sm bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+                <CardContent className="p-6 md:p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="relative">
+                      <Avatar className="h-16 w-16 md:h-20 md:w-20 ring-1 border-indigo-100 cursor-pointer" onClick={() => setIsEditModalOpen(true)}>
+                        <AvatarImage src={profile.profileimg} />
+                        <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
+                          {profile.username.split(" ").map((n) => n[0]).join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-2xl font-semibold text-foreground truncate">@{profile.username}</h2>
+                      <p className="text-black text-md truncate">{profile.email}</p>
+                      {profile.description && (
+                        <p className="mt-2 text-black text-md line-clamp-3">{profile.description}</p>
+                      )}
+                      <div className="mt-3 flex items-center gap-2">
+                        <span className="inline-flex items-center rounded-full
+                         border border-indigo-200 px-2.5 py-0.5 text-sm
+                         text-emerald-700
+                         bg-emerald-50 text-muted-foreground">Member</span>
+                      </div>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Social Links Section (wider) */}
+          <div className="lg:col-span-2">
+            <Card className="border border-border/60 shadow-sm bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+              <CardContent className="p-6 md:p-6">
+                <div className="mb-4">
+                  <h3 className="text-2xl font-semibold text-foreground">Social Links</h3>
+                  <p className="text-md text-black/80 mt-2 mb-2">Add social links to your app! </p>
+                  <p className="text-md text-black/80 mb-2">They will appear on top of your regular Links.</p>
                 </div>
 
-                <div className="flex gap-2 self-center lg:self-start">
-                  <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}
-                    className="hover:bg-gray-100 bg-indigo-600 text-white
-                              hover:ring-2 hover:ring-indigo-600 
-                              hover:text-black"
-                    >
-                    <Edit className="h-4 w-4 mr-2" /> Edit
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Social Links Section */}
-        <Card className="border border-border/60 shadow-sm bg-card/70
-         backdrop-blur supports-[backdrop-filter]:bg-card/60">
-          <CardContent className="p-6 md:p-3">
-            <div className="text-center mb-8">
-              <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-4 rounded-full"></div>
-              <h3 className="text-2xl font-bold text-foreground mb-2">Social Links</h3>
-              <p className="text-xl text-black ">They will appear on top of your regular Links.</p>
-            </div>
-
-            {/* Social Icons Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
-              {socialPlatforms.map((platform) => {
-                const IconComponent = platform.icon;
-                const isAdded = isSocialAdded(platform.key);
-                const existingSocial = socials.find(s => s.platform === platform.key);
-                
-                return (
-                  <div key={platform.key} className="relative group">
-                    <button
-                      onClick={() => existingSocial ? handleEditSocial(existingSocial) : handleSocialClick(platform.key)}
-                      className={`w-full h-20 rounded-xl border transition-all duration-200 flex flex-col items-center justify-center gap-2 group-hover:shadow-sm ${
-                        isAdded 
-                          ? 'border-emerald-400/60 hover:bg-indigo-400 hover:ring-1 bg-indigo-600 text-white' 
-                          : 'border-border hover:border-indigo-200 hover:ring-2 text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      <IconComponent className="w-6 h-6" />
-                      <span className="text-xs">{platform.name}</span>
-                    </button>
-
-                    {/* Delete button for added socials */}
-                    {isAdded && existingSocial && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteSocial(existingSocial.id);
-                        }}
-                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Added Social Links Display */}
-            {socials.length > 0 && (
-              <div className="mt-5">
-                <h4 className="text-lg font-semibold text-foreground mb-4 ml-2">Your Social Links</h4>
-                <div className="space-y-2">
-                  {socials.map((social) => {
-                    const IconComponent = getSocialIcon(social.platform);
+                {/* Social Icons Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 mb-6">
+                  {socialPlatforms.map((platform) => {
+                    const IconComponent = platform.icon;
+                    const isAdded = isSocialAdded(platform.key);
+                    const existingSocial = socials.find(s => s.platform === platform.key);
+                    
                     return (
-                      <div key={social.id} className="flex items-center justify-between
-                       p-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-400 hover:ring-1">
-                        <div className="flex items-center gap-3 min-w-0">
-                          {IconComponent && <IconComponent className="w-5 h-5 text-white" />}
-                          <div className="flex-1 overflow-hidden">
-                            <p className="font-medium text-sm capitalize">{social.platform}</p>
-                            <p className="text-xs text-white w-full h-full truncate">{social.url}</p>
+                      <div key={platform.key} className="relative group">
+                        <button
+                          onClick={() => existingSocial ? handleEditSocial(existingSocial) : handleSocialClick(platform.key)}
+                          className={`w-full h-24 rounded-2xl border transition-all duration-200 flex flex-col items-center justify-center gap-2 group-hover:shadow ${
+                            isAdded 
+                              ? 'border-emerald-300/70 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white ring-1 ring-emerald-300/40 hover:translate-y-[-2px]'
+                              : 'border-border bg-white/70 hover:bg-white text-muted-foreground hover:text-foreground hover:translate-y-[-2px]'
+                          }`}
+                        >
+                          <div className={`w-9 h-9 rounded-full flex items-center justify-center ${isAdded ? 'bg-white/20' : 'bg-indigo-50'}`}>
+                            <IconComponent className={`w-5 h-5 ${isAdded ? 'text-white' : 'text-indigo-600'}`} />
                           </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditSocial(social)}
-                            className="h-8 w-8 p-0"
+                          <span className="text-xs font-medium">{platform.name}</span>
+                        </button>
+
+                        {/* Added badge */}
+                        {isAdded && (
+                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow">
+                            <Check className="w-3.5 h-3.5" />
+                          </div>
+                        )}
+
+                        {/* Delete button for added socials */}
+                        {isAdded && existingSocial && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteSocial(existingSocial.id);
+                            }}
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600 shadow"
                           >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteSocial(social.id)}
-                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                            <X className="w-3 h-3" />
+                          </button>
+                        )}
                       </div>
                     );
                   })}
                 </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+
+                {/* Added Social Links Display */}
+                {socials.length > 0 && (
+                  <div className="mt-2">
+                    <Separator className="my-4" />
+                    <h4 className="text-sm font-semibold text-foreground mb-3">Your Social Links</h4>
+                    <div className="space-y-2">
+                      {socials.map((social) => {
+                        const IconComponent = getSocialIcon(social.platform);
+                        return (
+                          <div key={social.id} className="flex items-center justify-between p-3 bg-white 
+                          rounded-lg border border-indigo-100 hover:border-indigo-200
+                           hover:bg-indigo-600 hover:text-white ">
+                            <div className="flex items-center gap-3 
+                            min-w-0 hover:text-white">
+                              <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center">
+                                {IconComponent && <IconComponent className="w-4 h-4 
+                                text-indigo-700" />}
+                              </div>
+                              <div className="flex-1 overflow-hidden">
+                                <p className="font-medium text-sm capitalize  ">{social.platform}</p>
+                                <p className="text-xs  w-full truncate ">{social.url}</p>
+                              </div>
+                            </div>
+                            <div className="flex gap-1.5">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleEditSocial(social)}
+                                className="h-8 px-2"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDeleteSocial(social.id)}
+                                className="h-8 px-2 text-red-500 hover:text-red-700"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
       </div>
 
