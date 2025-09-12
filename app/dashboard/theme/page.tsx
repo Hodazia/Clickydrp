@@ -73,14 +73,15 @@ export default function ThemePage() {
 
         <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] text-[#2c2c2c]">
           <div className="max-w-6xl mx-auto space-y-8">
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold gradient-text">Theme Editor</h1>
                 <p className="text-muted-foreground mt-1">Customize the appearance of your link page</p>
               </div>
-            </div>
+            </div> */}
             <ThemeEditor />
           </div>
+          
         </main>
       </div>
     </SidebarProvider>

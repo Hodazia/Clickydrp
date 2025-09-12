@@ -101,7 +101,7 @@ export default function Username() {
         }
         return {
             ...backgroundProps,
-            border: `${theme?.profileBorderWidth || 0}px solid ${theme?.profileBorderColor || 'transparent'}`,
+            border: `${theme?.profileBorderWidth || 0}px solid transparent`,
         }
     }, [theme]);
 
@@ -110,7 +110,9 @@ export default function Username() {
     }
 
     if (!usermeta) {
-        return <p className="text-center mt-10">No data found!</p>;
+        return <p className="text-center mt-10">
+            <DashboardLoader />
+        </p>;
     }
 
     const viewportBgStyle = theme?.viewportType === 'image' && theme?.viewportImage
@@ -122,7 +124,8 @@ export default function Username() {
     return (
         <>
             <div
-                className="relative min-h-screen w-full flex flex-col items-center justify-start px-4 py-10"
+                className="relative min-h-screen w-full flex
+                 flex-col items-center justify-start px-4 py-3"
                 style={viewportBgStyle}
             >
                 {/* readability overlay over the background */}
@@ -130,7 +133,7 @@ export default function Username() {
                 {/* Card container */}
                 <div
                     className="relative w-full max-w-md flex flex-col 
-                    items-center rounded-3xl p-6 md:p-8  md:max-w-xl
+                    items-center rounded-3xl pt-2 md:pt-3 pb-6  md:max-w-xl
                      "
                     style={cardStyle}
                 >
@@ -140,14 +143,23 @@ export default function Username() {
                         <img
                             src={usermeta.profileimg}
                             alt={usermeta.username}
-                            className="w-28 h-28 rounded-full border-4 border-white/80 shadow-xl ring-4 ring-white/20 object-cover md:w-32 md:h-32"
+                            className="w-25 h-25 rounded-full border-4 
+                             shadow-xl ring-4 
+                             object-cover "
                         />
 
                         {/* Username + description */}
-                        <h1 className="mt-4 text-2xl md:text-3xl font-semibold tracking-tight text-gray-900/90">
+                        <h1 className="mt-4 text-2xl md:text-5xl font-semibold tracking-tight text-gray-900/90"
+                        style={{
+                            color:theme?.bioFontColor || '#ffffff'
+                        }}>
                             {usermeta.username}
                         </h1>
-                        <p className="mt-2 text-center text-gray-700/90 max-w-prose">
+                        <p className="mt-2 text-center  max-w-prose"
+                        style={{
+                            color:theme?.bioFontColor || '#ffffff',
+                            fontSize:theme?.bioFontSize || "20px"
+                        }}>
                             {usermeta.description}
                         </p>
 
@@ -162,24 +174,24 @@ export default function Username() {
                                     const color = hoveredSocialIdx === idx ?
                                         (theme?.socialsIconHoverColor || '#000') :
                                         (theme?.socialsIconColor || '#111827');
-                                    const size = (theme?.socialsSize || 18) + 4;
+                                    const size = (theme?.socialsSize) + 'px';
 
                                     return (
-                                        <a
+                                        <Link
                                             key={social.platform + idx}
                                             href={social.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             onMouseEnter={() => setHoveredSocialIdx(idx)}
                                             onMouseLeave={() => setHoveredSocialIdx(null)}
-                                            className="inline-flex"
+                                            className="inline-flex hover:scale-110 transition duration-300"
                                             aria-label={social.platform}
                                         >
                                             <IconComponent
                                                 className="transition-colors"
                                                 style={{ color, width: size, height: size }}
                                             />
-                                        </a>
+                                        </Link>
                                     );
                                 })}
                             </div>
@@ -187,56 +199,63 @@ export default function Username() {
                     </div>
 
                     {/* Scrollable Links Section */}
-                    <div className="w-full mt-6 space-y-4 flex flex-col flex-grow overflow-y-auto max-h-[60vh]">
+                    <div className="w-full mt-6 space-y-4 flex flex-col 
+                    flex-grow overflow-y-auto max-h-[60vh]">
                         {usermeta.links?.map((link, idx) => (
-                            <a
+                            <Link
                                 key={link.description}
                                 href={link.linkUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onMouseEnter={() => setHoveredLinkIdx(idx)}
                                 onMouseLeave={() => setHoveredLinkIdx(null)}
-                                className="w-full flex items-center gap-4 p-3 font-medium transition-all rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] text-white"
+                                className="w-full flex items-center  gap-4 p-3
+                                 font-medium transition-all rounded-full 
+                                 shadow-md hover:shadow-lg hover:scale-[1.02] text-white"
                                 style={{
                                     color: theme?.linksFontColor || '#ffffff',
                                     background: hoveredLinkIdx === idx ? (theme?.linksHoverColor || '#1f2937') :
                                         (theme?.linksBackground || '#111827'),
-                                    borderRadius: (theme?.linksBorderRadius || 16) + 'px',
+                                    borderRadius: (theme?.linksBorderRadius) + 'px',
                                     marginTop: idx === 0 ? 0 : (theme?.linksSpacing || 12),
                                 }}
                             >
+                                <div className="flex gap-10">
                                 <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-200/80 flex-shrink-0 md:w-16 md:h-16">
-                                    {link.linkThumbnail ? (
-                                        <img src={link.linkThumbnail} alt="Link Thumbnail" className="w-full h-full object-cover" />
-                                    ) : null}
+                                        {link.linkThumbnail ? (
+                                            <img src={link.linkThumbnail} alt="Link Thumbnail"
+                                            className="w-full h-full object-cover" />
+                                        ) : null}
+                                    </div>
+                                    <div className="flex justify-center text-[25px] lg:text-[18px] items-center">
+                                        {link.description || link.linkUrl}
+                                        </div>
+                                
                                 </div>
-                                <div className="flex-1 justify-center truncate">{link.description || link.linkUrl}</div>
-                            </a>
+                                    
+                        </Link>
                         ))}
                     </div>
-
-                    {/*logo preview */}
-
-                  <div className="flex justify-center items-center absolute bottom-4">
-                        <Link
-                            href="/signin" 
-                            className="text-white px-4 py-3 rounded-full 
-                            font-semibold hover:bg-white hover:text-indigo-600
-                            bg-indigo-600 hover:ring-2
-                            transition-colors w-full sm:w-auto text-center
-                            flex justify-center items-center gap-2
-                            
-                            "
-                        >
-                            Claim your own clickydrop
-                            <Image 
-                            src={logo}
-                            alt="logobutton"
-                            className='w-8 h-8 hover:text-indigo-800'
-                            />
-                        </Link>
-                        </div>
-                </div>
+                                   
+               </div>
+     
+            </div>
+            {/* Claim your own clickydrop div - Positioned fixed at the bottom */}
+            <div className="fixed bottom-0 left-0 right-0 p-2 w-full flex justify-center items-center bg-transparent z-50">
+                <Link
+                    href="/signin" 
+                    className="text-white px-4 py-3 rounded-full 
+                    font-semibold hover:bg-white hover:text-indigo-600
+                    bg-indigo-600 hover:ring-2 transition-colors w-full sm:w-auto text-center
+                    flex justify-center items-center gap-2 shadow-xl"
+                >
+                    Claim your own clickydrop
+                    <Image 
+                        src={logo}
+                        alt="logobutton"
+                        className='w-8 h-8 hover:text-indigo-800'
+                    />
+                </Link>
             </div>
         </>
     )

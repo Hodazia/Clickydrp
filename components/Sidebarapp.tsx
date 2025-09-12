@@ -121,15 +121,16 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
                             {/* <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
                                 {username.charAt(0)}{description.charAt(0)}
                             </AvatarFallback> */}
-                            <div className="text-lg font-bold text-foreground flex justify-center items-center
+                            <div className="text-lg font-bold text-gray-600
+                             flex justify-center items-center
                             ">
                                 Clickydrop
                             </div>
                         </div>
   
-                        <div className="text-lg mt-2 font-bold text-indigo-500">
+                        {/* <div className="text-lg mt-2 font-bold text-indigo-500">
                             DASHBOARD
-                        </div>
+                        </div> */}
                     </Avatar>
                     {/* <div className="flex-1 p-2 min-w-0">
                         <p className="text-lg font-bold text-foreground truncate">{username}</p>
@@ -140,7 +141,7 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
 
             <SidebarContent className="border border-t-indigo-600 px-3 py-4">
                 <SidebarGroup>
-                    <SidebarGroupLabel className="text-muted-foreground 
+                    <SidebarGroupLabel className="text-base
                     uppercase tracking-wider text-xl p-3 mb-2">
                         Main Menu
                     </SidebarGroupLabel>
@@ -184,7 +185,9 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
                             ))} */}
                             <SidebarMenuItem>
                                 <div className="text-black flex flex-col justify-between text-xl mb-2">
-                                    <div className="flex gap-3 border bg-indigo-300 p-1 rounded-xl">
+                                    <div className="flex gap-3 border border-2 border-indigo-400 
+                                    border-ring-2
+                                    bg-indigo-300 p-1 rounded-xl">
                                         {profileimg && (
                                         <Image 
                                         src={profileimg}
@@ -194,15 +197,21 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
                                         className="rounded-full h-12 w-12 object-cover"
                                         />
                                         )}
-                                        <div className="flex jusitfy-center text-white items-center">{username}</div>
+                                        <div className="flex flex-col flex-wrap 
+                                          text-white">
+                                        <div className="break-words max-w-[200px] ">
+                                            <div>{username}</div>
+                                            <div className="text-sm">{email}</div>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div className="mt-1 bg-teal-200 text-gray-500 rounded-xl
-                                    p-1
-                                    ">{email}</div>
                                 </div>
                                 <Button
                                     variant="ghost"
-                                    className="w-full hover:bg-destructive/20 hover:text-destructive rounded-lg p-3 justify-start flex items-center space-x-3"
+                                    className="w-full hover:bg-white hover:text-indigo-600 
+                                    hover:border-2 hover:border-indigo-200 hover:ring-2
+                                    bg-indigo-400 text-white
+                                     rounded-lg p-3 justify-start flex items-center space-x-3"
                                     onClick={handlelogout}
                                 >
                                     <LogOut className="h-6 w-6" />

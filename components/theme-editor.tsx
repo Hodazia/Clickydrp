@@ -12,6 +12,8 @@ import MobilePreviewSkeleton from '@/components/MobilePreviewSkeleton'
 import Image from 'next/image'
 import logo from "@/public/assets/Vector.svg"
 import Link from 'next/link'
+import { PiSelectionBackgroundBold } from "react-icons/pi";
+
 
 
 type Theme = {
@@ -138,17 +140,26 @@ export default function ThemeEditor() {
     }
   }
 
-  const Section = ({ children, title, isOpen = true, onToggle, icon }: { children: React.ReactNode; title: string; isOpen?: boolean; onToggle?: () => void; icon?: React.ReactNode }) => (
-    <Card className="glass-card border-accent/20">
-      <CardContent className="p-5 md:p-6">
-        <button type="button" onClick={onToggle} className="w-full flex items-center justify-between">
+  const Section = ({ children, title, isOpen = true, onToggle, icon}:
+     { children: React.ReactNode; title: string; isOpen?: boolean; onToggle?: () => void;
+       icon?: React.ReactNode, }) => (
+    <Card className="glass-card bg-gray-50 border-accent/20"
+    style={{
+      color: isOpen? 'indigo-200' : 'white'
+    }}>
+      <CardContent className="p-4 md:p-2">
+        <button type="button" onClick={onToggle} className="w-full flex items-center
+         justify-between">
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-accent/10 text-accent">
+            <span className="inline-flex h-6 w-6 items-center justify-center 
+            rounded-md bg-accent/10 text-accent">
               {icon}
             </span>
-            <h3 className="text-base md:text-lg font-semibold text-foreground">{title}</h3>
+            <h3 className="text-base md:text-lg font-semibold text-foreground">
+              {title}
+            </h3>
           </div>
-          <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`h-6 w-6 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
         {isOpen && (
           <div className="grid gap-4 mt-4">{children}</div>
@@ -238,28 +249,31 @@ useEffect(() => {
   return (
     <div className="grid gap-6 lg:grid-cols-12">
       {/* Controls Sidebar */}
-      <div className="lg:col-span-7 space-y-4">
+      <div className="lg:col-span-4 space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-semibold">Theme Editor</h2>
             <p className="text-sm text-muted-foreground">Customize your public page appearance</p>
           </div>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Button onClick={handleSubmit} 
             disabled={submitting} 
             className="px-6 bg-indigo-600 text-white hover:bg-white hover:text-indigo-600 hover:border-ring-2 hover:border-indigo-600 hover:border-2">
             Save Changes
             <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
-          </div>
+          </div> */}
         </div>
         <Separator />
 
-        <Section title="Background Settings" icon={<Palette className="h-4 w-4" />} isOpen={openSections.Background} onToggle={() => toggleSection('Background')}>
+        <Section title="Background Settings" 
+        icon={<PiSelectionBackgroundBold className="h-6 w-6 text-indigo-400" />} 
+        isOpen={openSections.Background} onToggle={() => toggleSection('Background')}>
           {openSections.Background && (
             <>
             <div>
-              <Label className="text-sm">Background Type</Label>
+              <Label className="text-sm">
+                Background Type</Label>
               <select
                 value={theme.viewportType}
                 onChange={(e) => setTheme((v) => ({ ...v, viewportType: e.target.value }))}
@@ -321,8 +335,9 @@ useEffect(() => {
             </>
           )}
           </Section>
+        
 
-        <Section title="Text Settings" icon={<TypeIcon className="h-4 w-4" />} isOpen={openSections.Text} onToggle={() => toggleSection('Text')}>
+        <Section title="Text Settings" icon={<TypeIcon className="h-6 w-6 text-indigo-400" />} isOpen={openSections.Text} onToggle={() => toggleSection('Text')}>
           {openSections.Text && (
             <>
             <div>
@@ -334,12 +349,12 @@ useEffect(() => {
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontColor: e.target.value }))}
                   className="h-10 w-10 rounded-md"
                     />
-                    <Input
+                    {/* <Input
                   value={theme.bioFontColor || ''}
                   className='border border-2 border-indigo-200
                   hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontColor: e.target.value }))}
-                />
+                /> */}
               </div>
             </div>
 
@@ -371,7 +386,7 @@ useEffect(() => {
           )}
           </Section>
 
-        <Section title="Links/Button Settings" icon={<Square className="h-4 w-4" />} isOpen={openSections.Buttons} onToggle={() => toggleSection('Buttons')}>
+        <Section title="Links/Button Settings" icon={<Square className="h-6 w-6 bg-indigo-500 text-white" />} isOpen={openSections.Buttons} onToggle={() => toggleSection('Buttons')}>
           {openSections.Buttons && (
             <>
             <div className="grid grid-cols-2 gap-4">
@@ -384,12 +399,12 @@ useEffect(() => {
                     onChange={(e) => setTheme((v) => ({ ...v, linksBackground: e.target.value }))}
                     className="h-10 w-10 rounded-md"
                   />
-                  <Input
+                  {/* <Input
                     value={theme.linksBackground || ''}
                     className='border border-2 border-indigo-200
                   hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, linksBackground: e.target.value }))}
-                  />
+                  /> */}
                 </div>
               </div>
               <div>
@@ -401,12 +416,12 @@ useEffect(() => {
                     onChange={(e) => setTheme((v) => ({ ...v, linksFontColor: e.target.value }))}
                     className="h-10 w-10 rounded-md"
                   />
-                  <Input
+                  {/* <Input
                     value={theme.linksFontColor || ''}
                     className='border border-2 border-indigo-200
                   hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, linksFontColor: e.target.value }))}
-                  />
+                  /> */}
                 </div>
                 </div>
               </div>
@@ -445,12 +460,12 @@ useEffect(() => {
                     onChange={(e) => setTheme((v) => ({ ...v, linksHoverColor: e.target.value }))}
                     className="h-10 w-10 rounded-md"
                   />
-                  <Input
+                  {/* <Input
                     value={theme.linksHoverColor || ''}
                     className='border border-2 border-indigo-200
                   hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, linksHoverColor: e.target.value }))}
-                  />
+                  /> */}
                 </div>
               </div>
             </div>
@@ -460,7 +475,7 @@ useEffect(() => {
 
         {/* Cards tab removed per new schema */}
 
-        <Section title="Social Icon Settings" icon={<Share2 className="h-4 w-4" />} isOpen={openSections.Socials} onToggle={() => toggleSection('Socials')}>
+        <Section title="Social Icon Settings" icon={<Share2 className="h-6 w-6 text-indigo-500" />} isOpen={openSections.Socials} onToggle={() => toggleSection('Socials')}>
           {openSections.Socials && (
             <>
             <div className="grid grid-cols-3 gap-4">
@@ -473,12 +488,12 @@ useEffect(() => {
                     onChange={(e) => setTheme((v) => ({ ...v, socialsIconColor: e.target.value }))}
                     className="h-10 w-10 rounded-md "
                   />
-                  <Input
+                  {/* <Input
                     value={theme.socialsIconColor || ''}
                     className='border border-2 border-indigo-200
                   hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, socialsIconColor: e.target.value }))}
-                  />
+                  /> */}
                 </div>
               </div>
               <div>
@@ -490,12 +505,12 @@ useEffect(() => {
                     onChange={(e) => setTheme((v) => ({ ...v, socialsIconHoverColor: e.target.value }))}
                     className="h-10 w-10 rounded-md"
                   />
-                  <Input
+                  {/* <Input
                     value={theme.socialsIconHoverColor || ''}
                     className='border border-2 border-indigo-200
                   hover:border-ring-2'
                     onChange={(e) => setTheme((v) => ({ ...v, socialsIconHoverColor: e.target.value }))}
-                  />
+                  /> */}
                 </div>
               </div>
               <div>
@@ -515,7 +530,7 @@ useEffect(() => {
           )}
           </Section>
 
-        <Section title="Profile Image Settings" icon={<User2 className="h-4 w-4" />} isOpen={openSections.Profile} onToggle={() => toggleSection('Profile')}>
+        <Section title="Profile Image Settings" icon={<User2 className="h-6 w-6 text-indigo-500" />} isOpen={openSections.Profile} onToggle={() => toggleSection('Profile')}>
           {openSections.Profile && (
             <>
             <div className="grid grid-cols-3 gap-4">
@@ -534,12 +549,21 @@ useEffect(() => {
               </div>
               <div>
                 <Label className="text-sm">Border Color</Label>
-                <Input
+                <div className="mt-1 flex items-center gap-3">
+                <input
+                    type="color"
+                    value={theme.profileBorderColor || ''}
+                  className='h-10 w-10 rounded-md'
+                  onChange={(e) => setTheme((v) => ({ ...v, profileBorderColor: e.target.value }))}
+                          />
+                </div>
+
+                {/* <Input
                   value={theme.profileBorderColor || ''}
                   className='border border-2 border-indigo-200
                   hover:border-ring-2'
                   onChange={(e) => setTheme((v) => ({ ...v, profileBorderColor: e.target.value }))}
-                />
+                /> */}
               </div>
               <div>
                 <Label className="text-sm">Border Width</Label>
@@ -557,12 +581,20 @@ useEffect(() => {
             </>
           )}
           </Section>
+          <div className="flex justify-center items-center gap-2">
+            <Button onClick={handleSubmit} 
+            disabled={submitting} 
+            className="px-6 bg-indigo-600 text-white hover:bg-white hover:text-indigo-600 hover:border-ring-2 hover:border-indigo-600 hover:border-2">
+            Save Changes
+            <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
 
       </div>
 
       {/* Preview */}
-      <div className="lg:col-span-5">
-        <Card className="border-accent/20 sticky top-6">
+      <div className="lg:col-span-8 ">
+        <Card className="border-accent/20 bg-gray-50 sticky top-6">
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold mb-4">Preview</h3>
             {/* Phone frame */}
@@ -611,7 +643,8 @@ useEffect(() => {
                       theme.profileShape === 'rounded' ? 'rounded-lg' : 'rounded-none'}`}
                     />
                   </div>
-                  <h4 className="mt-3 font-semibold">{data?.username}</h4>
+                  <h4 className="mt-3 font-semibold"
+                  style={{ color: theme.bioFontColor || '#111827'}}>{data?.username}</h4>
                   <p
                     className="text-center text-sm mt-1"
                     style={{ color: theme.bioFontColor || '#111827',
@@ -630,7 +663,7 @@ useEffect(() => {
                         const color = hoveredSocialIdx === idx ? (theme.socialsIconHoverColor || '#000') : (theme.socialsIconColor || '#111827')
                         const size = (theme.socialsSize || 18) + 4
                         return (
-                          <a
+                          <Link
                             key={s.platform + idx}
                             href={s.url}
                             target="_blank"
@@ -641,7 +674,7 @@ useEffect(() => {
                             aria-label={s.platform}
                           >
                             <Icon className="transition-colors" style={{ color, width: size, height: size }} />
-                          </a>
+                          </Link>
                         )
                       })}
                     </div>
