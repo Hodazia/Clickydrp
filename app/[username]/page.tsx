@@ -8,7 +8,10 @@ import { Social } from "@/lib/schema";
 import { Theme } from "@/lib/schema";
 import Icon from 'lucide-react'
 import { useMemo } from "react";
-
+import Image from "next/image";
+import logo from "@/public/assets/Vector.svg"
+import Link from "next/link";
+import DashboardLoader from "@/components/Loader";
 // Minimal SVG icons for socials
 const SocialIcons: Record<string, (props: any) => React.ReactElement> = {
     instagram: (props: any) => (
@@ -126,7 +129,9 @@ export default function Username() {
                 <div className="pointer-events-none absolute inset-0 bg-black/20" />
                 {/* Card container */}
                 <div
-                    className="relative w-full max-w-md flex flex-col items-center rounded-3xl p-6 md:p-8 shadow-2xl md:max-w-xl border border-white/10 bg-white/60 backdrop-blur-md"
+                    className="relative w-full max-w-md flex flex-col 
+                    items-center rounded-3xl p-6 md:p-8  md:max-w-xl
+                     "
                     style={cardStyle}
                 >
                     {/* Header Section (Profile, Description, Socials) */}
@@ -209,6 +214,28 @@ export default function Username() {
                             </a>
                         ))}
                     </div>
+
+                    {/*logo preview */}
+
+                  <div className="flex justify-center items-center absolute bottom-4">
+                        <Link
+                            href="/signin" 
+                            className="text-white px-4 py-3 rounded-full 
+                            font-semibold hover:bg-white hover:text-indigo-600
+                            bg-indigo-600 hover:ring-2
+                            transition-colors w-full sm:w-auto text-center
+                            flex justify-center items-center gap-2
+                            
+                            "
+                        >
+                            Claim your own clickydrop
+                            <Image 
+                            src={logo}
+                            alt="logobutton"
+                            className='w-8 h-8 hover:text-indigo-800'
+                            />
+                        </Link>
+                        </div>
                 </div>
             </div>
         </>

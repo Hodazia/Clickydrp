@@ -6,7 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, ChevronDown, Palette, Type as TypeIcon, Square, Share2, User2 } from 'lucide-react'
+import { Separator } from '@/components/ui/separator'
+import MobilePreviewSkeleton from '@/components/MobilePreviewSkeleton'
+import Image from 'next/image'
+import logo from "@/public/assets/Vector.svg"
+import Link from 'next/link'
+
 
 type Theme = {
   id?: string
@@ -51,15 +57,21 @@ const defaultTheme: Theme = {
   profileBorderWidth: 2,
 }
 
-const tabs = ['Background', 'Text', 'Buttons', 'Socials', 'Profile'] as const
-type Tab = typeof tabs[number]
-
 export default function ThemeEditor() {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
-  const [activeTab, setActiveTab] = useState<Tab>('Background')
   const [submitting, setSubmitting] = useState(false)
   const [hoveredSocialIdx, setHoveredSocialIdx] = useState<number | null>(null)
   const [hoveredLinkIdx, setHoveredLinkIdx] = useState<number | null>(null)
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    Background: true,
+    Text: true,
+    Buttons: true,
+    Socials: true,
+    Profile: true,
+  })
+
+  const toggleSection = (key: string) =>
+    setOpenSections((s) => ({ ...s, [key]: !s[key] }))
 
   // Load existing theme
   useEffect(() => {
@@ -126,14 +138,21 @@ export default function ThemeEditor() {
     }
   }
 
-  const Section = ({ children, title }: { children: React.ReactNode; title: string }) => (
+  const Section = ({ children, title, isOpen = true, onToggle, icon }: { children: React.ReactNode; title: string; isOpen?: boolean; onToggle?: () => void; icon?: React.ReactNode }) => (
     <Card className="glass-card border-accent/20">
       <CardContent className="p-5 md:p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/10 text-accent">✦</span>
-          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-        </div>
-        <div className="grid gap-4">{children}</div>
+        <button type="button" onClick={onToggle} className="w-full flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-accent/10 text-accent">
+              {icon}
+            </span>
+            <h3 className="text-base md:text-lg font-semibold text-foreground">{title}</h3>
+          </div>
+          <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
+        {isOpen && (
+          <div className="grid gap-4 mt-4">{children}</div>
+        )}
       </CardContent>
     </Card>
   )
@@ -217,27 +236,28 @@ useEffect(() => {
   }
 
   return (
-    <div className="bg-[] grid grid-cols-1  gap-8">
-        {/* Controls */}
-      <div className="space-y-6">
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-2">
-          {tabs.map((t) => (
-            <button
-              key={t}
-              onClick={() => setActiveTab(t)}
-              className={`px-4 py-2 rounded-lg border transition ${
-                activeTab === t ? 'bg-white border border-2 border-ring-2 text-indigo-600' : 
-                `border-border hover:bg-indigo-400 bg-indigo-600 text-white `
-              }`}
-            >
-              {t}
-            </button>
-          ))}
+    <div className="grid gap-6 lg:grid-cols-12">
+      {/* Controls Sidebar */}
+      <div className="lg:col-span-7 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold">Theme Editor</h2>
+            <p className="text-sm text-muted-foreground">Customize your public page appearance</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSubmit} 
+            disabled={submitting} 
+            className="px-6 bg-indigo-600 text-white hover:bg-white hover:text-indigo-600 hover:border-ring-2 hover:border-indigo-600 hover:border-2">
+            Save Changes
+            <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
         </div>
+        <Separator />
 
-        {activeTab === 'Background' && (
-          <Section title="Background Settings">
+        <Section title="Background Settings" icon={<Palette className="h-4 w-4" />} isOpen={openSections.Background} onToggle={() => toggleSection('Background')}>
+          {openSections.Background && (
+            <>
             <div>
               <Label className="text-sm">Background Type</Label>
               <select
@@ -298,11 +318,13 @@ useEffect(() => {
                 />
               </div>
             )}
+            </>
+          )}
           </Section>
-        )}
 
-        {activeTab === 'Text' && (
-          <Section title="Text Settings">
+        <Section title="Text Settings" icon={<TypeIcon className="h-4 w-4" />} isOpen={openSections.Text} onToggle={() => toggleSection('Text')}>
+          {openSections.Text && (
+            <>
             <div>
               <Label className="text-sm">Bio Font Color</Label>
               <div className="mt-1 flex items-center gap-3">
@@ -345,11 +367,13 @@ useEffect(() => {
                     />
                   </div>
             </div>
+            </>
+          )}
           </Section>
-        )}
 
-        {activeTab === 'Buttons' && (
-          <Section title="Links/Button Settings">
+        <Section title="Links/Button Settings" icon={<Square className="h-4 w-4" />} isOpen={openSections.Buttons} onToggle={() => toggleSection('Buttons')}>
+          {openSections.Buttons && (
+            <>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="text-sm">Background</Label>
@@ -430,13 +454,15 @@ useEffect(() => {
                 </div>
               </div>
             </div>
+            </>
+          )}
           </Section>
-        )}
 
         {/* Cards tab removed per new schema */}
 
-        {activeTab === 'Socials' && (
-          <Section title="Social Icon Settings">
+        <Section title="Social Icon Settings" icon={<Share2 className="h-4 w-4" />} isOpen={openSections.Socials} onToggle={() => toggleSection('Socials')}>
+          {openSections.Socials && (
+            <>
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <Label className="text-sm">Icon Color</Label>
@@ -485,11 +511,13 @@ useEffect(() => {
                 />
               </div>
             </div>
+            </>
+          )}
           </Section>
-        )}
 
-        {activeTab === 'Profile' && (
-          <Section title="Profile Image Settings">
+        <Section title="Profile Image Settings" icon={<User2 className="h-4 w-4" />} isOpen={openSections.Profile} onToggle={() => toggleSection('Profile')}>
+          {openSections.Profile && (
+            <>
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <Label className="text-sm">Shape</Label>
@@ -526,27 +554,22 @@ useEffect(() => {
                 />
               </div>
             </div>
+            </>
+          )}
           </Section>
-        )}
 
-        <div className="flex justify-end">
-          <Button onClick={handleSubmit} disabled={submitting} className="px-6
-          bg-indigo-600 text-white hover:bg-white hover:text-indigo-600 hover:border-ring-2 
-          hover:border-indigo-600 hover:border-2
-          ">
-            Save Changes
-            <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-          </div>
+      </div>
 
       {/* Preview */}
-      <div>
-        <Card className="border-accent/20">
+      <div className="lg:col-span-5">
+        <Card className="border-accent/20 sticky top-6">
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold mb-4">Preview</h3>
             {/* Phone frame */}
             <div className="flex items-center justify-center">
+              {(!data) ? (
+                <MobilePreviewSkeleton />
+              ) : (
               <div className="relative w-[340px] h-[720px] md:w-[360px]
                md:h-[740px] rounded-[2.5rem] border-[10px] border-black/90 
                shadow-2xl overflow-hidden bg-black/5">
@@ -566,12 +589,12 @@ useEffect(() => {
                   <div className="relative h-full w-full overflow-y-auto bg-transparent">
                     <div className="min-h-full w-full px-4 py-5 flex flex-col items-center">
                       <div
-                        className="w-full rounded-3xl p-4 border shadow-sm bg-white/80 backdrop-blur"
-                        style={cardStyle}
+                        className="w-full  p-4 "
+                        
                       >
                         <div className="flex flex-col items-center">
                   <div
-                    className="w-20 h-20 bg-white shadow-md"
+                    className="w-20 h-20  shadow-md"
                     style={{
                       borderRadius:
                         theme.profileShape === 'circle' ? '9999px' : 
@@ -656,13 +679,34 @@ useEffect(() => {
                       </a>
                     ))}
                   </div>
+
+                  <div className="flex justify-center items-center absolute bottom-4">
+                  <Link
+                    href="/signin" 
+                    className="text-white px-4 py-3 rounded-full 
+                    font-semibold hover:bg-white hover:text-indigo-600
+                    bg-indigo-600 hover:ring-2
+                    transition-colors w-full sm:w-auto text-center
+                    flex justify-center items-center gap-2
+                    
+                    "
+                  >
+                    Claim your own clickydrop
+                    <Image 
+                    src={logo}
+                    alt="logobutton"
+                    className='w-8 h-8 hover:text-indigo-800'
+                    />
+                  </Link>
+                        </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-          </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>

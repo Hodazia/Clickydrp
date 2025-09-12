@@ -2,7 +2,7 @@ import React from 'react';
 
 const ProfileSkeleton = () => {
   return (
-    <div className="w-full rounded-3xl p-4 border overflow-hidden relative">
+    <div className=" flex justify-center items-center rounded-3xl p-4 border overflow-hidden relative">
       <style>
         {`
         @keyframes shimmer {
@@ -16,7 +16,7 @@ const ProfileSkeleton = () => {
         }
         `}
       </style>
-      <div className="flex justify-between">
+      <div className="flex justify-center items-center">
         <div className='flex justify-center items-center gap-3'>
         {/* Profile Image Skeleton */}
             <div className="w-20 h-20 rounded-full bg-gray-200 shimmer-bg">

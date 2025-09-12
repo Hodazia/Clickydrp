@@ -120,7 +120,7 @@ export async function POST(req: Request) {
       updatedAt: true,
     } as const;
 
-    const existing = await db.theme.findFirst({ where: { userId: sessionUser.id } });
+    const existing = await db.theme.findFirst({ where: { userId: sessionUser.id }, select: { id: true } });
     const theme = existing
       ? await db.theme.update({ where: { id: existing.id }, data: allowed as any, select })
       : await db.theme.create({ data: { ...allowed, userId: sessionUser.id } as any, select });
