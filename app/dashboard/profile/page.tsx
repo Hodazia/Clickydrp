@@ -351,7 +351,9 @@ export default function Dashboard() {
             <div className="flex items-center gap-2">
               <Button
                 onClick={() => setIsEditModalOpen(true)}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-500 hover:to-purple-500 shadow-md px-5"
+                className="bg-indigo-600  text-white hover:bg-white hover:text-indigo-600 hover:ring-2 hover:border 
+                hover:border-indigo-600
+                 shadow-md px-5"
               >
                 <Edit className="h-4 w-4 mr-2" /> Edit profile
               </Button>

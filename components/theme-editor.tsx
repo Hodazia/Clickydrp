@@ -249,7 +249,7 @@ useEffect(() => {
   return (
     <div className="grid gap-6 lg:grid-cols-12">
       {/* Controls Sidebar */}
-      <div className="lg:col-span-4 space-y-4">
+      <div className="lg:col-span-4 space-y-4 overflow-y-auto max-h-[calc(150vh)]">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-semibold">Theme Editor</h2>
@@ -593,7 +593,7 @@ useEffect(() => {
       </div>
 
       {/* Preview */}
-      <div className="lg:col-span-8 ">
+      <div className="lg:col-span-8 sticky top-6 self-start">
         <Card className="border-accent/20 bg-gray-50 sticky top-6">
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold mb-4">Preview</h3>

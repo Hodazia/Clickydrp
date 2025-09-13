@@ -200,7 +200,7 @@ export default function Username() {
 
                     {/* Scrollable Links Section */}
                     <div className="w-full mt-6 space-y-4 flex flex-col 
-                    flex-grow overflow-y-auto max-h-[60vh]">
+                    flex-grow pb-20">
                         {usermeta.links?.map((link, idx) => (
                             <Link
                                 key={link.description}

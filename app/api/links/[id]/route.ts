@@ -2,21 +2,100 @@ import { NextResponse } from "next/server";
 import  { db } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 
+import { v2 as cloudinary } from "cloudinary";
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
+
 // PUT api/links/:id , delete too , 
 export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
 ) {
+
+  try{
+
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const body = await req.json();
-  const updated = await db.link.update({
-    where: { id: params.id, userId: sessionUser.id },
-    data: body,
-  });
+  const { id } = params;
+    const existingLink = await db.link.findUnique({
+      where: { id: id, userId: sessionUser.id as string },
+    });
 
-  return NextResponse.json(updated);
+    if (!existingLink) {
+      return NextResponse.json(
+        { error: "Link not found or not owned by user." },
+        { status: 404 }
+      );
+    }
+    const formData = await req.formData();
+    const linkUrl = formData.get("linkUrl") as string;
+    const description = formData.get("description") as string;
+    const file = formData.get("file") as File | null;
+
+    if (!linkUrl) {
+      return NextResponse.json({ error: "Link URL required" }, { status: 400 });
+    }
+
+    let imageUrl = existingLink.linkThumbnail;
+
+    if (file) {
+      // Step 1: Delete the old image from Cloudinary if it exists.
+      if (existingLink.linkThumbnail) {
+        const publicId = existingLink.linkThumbnail
+          .split("/")
+          .pop()
+          ?.split(".")[0];
+        if (publicId) {
+          await cloudinary.uploader.destroy(
+            `linktree-thumbnails/${publicId}`
+          );
+        }
+      }
+
+      // Step 2: Upload the new image to Cloudinary.
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      const uploadResponse = await new Promise<any>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "linktree-thumbnails",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(buffer);
+      });
+
+      imageUrl = uploadResponse.secure_url;
+    }
+
+    // Step 3: Update the link in the database.
+    const updatedLink = await db.link.update({
+      where: { id: id },
+      data: {
+        linkUrl,
+        description,
+        linkThumbnail: imageUrl,
+      },
+    });
+
+    return NextResponse.json(updatedLink);
+  }
+  catch(error:any)
+  {
+    console.error("Error updating link:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
 export async function DELETE(

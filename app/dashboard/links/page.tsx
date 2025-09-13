@@ -72,43 +72,83 @@ export default function LinksManager() {
     }
   }, [session]);
 
+  // // Save link (create or update)
+  // const handleSave = async (link: Link) => {
+  //   try {
+  //     let res;
+  //     if (link.id.startsWith("temp-")) {
+  //       // new link -> POST
+  //       const formData = new FormData();
+  //       formData.append("linkUrl", link.linkUrl || "");
+  //       formData.append("description", link.description || "");
+  //       if (link.linkThumbnail && typeof link.linkThumbnail !== "string") {
+  //         formData.append("file", link.linkThumbnail as any);
+  //       }
+  //       res = await fetch("/api/links", { method: "POST", body: formData });
+  //     } else {
+  //       // existing link -> PUT
+  //       res = await fetch(`/api/links/${link.id}`, {
+  //         method: "PUT",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({
+  //           linkUrl: link.linkUrl,
+  //           description: link.description,
+  //         }),
+  //       });
+  //     }
+
+  //     if (!res.ok) throw new Error("Save failed");
+  //     const updated = await res.json();
+
+  //     setLinks((prev) =>
+  //       prev.map((l) => (l.id === link.id ? { ...updated } : l))
+  //     );
+  //     toast.success("Link saved");
+  //   } catch {
+  //     toast.error("Failed to save link");
+  //   }
+  // };
+
   // Save link (create or update)
-  const handleSave = async (link: Link) => {
-    try {
-      let res;
-      if (link.id.startsWith("temp-")) {
-        // new link -> POST
-        const formData = new FormData();
-        formData.append("linkUrl", link.linkUrl || "");
-        formData.append("description", link.description || "");
-        if (link.linkThumbnail && typeof link.linkThumbnail !== "string") {
-          formData.append("file", link.linkThumbnail as any);
-        }
-        res = await fetch("/api/links", { method: "POST", body: formData });
-      } else {
-        // existing link -> PUT
-        res = await fetch(`/api/links/${link.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            linkUrl: link.linkUrl,
-            description: link.description,
-          }),
-        });
-      }
+  // Save link (create or update)
+const handleSave = async (link: Link) => {
+  try {
+    const formData = new FormData();
+    formData.append("linkUrl", link.linkUrl || "");
+    formData.append("description", link.description || "");
 
-      if (!res.ok) throw new Error("Save failed");
-      const updated = await res.json();
+    let method = "POST";
+    let url = "/api/links";
 
-      setLinks((prev) =>
-        prev.map((l) => (l.id === link.id ? { ...updated } : l))
-      );
-      toast.success("Link saved");
-    } catch {
-      toast.error("Failed to save link");
+    if (!link.id.startsWith("temp-")) {
+      // It's an existing link, so we update it.
+      method = "PUT";
+      url = `/api/links/${link.id}`;
     }
-  };
 
+    // Only append the thumbnail if it's a File object (meaning it's a new upload).
+    // The previous code had a bug here.
+    if (link.linkThumbnail && typeof link.linkThumbnail !== "string") {
+      formData.append("file", link.linkThumbnail);
+    }
+    
+    // You'll also need to handle the case where the user wants to remove the image,
+    // but the provided code doesn't include that functionality.
+
+    const res = await fetch(url, { method, body: formData });
+
+    if (!res.ok) throw new Error("Save failed");
+    const updated = await res.json();
+
+    setLinks((prev) =>
+      prev.map((l) => (l.id === link.id ? { ...updated } : l))
+    );
+    toast.success("Link saved");
+  } catch (err) {
+    console.error("Error saving link:", err);
+    toast.error("Failed to save link");
+  }
+};
   // Delete link
   const handleDelete = async (id: string) => {
     try {
