@@ -3,12 +3,14 @@
     - with a different background , closer to indigo-100 to indigo-600
     - Sections in the landing page, 
     #DONE
--> Demo, -> Watch a tutorial to get started,
--> Dashboard -> A dashboard photo of theme editor customize ur clickydrop the way u want
+
 -> Some very beautiful theme portrayals in the mobile preview , give at least 5
-  -> How to style which designs to follow look for the inspirations in designs from figma, dribble
+-> How to style which designs to follow look for the inspirations in designs from figma, dribble
+
+-> Dashboard -> A dashboard photo of theme editor customize ur clickydrop the way u want #DONE
 -> Features for the page! , 
-  -> A small gif also for the theme editor!
+  -> A small gif also for the theme editor! #DONE
+-> Demo, -> Watch a tutorial to get started,
 -> FAQ's #DONE
 */
 
@@ -18,6 +20,7 @@ import { Github } from "lucide-react"
 import { useRouter } from "next/navigation"
 import logovector from "@/public/assets/Vector.svg"; 
 import Image from "next/image";
+import Hroimage from "@/public/assets/left-herosection.png"
 
 export default function Hero()
 {
@@ -41,7 +44,7 @@ export default function Hero()
           hover:text-white p-2 rounded-full">Demo</a>
           <a href="#" className="hover:text-black transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">Features</a>
-          <a href="#" className="hover:text-black transition-colors hover:bg-indigo-600
+          <a href="#dashboard" className="hover:text-black transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">Dashboard</a>
           <a href="#" className="hover:text-black transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">FAQ's</a>
@@ -65,27 +68,14 @@ export default function Hero()
       </header>
 
       {/* Hero Content */}
-      <main className="text-center py-10 px-4">
+      <main className="text-center grid grid-cols-1 lg:grid-cols-2  px-4">
+        <div className="">
         <h1 className="text-6xl sm:text-7xl md:text-8xl font-playfair-display leading-tight">
           Single Link <br />
           Multi Benefits
         </h1>
 
-        <div className="flex justify-center items-center mt-6 space-x-4">
-          <div className="flex">
-            <div className="w-10 h-10 rounded-full border-2 border-[#fffbf0] bg-red-400 -mr-2"></div>
-            <div className="w-10 h-10 rounded-full border-2 border-[#fffbf0] bg-blue-400 -mr-2"></div>
-            <div className="w-10 h-10 rounded-full border-2 border-[#fffbf0] bg-green-400 -mr-2"></div>
-            <div className="w-10 h-10 rounded-full border-2 border-[#fffbf0] bg-purple-400"></div>
-          </div>
-          <div className="text-left">
-            <p className="font-semibold text-sm">Trust Pilot</p>
-            <p className="text-yellow-400 text-lg">★★★★★</p>
-            <p className="text-xs text-[#6b6b6b]">rated 5.0 over 12.5k reviews</p>
-          </div>
-        </div>
-
-        <p className="text-base sm:text-lg mt-8 text-[#2c2c2c] leading-relaxed">
+        <p className="text-base mt-5 sm:text-lg text-[#2c2c2c] leading-relaxed">
           ClickyDrop is an open-source alternative to <br className="hidden sm:block" />
           Linktree for their bio links!
           <br />
@@ -128,6 +118,15 @@ export default function Hero()
             alt="logobutton"
             />
           </a>
+        </div>
+        </div>
+        <div className="flex justify-center">
+          <Image 
+          src={Hroimage}
+          alt="hero image"
+          className="w-[90%] h-[90%] md:w-[75%] md:h-[75%]"
+
+          />
         </div>
       </main>
     </div>
