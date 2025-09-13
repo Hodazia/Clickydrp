@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
-import { Edit, X, Trash2, Check } from "lucide-react";
+import { Edit, X, Trash2, Check, Share } from "lucide-react";
 import { useProtectedRoute } from "@/lib/hooks/useprotected";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,6 +19,7 @@ import DashboardLoader from "@/components/Loader";
 import ProfileSkeleton from "@/components/ProfileSkeleton";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ShareLinkModal from "@/components/ShareModal";
 
 interface Social {
   id: string;
@@ -139,6 +140,7 @@ export default function Dashboard() {
   const [selectedPlatform, setSelectedPlatform] = useState<string>('');
   const [socialUrl, setSocialUrl] = useState('');
   const [editingSocial, setEditingSocial] = useState<Social | null>(null);
+  const [isshareeditopen, setisshare] = useState(false);
 
   const { session, status } = useProtectedRoute();
   const router = useRouter();
@@ -351,11 +353,14 @@ export default function Dashboard() {
             <div className="flex items-center gap-2">
               <Button
                 onClick={() => setIsEditModalOpen(true)}
-                className="bg-indigo-600  text-white hover:bg-white hover:text-indigo-600 hover:ring-2 hover:border 
-                hover:border-indigo-600
-                 shadow-md px-5"
+                className="bg-indigo-600 text-white hover:from-indigo-500 hover:to-purple-500 shadow-md px-5"
               >
                 <Edit className="h-4 w-4 mr-2" /> Edit profile
+              </Button>
+              <Button
+              onClick={() => setisshare(true)}
+              className="bg-indigo-600 text-white hover:from-indigo-500 hover:to-purple-500 shadow-md px-5">
+                <Share /> Share your clickydrop
               </Button>
             </div>
           </div>
@@ -518,6 +523,13 @@ export default function Dashboard() {
         email={profile?.email || "" }
         profileimg={profile?.profileimg || ""}
         description={profile?.description || ""}
+      />
+
+      {/*Share link modal */}
+      <ShareLinkModal 
+      isOpen={isshareeditopen}
+      onClose={() => setisshare(false)}
+      username={profile?.username || ""}
       />
 
       {/* Social Links Modal */}

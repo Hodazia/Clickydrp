@@ -10,7 +10,6 @@
 -> Features for the page! , 
   -> A small gif also for the theme editor!
 -> FAQ's #DONE
--> Footer
 */
 
 'use client'

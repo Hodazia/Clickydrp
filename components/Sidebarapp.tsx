@@ -93,6 +93,7 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
                             <span className="mt-1 text-xs">{item.title}</span>
                         </Link>
                     ))}
+                    
                     <button 
                         onClick={handlelogout}
                         className="flex flex-col items-center justify-center p-2 text-sm transition-all duration-200 text-gray-500 hover:text-red-500"
@@ -184,6 +185,7 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
                                 </SidebarMenuItem>
                             ))} */}
                             <SidebarMenuItem>
+
                                 <div className="text-black flex flex-col justify-between text-xl mb-2">
                                     <div className="flex gap-3 border border-2 border-indigo-400 
                                     border-ring-2
@@ -206,6 +208,7 @@ export function AppSidebar({username,email,profileimg,description}: Sidebarprop)
                                         </div>
                                     </div>
                                 </div>
+
                                 <Button
                                     variant="ghost"
                                     className="w-full hover:bg-white hover:text-indigo-600 
