@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import type { UploadApiResponse } from "cloudinary";
 
-import { authConfig } from "../auth/[...nextauth]/route";
-
+// import { authConfig } from "../auth/[...nextauth]/route";
+import { authConfig } from "@/lib/authnext";
 import { db } from "@/lib/prisma";
 import { v2 as cloudinary } from "cloudinary";
 

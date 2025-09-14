@@ -1,7 +1,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authConfig } from "../auth/[...nextauth]/route";
+// import { authConfig } from "../auth/[...nextauth]/route";
+import { authConfig } from "@/lib/authnext";
 import { db } from "@/lib/prisma"; // prisma client
 import { v2 as cloudinary } from "cloudinary";
 import type { UploadApiResponse } from "cloudinary";
