@@ -1,19 +1,3 @@
-/*
--> code the hero section end to end!
-    - with a different background , closer to indigo-100 to indigo-600
-    - Sections in the landing page, 
-    #DONE
-
--> Some very beautiful theme portrayals in the mobile preview , give at least 5
--> How to style which designs to follow look for the inspirations in designs from figma, dribble
-
--> Dashboard -> A dashboard photo of theme editor customize ur clickydrop the way u want #DONE
--> Features for the page! , 
-  -> A small gif also for the theme editor! #DONE
--> Demo, -> Watch a tutorial to get started,
--> FAQ's #DONE
-*/
-
 'use client'
 import Link from "next/link"
 import { Github } from "lucide-react"
@@ -21,6 +5,11 @@ import { useRouter } from "next/navigation"
 import logovector from "@/public/assets/Vector.svg"; 
 import Image from "next/image";
 import Hroimage from "@/public/assets/left-herosection.png"
+import bdbarbie from "@/public/assets/bad-barbie.png"
+import ishowspeed from "@/public/assets/ishow-speed.png"
+import ronaldo from "@/public/assets/rnld-portrait.png"
+import prfl from "@/public/assets/centerfeature-port.png"
+import {motion} from "framer-motion"
 
 export default function Hero()
 {
@@ -31,6 +20,11 @@ export default function Hero()
       {/* Header */}
       <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 
       flex justify-between items-center">
+        <motion.div
+        initial={{opacity:0, scale:0}}
+        animate={{ opacity:1, scale:1, transition: {duration: 1}}}
+        whileHover={{ opacity:1,scale:1.2, rotate:2 }}
+        >
         <div className="flex  gap-1 justify-center items-center text-4xl font-bold text-[#e9c882]">
           <Image 
           src={logovector}
@@ -38,6 +32,7 @@ export default function Hero()
           alt="Logo"
           /> 
           <span className="text-3xl">ClickyDrop</span></div>
+        </motion.div>
         <nav className="hidden md:flex space-x-6 text-[#6b6b6b] font-medium">
           <a href="#videodemo" 
           className="hover:text-black transition-colors hover:bg-indigo-600
@@ -50,30 +45,36 @@ export default function Hero()
           hover:text-white p-2 rounded-full">FAQ's</a>
         </nav>
         <div className="flex items-center space-x-4">
-          <a href="#" className="text-white px-5 py-2 bg-indigo-600 hover:text-indigo-600 
+          <Link href="/signin" className="text-white px-5 py-2 bg-indigo-600 hover:text-indigo-600 
           hover:bg-white rounded-full transition-colors hover:ring-2
+          hover:scale-105 transition duration 800
            "
-           onClick={() => {
-            router.push("/signin")
-           }}
-           >Login</a>
-          <a href="#" className=" text-white px-5 py-2 rounded-full font-semibold 
-          transition-colors bg-indigo-600 hover:text-indigo-600 hover:bg-white
+           >Login</Link>
+          <Link href="/signup" className=" text-white px-5 py-2 rounded-full font-semibold 
+          transition-colors bg-indigo-600 
+          hover:scale-105 transition duration 200
+          hover:text-indigo-600 hover:bg-white
            p-2 rounded-full hover:ring-2"
-           onClick={() => {
-            router.push("/signup")
-           }}
-           >Register</a>
+           >Register</Link>
         </div>
       </header>
 
       {/* Hero Content */}
-      <main className="text-center grid grid-cols-1 lg:grid-cols-2  px-4">
-        <div className="">
-        <h1 className="text-6xl sm:text-7xl md:text-8xl font-playfair-display leading-tight">
+      <main className="text-center grid grid-cols-1 lg:grid-cols-2  px-4 items-center">
+      <motion.div
+          initial={{ opacity:0,x:-100}}
+          animate={{opacity:1, x:0, scale:1, 
+            transition: {
+            duration:1
+          }}}
+          >
+
+          <h1 className="text-6xl sm:text-7xl md:text-8xl font-playfair-display leading-tight">
           Single Link <br />
           Multi Benefits
         </h1>
+
+
 
         <p className="text-base mt-5 sm:text-lg text-[#2c2c2c] leading-relaxed">
           ClickyDrop is an open-source alternative to <br className="hidden sm:block" />
@@ -101,9 +102,11 @@ export default function Hero()
           </div>
           <a 
             href="#" 
-            className="text-white px-8 py-3 rounded-full 
+            className="text-white px-4 py-3 rounded-full 
             font-semibold hover:bg-white hover:text-indigo-600
             bg-indigo-600 hover:ring-2
+            hover:scale-105
+            transition duration-300
             transition-colors w-full sm:w-auto text-center
             flex justify-center items-center gap-2
             
@@ -119,16 +122,66 @@ export default function Hero()
             />
           </a>
         </div>
-        </div>
-        <div className="flex justify-center">
+        </motion.div>
+        <motion.div
+        initial={{scale:0.5,x:500,opacity:0}}
+        animate={{
+          scale:1,
+          opacity:1,
+          x:0,
+          transition:{
+            duration:1
+          }
+        }}
+        whileHover={{ scale:1.1}}
+        >
+        <div className="relative mx-auto mt-8 lg:mt-0">
           <Image 
           src={Hroimage}
           alt="hero image"
-          className="w-[90%] h-[90%] md:w-[75%] md:h-[75%]"
-
+          className="w-full h-auto max-h-[600px] object-contain mx-auto"
           />
-        </div>
+          </div>
+        </motion.div>
+
+
       </main>
+      <div className="mt-20">
+        <motion.div
+        initial={{ opacity:0,y:-40}}
+        animate={{ opacity:1, y:0}}
+        transition={{ type: "spring", stiffness: 120, damping: 15 }}
+        >
+        <div className="text-center text-white rounded-full p-1
+         max-w-4xl text-4xl bg-indigo-400 mx-auto
+         hover:bg-indigo-300 hover:scale-105
+         transition duration-300">
+          Create your profile in minutes just like the ones below! 👇
+        </div>
+        </motion.div>
+
+              {/* Animated Images */}
+      <div className="flex flex-wrap justify-center gap-3 mt-8">
+        {[bdbarbie, ronaldo, prfl, ishowspeed].map((img, i) => (
+          <motion.div
+            key={i}
+            className="w-1/2 sm:w-1/5"
+            initial={{ opacity: 0, scale: 0.8, y: 40 , x:-100}}
+            whileInView={{ opacity: 1, scale: 1, y: 0 , x:0}}
+            transition={{ duration: 0.5, delay: i * 0.2, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }} 
+            whileHover={{ scale: 1.1, rotate: 2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Image
+              src={img}
+              alt={`profile-${i}`}
+              className="h-auto rounded-xl object-cover shadow-md"
+            />
+          </motion.div>
+        ))}
+      </div>
+      </div>
     </div>
         </>
     )

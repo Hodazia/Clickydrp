@@ -1,16 +1,26 @@
 // 
+'use client'
 import dashboardprev from '@/public/assets/Dashboard-edit.png'
 import Image from 'next/image'
+import {motion} from "framer-motion"
+
 
 export function Dashboardedit() {
     //
     return (
         <>
         <section id='dashboard'>
+            <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 40 , x:-100}}
+            whileInView={{ opacity: 1, scale: 1, y: 0 , x:0}}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            whileHover={{ scale: 1.1}}
+            >
         <div className='bg-[#fffbf0] text-[#2c2c2c] pb-4'>
-            <div className='max-w-4xl mx-auto text-indigo-500 mb-2 pb-1 border-b-3 border-indigo-500
-             text-center text-4xl'>
-                Edit your clickydrop with built-in theme-editor feature</div>
+            <div className='max-w-4xl mx-auto bg-indigo-400 text-white mb-2 
+             mx-auto rounded-full p-1 text-4xl hover:bg-indigo-300 hover:scale-105 
+             transition duration-300'>
+                Edit your clickydrop with built-in theme-editor feature 🎨</div>
                 <div className='mt-10'>
                 <Image 
             src={dashboardprev}
@@ -22,6 +32,7 @@ export function Dashboardedit() {
                 </div>
 
         </div>
+        </motion.div>
         </section>
 
         </>

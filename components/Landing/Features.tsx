@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Lock, Link, Sparkles, User, Share2, Globe,Palette } from 'lucide-react';
 import React from 'react';
 import FeaturePortrait from "@/public/assets/centerfeature-port.png"
+import {motion} from "framer-motion"
 
 
 const features = [
@@ -62,10 +63,22 @@ const songs = [
 export default function Features() {
   return (
     <div className="bg-[#fffbf0] text-[#2c2c2c] p-10 md:p-20 font-sans min-h-screen">
+      <motion.div
+      initial={{ scale:0.5,}}
+      whileInView={{ scale:1, }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      >
       <div className='text-center  mb-2 '>
-      <span className='border-b-3 border-indigo-500 items-center text-3xl text-indigo-600 '>FEATURES
+      <span className='items-center text-3xl 
+            bg-indigo-400 text-white mb-2 
+             mx-auto rounded-full p-2 
+             hover:bg-indigo-300 hover:scale-105
+             transition duration-300
+             '>FEATURES
       </span>
       </div>
+      </motion.div>
+
       <div className='text-center mt-4'>
       <span className='items-center text-3xl text-indigo-300 '>
         A lot of amazing & cool features
@@ -77,7 +90,10 @@ export default function Features() {
         {/* Left Side Features */}
         <div className="flex flex-col gap-10">
           {features.map((feature, index) => (
-            <div key={index} className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4">
+            <div key={index} className="flex flex-col 
+            md:flex-row items-center md:items-start text-center
+            ml-2
+            md:text-left gap-4">
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#f3e8ff]">
                 {feature.icon}
               </div>
@@ -90,7 +106,13 @@ export default function Features() {
         </div>
 
         {/* Center Phone Mockup */}
-        <div className="w-[80%] max-w-sm md:max-w-xs lg:max-w-sm">
+        <motion.div
+      initial={{ scale:0.5,}}
+      whileInView={{ scale:1, }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      whileHover={{ scale: 1.1, rotate: 2 }}
+      >
+        <div className="w-[80%] max-w-sm md:max-w-xs ml-10 lg:max-w-sm">
             {/* Profile Section */}
             <Image
                   src={FeaturePortrait}
@@ -98,7 +120,7 @@ export default function Features() {
                   className="rounded-md "
                 />
         </div>
-
+        </motion.div>
         {/* Right Side Features */}
         <div className="flex flex-col gap-10">
           {securityFeatures.map((feature, index) => (

@@ -12,6 +12,8 @@ import { useState } from "react"
 import { ArrowUp,ArrowDown } from "lucide-react"
 import logo from "@/public/assets/Vector.svg"
 import Image from "next/image"
+import {motion} from "framer-motion"
+
 
 interface faq {
     id:number,
@@ -71,6 +73,14 @@ export default function FAQsection(){
                     <h2 className="text-3xl md:text-5xl p-2 font-bold text-indigo-400">
                         Frequently Asked Questions!
                     </h2>
+                    <motion.div
+                    initial={{ scale:0.5 , opacity:0, x:-100}}
+                    whileInView={{ scale:1, opacity:1, x:0}}
+                    transition={{
+                        duration:1,
+                        ease:"easeOut"
+                    }}
+                    >
                     <div className="space-y-4 pt-10 pb-5">
                 {faqs.map((item, index) => (
                     <div
@@ -97,15 +107,21 @@ export default function FAQsection(){
                     </div>
                 ))}
         </div>
+        </motion.div>
                 </div>
             </div>
             <div className="bg-[#fffbf0] text-gray-400 flex justify-between
              max-w-4xl mx-auto px-4 py-4 sm:px-6 lg:px-8
             text-2xl 
             ">
-                <div className="flex ">
-                <span className="text-black ">ClickyDrop
+
+
+                    <motion.div 
+                    whileHover={{ scale:1.2, rotate:2}}
+                    className="flex ">
+                        <span className="text-black ">ClickyDrop
                     </span>
+
                 <span className="">
                     <Image 
                     src={logo}
@@ -113,11 +129,15 @@ export default function FAQsection(){
                     className="text-indigo-600 "
                     />
                 </span>
-                </div>
-                <div>
+                </motion.div>
+                    
+
+                <motion.div
+                
+                >
                     <span className="text-black">&copy;
                     </span>2025 Ziaul Hoda All rights reserved
-                </div>
+                </motion.div>
             </div>
         </section>
         
