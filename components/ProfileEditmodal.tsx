@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import { Button } from "./ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import ShareLinkModal from "./ShareModal";
+
 
 interface ProfileEditModalProps {
   isOpen: boolean;

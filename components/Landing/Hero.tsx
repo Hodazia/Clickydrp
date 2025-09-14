@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link"
-import { Github } from "lucide-react"
+import { Github, MenuIcon, XIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import logovector from "@/public/assets/Vector.svg"; 
 import Image from "next/image";
@@ -10,9 +10,11 @@ import ishowspeed from "@/public/assets/ishow-speed.png"
 import ronaldo from "@/public/assets/rnld-portrait.png"
 import prfl from "@/public/assets/centerfeature-port.png"
 import {motion} from "framer-motion"
+import { useState } from "react";
 
 export default function Hero()
 {
+  const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
     return (
         <>
@@ -37,14 +39,16 @@ export default function Hero()
           <a href="#videodemo" 
           className="hover:text-black transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">Demo</a>
-          <a href="#" className="hover:text-black transition-colors hover:bg-indigo-600
+          <a href="#features" className="hover:text-black transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">Features</a>
           <a href="#dashboard" className="hover:text-black transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">Dashboard</a>
-          <a href="#" className="hover:text-black transition-colors hover:bg-indigo-600
+          <a href="#faqs" className="hover:text-black transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">FAQ's</a>
-        </nav>
-        <div className="flex items-center space-x-4">
+
+
+        
+        <div className="hidden md:flex items-center space-x-4">
           <Link href="/signin" className="text-white px-5 py-2 bg-indigo-600 hover:text-indigo-600 
           hover:bg-white rounded-full transition-colors hover:ring-2
           hover:scale-105 transition duration 800
@@ -57,7 +61,38 @@ export default function Hero()
            p-2 rounded-full hover:ring-2"
            >Register</Link>
         </div>
+
+
+      </nav>
+                  {/* Mobile Hamburger Menu Button */}
+                  <div className="md:hidden flex items-center">
+                  <button onClick={() => setIsOpen(!isOpen)}>
+                      <MenuIcon className="w-8 h-8 text-indigo-400" />
+                  </button>
+            </div>
       </header>
+
+{/* Mobile Menu */}
+{isOpen && (
+                <div className="relative top-0 left-0 w-full h-full bg-[#fffbf0] z-50 flex 
+                flex-col items-center justify-start animate-fade-in border-b-indigo-200 border-2 pb-2">
+                    <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 text-[#2c2c2c]">
+                        <XIcon className="w-8 h-8 text-blue-400" />
+                    </button>
+                    <nav className="flex flex-col space-y-6 text-[#6b6b6b] text-xl font-medium">
+                        <a href="#videodemo" onClick={() => setIsOpen(false)} className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">Demo</a>
+                        <a href="#features" onClick={() => setIsOpen(false)} className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">Features</a>
+                        <a href="#dashboard" onClick={() => setIsOpen(false)} className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">Dashboard</a>
+                        <a href="#faqs" onClick={() => setIsOpen(false)} className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">FAQ's</a>
+                    </nav>
+
+                    <div className="flex flex-col items-center space-y-4 mt-8">
+                        <a href="/signin" onClick={() => setIsOpen(false)} className="text-white px-5 py-2 bg-indigo-600 hover:text-indigo-600 hover:bg-white rounded-full transition-colors hover:ring-2 hover:scale-105 duration-300">Login</a>
+                        <a href="/signup" onClick={() => setIsOpen(false)} className="text-white px-5 py-2 rounded-full font-semibold transition-colors bg-indigo-600 hover:scale-105 duration-200 hover:text-indigo-600 hover:bg-white p-2 rounded-full hover:ring-2">Register</a>
+                    </div>
+                </div>
+            )}
+
 
       {/* Hero Content */}
       <main className="text-center grid grid-cols-1 lg:grid-cols-2  px-4 items-center">

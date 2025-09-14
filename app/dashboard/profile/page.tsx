@@ -14,11 +14,11 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AppSidebar } from "@/components/Sidebarapp";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import SocialMoal from "@/components/social-modal";
+
 import DashboardLoader from "@/components/Loader";
 import ProfileSkeleton from "@/components/ProfileSkeleton";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import ShareLinkModal from "@/components/ShareModal";
 
 interface Social {
@@ -156,7 +156,7 @@ export default function Dashboard() {
     if (session) {
       const fetchSocials = async () => {
         try {
-          const response = await fetch("http://localhost:3000/api/socials");
+          const response = await fetch("/api/socials");
           if (!response.ok) throw new Error("Failed to fetch social links.");
           const data: Social[] = await response.json();
           setSocials(data);
@@ -167,7 +167,7 @@ export default function Dashboard() {
 
       const fetchProfile = async () => {
         try {
-          const response = await fetch("http://localhost:3000/api/profile");
+          const response = await fetch("/api/profile");
           if (!response.ok) throw new Error("Failed to fetch profile.");
           const data: Profile = await response.json();
           setProfile(data);
@@ -207,7 +207,7 @@ export default function Dashboard() {
         formData.append("profileImage", data.profileimg);
       }
 
-      const res = await fetch("http://localhost:3000/api/profile", {
+      const res = await fetch("/api/profile", {
         method: "POST",
         body: formData,
       });
@@ -246,7 +246,7 @@ export default function Dashboard() {
     try {
       if (editingSocial) {
         // Update existing social
-        const response = await fetch(`http://localhost:3000/api/socials/${editingSocial.id}`, {
+        const response = await fetch(`/api/socials/${editingSocial.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -264,7 +264,7 @@ export default function Dashboard() {
         toast.success("Social link updated successfully");
       } else {
         // Create new social
-        const response = await fetch("http://localhost:3000/api/socials", {
+        const response = await fetch("/api/socials", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -293,7 +293,7 @@ export default function Dashboard() {
 
   const handleDeleteSocial = async (socialId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/socials/${socialId}`, {
+      const response = await fetch(`/api/socials/${socialId}`, {
         method: "DELETE",
       });
 

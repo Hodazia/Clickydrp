@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Lock, Link, Sparkles, User, Share2, Globe,Palette } from 'lucide-react';
+import { Link, Sparkles, User, Share2, Globe,Palette } from 'lucide-react';
 import React from 'react';
 import FeaturePortrait from "@/public/assets/centerfeature-port.png"
 import {motion} from "framer-motion"
@@ -62,6 +62,8 @@ const songs = [
 
 export default function Features() {
   return (
+    <>
+    <section id='features'>
     <div className="bg-[#fffbf0] text-[#2c2c2c] p-10 md:p-20 font-sans min-h-screen">
       <motion.div
       initial={{ scale:0.5,}}
@@ -137,5 +139,8 @@ export default function Features() {
         </div>
       </div>
     </div>
+    </section>
+    </>
+    
   );
 }

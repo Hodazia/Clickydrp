@@ -6,7 +6,6 @@ import { authConfig } from "../auth/[...nextauth]/route";
 
 import { db } from "@/lib/prisma";
 import { v2 as cloudinary } from "cloudinary";
-import { requireUser } from "@/lib/auth";
 
 // Configure Cloudinary
 cloudinary.config({

@@ -9,7 +9,7 @@ import { SiGithub } from "react-icons/si";
 import { toast } from "sonner";
 import { signinSchema } from "@/lib/schema";
 import Image from 'next/image'; // Import the Image component
-import prfpng from "@/public/assets/link.png"; // Your image import
+import prfpng from "@/public/assets/bad-barbie.png"; // Your image import
 
 export default function Signin() {
     const router = useRouter();
@@ -181,7 +181,7 @@ export default function Signin() {
                         <Image
                             src={prfpng}
                             alt="App preview of a bio link page"
-                            className="w-full h-full object-contain rounded-2xl shadow-xl"
+                            className="w-full h-full object-contain rounded-2xl"
                         />
                     </div>
                 </div>

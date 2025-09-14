@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { ChevronRight, ChevronDown, Palette, Type as TypeIcon, Square, Share2, User2 } from 'lucide-react'
+import { ChevronRight, ChevronDown, Type as TypeIcon, Square, Share2, User2 } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import MobilePreviewSkeleton from '@/components/MobilePreviewSkeleton'
 import Image from 'next/image'
@@ -79,7 +79,7 @@ export default function ThemeEditor() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/themes', { credentials: 'include' })
+        const res = await fetch('/api/themes', { credentials: 'include' })
         if (!res.ok) throw new Error('Failed to load theme')
 
         const data: Theme = await res.json()
@@ -123,7 +123,7 @@ export default function ThemeEditor() {
   const handleSubmit = async () => {
     setSubmitting(true)
     try {
-      const res = await fetch('http://localhost:3000/api/themes', {
+      const res = await fetch('/api/themes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -204,7 +204,7 @@ const [data,setData] = useState<Profile| null>(null)
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/users/me', { credentials: 'include' })
+      const res = await fetch('/api/users/me', { credentials: 'include' })
       if (!res.ok) throw new Error('Failed to load metadata! ')
       const resultantData: Profile = await res.json()
     console.log("Data from the users/me ", resultantData);
@@ -683,7 +683,7 @@ useEffect(() => {
                   {/* Links */}
                   <div className="w-full mt-4 space-y-3">
                     {data?.links?.map((i, idx) => (
-                      <a
+                      <Link
                         key={i.description + idx}
                         href={i.linkUrl}
                         target="_blank"
@@ -709,7 +709,7 @@ useEffect(() => {
                           </div>
                           <div className="flex-1 truncate">{i.description || i.linkUrl}</div>
                         </div>
-                      </a>
+                      </Link>
                     ))}
                   </div>
 

@@ -9,7 +9,7 @@ Coding an FAQ Section! , ,
 'use client'
 
 import { useState } from "react"
-import { ArrowUp,ArrowDown } from "lucide-react"
+import { ArrowDown } from "lucide-react"
 import logo from "@/public/assets/Vector.svg"
 import Image from "next/image"
 import {motion} from "framer-motion"

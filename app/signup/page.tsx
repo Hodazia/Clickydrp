@@ -1,12 +1,14 @@
 'use client'
 
 import React, { useState } from "react";
-import { Sparkle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
 import { SiGithub } from "react-icons/si";
 import { signIn } from "next-auth/react";
+import logoright from "@/public/assets/ishowspeedright.png"
+import Image from "next/image"
+import Link from "next/link"
 
 export default function Signup() {
     const [formData, setFormData] = useState({
@@ -40,7 +42,7 @@ export default function Signup() {
 
         try {
             // Note: Replace with your actual API endpoint
-            const response = await fetch("http://localhost:3000/api/register", {
+            const response = await fetch("/api/register", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -184,9 +186,9 @@ export default function Signup() {
                     <div className="text-center mt-6">
                         <span className="text-gray-500">
                            Already have an account? {" "}
-                           <a href="/signin" className="text-indigo-600 font-semibold hover:underline">
+                           <Link href="/signin" className="text-indigo-600 font-semibold hover:underline">
                                Sign In
-                           </a>
+                           </Link>
                         </span>
                     </div>
                 </div>
@@ -195,10 +197,10 @@ export default function Signup() {
                 <div className="lg:flex flex-1 items-center justify-center
                  p-6 ">
                      <div className="w-full h-full max-w-lg">
-                        <img
-                            src="https://placehold.co/800x1000/F1F5F9/161615?text=Beautifully+Crafted+Bio+Link"
+                        <Image
+                            src={logoright}
                             alt="App preview of a bio link page"
-                            className="w-full h-full object-contain rounded-2xl shadow-xl"
+                            className="w-full h-full object-contain rounded-2xl"
                         />
                     </div>
                 </div>

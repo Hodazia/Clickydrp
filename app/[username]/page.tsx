@@ -1,12 +1,11 @@
 'use client'
 import { useRouter } from "next/navigation";
-import { useProtectedRoute } from "@/lib/hooks/useprotected";
+
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Links } from "@/lib/schema";
 import { Social } from "@/lib/schema";
 import { Theme } from "@/lib/schema";
-import Icon from 'lucide-react'
 import { useMemo } from "react";
 import Image from "next/image";
 import logo from "@/public/assets/Vector.svg"
@@ -58,15 +57,15 @@ export default function Username() {
     const [hoveredSocialIdx, setHoveredSocialIdx] = useState<number | null>(null)
     const pathname = usePathname();
     const username = pathname.split('/')[1]
-    console.log("pathname ", pathname);
-    console.log("Username is ", username)
+    // console.log("pathname ", pathname);
+    // console.log("Username is ", username)
 
     const fetchData = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/api/users/${username}`, { credentials: 'include' })
+            const res = await fetch(`/api/users/${username}`, { credentials: 'include' })
             if (!res.ok) throw new Error('Failed to load metadata! ')
             const resultantData: metaprops = await res.json()
-            console.log("Data from the users/me ", resultantData);
+            // console.log("Data from the users/me ", resultantData);
             setusermeta(resultantData)
         } catch {
             console.log('Could not load theme')
@@ -77,7 +76,7 @@ export default function Username() {
         if (status === "unauthenticated") {
             router.push("/signin");
         }
-    }, [status, router]);
+    }, [router]);
 
     useEffect(() => {
         
@@ -106,13 +105,13 @@ export default function Username() {
     }, [theme]);
 
     if (status === "loading") {
-        return <p>Loading...</p>;
+        return <div>Loading...</div>;
     }
 
     if (!usermeta) {
-        return <p className="text-center mt-10">
+        return <div className="text-center mt-10">
             <DashboardLoader />
-        </p>;
+        </div>;
     }
 
     const viewportBgStyle = theme?.viewportType === 'image' && theme?.viewportImage
@@ -155,13 +154,13 @@ export default function Username() {
                         }}>
                             {usermeta.username}
                         </h1>
-                        <p className="mt-2 text-center  max-w-prose"
+                        <div className="mt-2 text-center  max-w-prose"
                         style={{
                             color:theme?.bioFontColor || '#ffffff',
                             fontSize:theme?.bioFontSize || "20px"
                         }}>
                             {usermeta.description}
-                        </p>
+                        </div>
 
                         {/* Social icons */}
                         {usermeta?.socials && usermeta.socials.length > 0 && (

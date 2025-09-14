@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, Palette, Share, Settings, LogOut, ChevronLeft,
+import { User, Palette, Settings, LogOut,
     Link2, LucideIcon} from "lucide-react";
 import { Button } from "./ui/button";
 import React from "react";
@@ -11,7 +11,7 @@ import { Sidebar,SidebarContent,SidebarGroup,
     SidebarHeader, SidebarGroupLabel,SidebarGroupContent,SidebarMenu,
     SidebarMenuItem,SidebarMenuButton,
 } from "./ui/sidebar";
-import { Avatar,AvatarFallback,AvatarImage, } from "@radix-ui/react-avatar";
+import { Avatar } from "@radix-ui/react-avatar";
 import { signOut } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

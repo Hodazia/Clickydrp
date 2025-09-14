@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ interface usernamelink {
     onClose: ()=>void
 }
 
+// declare a variable which will store frontend url
 
 
 export default function ShareLinkModal({username,isOpen,onClose}: usernamelink) { // modal opens directly for demo

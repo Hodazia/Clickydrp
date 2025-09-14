@@ -35,7 +35,7 @@ export default function ThemePage() {
       // If a session exists, fetch the profile
       const fetchProfile = async () => {
         try {
-          const response = await fetch("http://localhost:3000/api/profile");
+          const response = await fetch("/api/profile");
           if (!response.ok) throw new Error("Failed to fetch profile.");
           const data: Profile = await response.json();
           setprofile(data);
