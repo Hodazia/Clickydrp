@@ -4,14 +4,14 @@ import { requireUser } from "@/lib/auth";
 // socials/:id
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     // Ensure the social belongs to the user
     const existing = await db.social.findUnique({
-      where: { id: params.id },
+      where: { id: context.params.id },
     });
   
     if (!existing || existing.userId !== sessionUser.id) {
@@ -19,7 +19,7 @@ export async function PUT(
     }
   const body = await req.json();
   const updated = await db.social.update({
-    where: { id: params.id, userId: sessionUser.id },
+    where: { id: context.params.id, userId: sessionUser.id },
     data: body,
   });
 
@@ -28,13 +28,13 @@ export async function PUT(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const existing = await db.social.findUnique({
-    where: { id: params.id },
+    where: { id: context.params.id },
   });
 
   if (!existing || existing.userId !== sessionUser.id) {
@@ -42,7 +42,7 @@ export async function DELETE(
   }
   
   await db.social.delete({
-    where: { id: params.id, userId: sessionUser.id },
+    where: { id: context.params.id, userId: sessionUser.id },
   });
 
   return NextResponse.json({ success: true });

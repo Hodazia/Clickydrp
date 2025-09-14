@@ -14,7 +14,7 @@ cloudinary.config({
 // PUT api/links/:id , delete too , 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
 
   try{
@@ -22,7 +22,7 @@ export async function PUT(
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = params;
+  const { id } = context.params; 
     const existingLink = await db.link.findUnique({
       where: { id: id, userId: sessionUser.id as string },
     });
@@ -104,13 +104,13 @@ export async function PUT(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await db.link.delete({
-    where: { id: params.id, userId: sessionUser.id },
+    where: { id: context.params.id, userId: sessionUser.id },
   });
 
   return NextResponse.json({ success: true });

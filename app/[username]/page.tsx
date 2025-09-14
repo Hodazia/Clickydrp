@@ -145,6 +145,8 @@ export default function Username() {
                             className="w-25 h-25 rounded-full border-4 
                              shadow-xl ring-4 
                              object-cover "
+                             width={40}
+                             height={40}
                         />
 
                         {/* Username + description */}
@@ -223,7 +225,9 @@ export default function Username() {
                                 <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-200/80 flex-shrink-0 md:w-16 md:h-16">
                                         {link.linkThumbnail ? (
                                             <Image src={link.linkThumbnail} alt="Link Thumbnail"
-                                            className="w-full h-full object-cover" />
+                                            className="w-full h-full object-cover" 
+                                            width={40}
+                                            height={40}/>
                                         ) : null}
                                     </div>
                                     <div className="flex justify-center text-[25px] lg:text-[18px] items-center">
@@ -253,6 +257,8 @@ export default function Username() {
                         src={logo}
                         alt="logobutton"
                         className='w-8 h-8 hover:text-indigo-800'
+                        width={40}
+                        height={40}
                     />
                 </Link>
             </div>
