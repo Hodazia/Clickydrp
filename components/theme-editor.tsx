@@ -133,8 +133,8 @@ export default function ThemeEditor() {
       const saved = await res.json()
       setTheme({ ...theme, ...saved })
       toast.success('Theme saved!')
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to save')
+    } catch (e: unknown) {
+      toast.error(e instanceof Error? e.message : 'Failed to save')
     } finally {
       setSubmitting(false)
     }

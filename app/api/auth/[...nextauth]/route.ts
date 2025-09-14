@@ -32,9 +32,9 @@ export const authConfig: AuthOptions = {
         },
         async session({ session, token }) {
             if (token) {
-                (session.user as any).id = token.id;
-                (session.user as any).email = token.email;
-                (session.user as any).name = token.name;
+                (session.user).id = token.id;
+                (session.user).email = token.email;
+                (session.user).name = token.name;
                 
             }
             return session;

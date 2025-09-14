@@ -1,5 +1,5 @@
 'use client'
-import { useRouter } from "next/navigation";
+
 
 import { useEffect, useState, useCallback} from "react";
 import { usePathname } from "next/navigation";
@@ -51,7 +51,7 @@ interface metaprops {
 
 export default function Username() {
     // const { session, status } = useProtectedRoute();
-    const router = useRouter();
+    // const router = useRouter(); 
     const [usermeta, setusermeta] = useState<metaprops | null>(null);
     const [hoveredLinkIdx, setHoveredLinkIdx] = useState<number | null>(null)
     const [hoveredSocialIdx, setHoveredSocialIdx] = useState<number | null>(null)

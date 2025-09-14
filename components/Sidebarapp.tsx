@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, Palette, Settings, LogOut,
+import { User, Palette, LogOut,
     Link2, LucideIcon} from "lucide-react";
 import { Button } from "./ui/button";
 import React from "react";

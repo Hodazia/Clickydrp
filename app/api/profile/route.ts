@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
 /*
 Get username profileimg, description, email from the DB
 */
-export async function GET(req:NextRequest) {
+export async function GET() {
     // 
     try {
         const session = await getServerSession(authConfig);
