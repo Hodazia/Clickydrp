@@ -2,7 +2,10 @@
 import { getServerSession } from "next-auth";
 
 import { db } from "@/lib/prisma";
-import { authConfig } from "@/app/api/auth/[...nextauth]/route";
+
+import { authConfig } from "@/lib/authnext";
+
+
 
 
 export async function requireUser() {
