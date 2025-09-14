@@ -27,15 +27,13 @@ interface Social {
   url: string;
 }
 
-// this is the schema in the DB too
 interface Profile {
   username: string;
   email: string;
-  profileimg: string; // ✅ required
+  profileimg: string;
   description: string;
 }
 
-// Social platform icons as SVG components
 const SocialIcons = {
   tiktok: (props: any) => (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -146,39 +144,43 @@ export default function Dashboard() {
   const router = useRouter();
 
 
-
-
-  // Fetch socials
-  const fetchSocials = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/socials");
-      if (!response.ok) throw new Error("Failed to fetch social links.");
-      const data: Social[] = await response.json();
-      console.log("Social data fetched is ", data);
-      setSocials(data);
-    } catch {
-      toast.error("Could not load social links.");
-    }
-  };
-
-  // Fetch profile
-  const fetchProfile = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/profile");
-      if (!response.ok) throw new Error("Failed to fetch profile.");
-      const data: Profile = await response.json();
-      setProfile(data);
-    } catch {
-      toast.error("Could not load profile.");
-    }
-  };
-
+  // The combined useEffect hook
   useEffect(() => {
+    // If no session, redirect. This handles the initial state.
+    if (status === "unauthenticated" && !session) {
+      router.push("/");
+      return;
+    }
+
+    // Only fetch data if the user is authenticated
     if (session) {
+      const fetchSocials = async () => {
+        try {
+          const response = await fetch("http://localhost:3000/api/socials");
+          if (!response.ok) throw new Error("Failed to fetch social links.");
+          const data: Social[] = await response.json();
+          setSocials(data);
+        } catch {
+          toast.error("Could not load social links.");
+        }
+      };
+
+      const fetchProfile = async () => {
+        try {
+          const response = await fetch("http://localhost:3000/api/profile");
+          if (!response.ok) throw new Error("Failed to fetch profile.");
+          const data: Profile = await response.json();
+          setProfile(data);
+        } catch {
+          toast.error("Could not load profile.");
+        }
+      };
+
       fetchSocials();
       fetchProfile();
     }
-  }, [session]);
+  }, [session, status, router]);
+
 
   // Handle profile update
   const handleProfileUpdate = async (data: 
@@ -313,21 +315,17 @@ export default function Dashboard() {
     return socials.some(social => social.platform === platform);
   };
 
-    // ✅ Instead of early return, handle loading and redirect via render logic
-    if (status === "loading") {
-      return <DashboardLoader />
-    }
+  // Conditional rendering based on status
+  if (status === "loading") {
+    return <DashboardLoader />;
+  }
   
-    if (!session) {
-      // router.push runs inside useEffect to avoid hook mismatch
-      useEffect(() => {
-        router.push("/signin");
-      }, [router]);
-  
-      return null; // still render null here safely
-    }
+  // This redirect is now handled inside the useEffect to follow hook rules.
+  // The component won't render anything in this state, preventing the error.
+  if (status === "unauthenticated") {
+    return null; 
+  }
 
-    
   return (
 
     <SidebarProvider>
@@ -353,13 +351,18 @@ export default function Dashboard() {
             <div className="flex items-center gap-2">
               <Button
                 onClick={() => setIsEditModalOpen(true)}
-                className="bg-indigo-600 text-white hover:from-indigo-500 hover:to-purple-500 shadow-md px-5"
+                className="bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white 
+                hover:border-2 hover:border-indigo-600 
+                shadow-md px-5"
               >
                 <Edit className="h-4 w-4 mr-2" /> Edit profile
               </Button>
               <Button
               onClick={() => setisshare(true)}
-              className="bg-indigo-600 text-white hover:from-indigo-500 hover:to-purple-500 shadow-md px-5">
+              className="bg-indigo-600 text-white
+              hover:text-indigo-600 hover:bg-white 
+                hover:border-2 hover:border-indigo-600 
+              shadow-md px-5">
                 <Share /> Share your clickydrop
               </Button>
             </div>
@@ -471,10 +474,12 @@ export default function Dashboard() {
                         return (
                           <div key={social.id} className="flex items-center justify-between p-3 bg-white 
                           rounded-lg border border-indigo-100 hover:border-indigo-200
+                          border-1 border-indigo-400
                            hover:bg-indigo-600 hover:text-white ">
-                            <div className="flex items-center gap-3 
+                            <div className="flex items-center gap-3  
                             min-w-0 hover:text-white">
-                              <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center">
+                              <div className="w-8 h-8 rounded-full
+                               bg-indigo-50 flex items-center justify-center">
                                 {IconComponent && <IconComponent className="w-4 h-4 
                                 text-indigo-700" />}
                               </div>
@@ -608,11 +613,6 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* <SocialMoal 
-      isOpen={isSocialModalOpen}
-      onClose={() => setIsSocialModalOpen(false)}
-      onSubmit={handleSocialSubmit}
-      /> */}
     </main>
     </div>
     </SidebarProvider>

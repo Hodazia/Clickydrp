@@ -51,7 +51,7 @@ interface metaprops {
 }
 
 export default function Username() {
-    const { session, status } = useProtectedRoute();
+    // const { session, status } = useProtectedRoute();
     const router = useRouter();
     const [usermeta, setusermeta] = useState<metaprops | null>(null);
     const [hoveredLinkIdx, setHoveredLinkIdx] = useState<number | null>(null)
@@ -80,10 +80,10 @@ export default function Username() {
     }, [status, router]);
 
     useEffect(() => {
-        if (session) {
+        
             fetchData();
-        }
-    }, [session]);
+        
+    }, []);
 
     // ** Corrected position of useMemo **
     const theme = usermeta?.themes?.[0];

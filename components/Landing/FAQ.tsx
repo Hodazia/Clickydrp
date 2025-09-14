@@ -10,6 +10,8 @@ Coding an FAQ Section! , ,
 
 import { useState } from "react"
 import { ArrowUp,ArrowDown } from "lucide-react"
+import logo from "@/public/assets/Vector.svg"
+import Image from "next/image"
 
 interface faq {
     id:number,
@@ -95,6 +97,26 @@ export default function FAQsection(){
                     </div>
                 ))}
         </div>
+                </div>
+            </div>
+            <div className="bg-[#fffbf0] text-gray-400 flex justify-between
+             max-w-4xl mx-auto px-4 py-4 sm:px-6 lg:px-8
+            text-2xl 
+            ">
+                <div className="flex ">
+                <span className="text-black ">ClickyDrop
+                    </span>
+                <span className="">
+                    <Image 
+                    src={logo}
+                    alt="logo"
+                    className="text-indigo-600 "
+                    />
+                </span>
+                </div>
+                <div>
+                    <span className="text-black">&copy;
+                    </span>2025 Ziaul Hoda All rights reserved
                 </div>
             </div>
         </section>

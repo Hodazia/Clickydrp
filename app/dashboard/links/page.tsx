@@ -39,38 +39,77 @@ export default function LinksManager() {
   const { session, status } = useProtectedRoute();
   const router = useRouter();
 
+  useEffect( () => {
+        // If no session, redirect. This handles the initial state.
+        if (status === "unauthenticated" && !session) {
+          router.push("/");
+          return;
+        }
+
+        if(session)
+        {
+          const fetchProfile = async () => {
+            try {
+              const response = await fetch("http://localhost:3000/api/profile");
+              if (!response.ok) throw new Error("Failed to fetch profile.");
+              const data: Profile = await response.json();
+              setProfile(data);
+            } catch {
+              toast.error("Could not load profile.");
+            }
+          }; 
+
+          const fetchLinks = async () => {
+            setLoading(true);
+            try {
+              const res = await fetch("/api/links");
+              const data = await res.json();
+              setLinks(data || []);
+            } catch {
+              toast.error("Failed to load links");
+            } finally {
+              setLoading(false);
+            }
+          };
+
+          fetchProfile();
+          fetchLinks();
+        }
+  }, [session,status,router]);
   // Fetch profile
-  const fetchProfile = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/profile");
-      if (!response.ok) throw new Error("Failed to fetch profile.");
-      const data: Profile = await response.json();
-      setProfile(data);
-    } catch {
-      toast.error("Could not load profile.");
-    }
-  };
+  // const fetchProfile = async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:3000/api/profile");
+  //     if (!response.ok) throw new Error("Failed to fetch profile.");
+  //     const data: Profile = await response.json();
+  //     setProfile(data);
+  //   } catch {
+  //     toast.error("Could not load profile.");
+  //   }
+  // };
 
-  // Fetch links
-  useEffect(() => {
-    const fetchLinks = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch("/api/links");
-        const data = await res.json();
-        setLinks(data || []);
-      } catch {
-        toast.error("Failed to load links");
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    if (session) {
-      fetchLinks();
-      fetchProfile();
-    }
-  }, [session]);
+
+  // // Fetch links
+  // useEffect(() => {
+  //   const fetchLinks = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const res = await fetch("/api/links");
+  //       const data = await res.json();
+  //       setLinks(data || []);
+  //     } catch {
+  //       toast.error("Failed to load links");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (session) {
+  //     fetchLinks();
+  //     fetchProfile();
+  //   }
+  // }, [session]);
 
   // Save link (create or update)
   const handleSave = async (link: Link) => {
@@ -176,11 +215,10 @@ export default function LinksManager() {
     return <p><DashboardLoader /></p>;
   }
 
-  if (!session) {
-    useEffect(() => {
-      router.push("/signin");
-    }, [router]);
-    return null;
+    // This redirect is now handled inside the useEffect to follow hook rules.
+  // The component won't render anything in this state, preventing the error.
+  if (status === "unauthenticated") {
+    return null; 
   }
 
   return (
