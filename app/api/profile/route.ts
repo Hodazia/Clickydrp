@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authConfig } from "../auth/[...nextauth]/route";
 import { db } from "@/lib/prisma"; // prisma client
 import { v2 as cloudinary } from "cloudinary";
+import type { UploadApiResponse } from "cloudinary";
 
 // Cloudinary config
 cloudinary.config({
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
       const buffer = Buffer.from(bytes);
 
       // Upload to Cloudinary
-      const uploadResponse = await new Promise<any>((resolve, reject) => {
+      const uploadResponse:UploadApiResponse = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           {
             folder: "user-profiles",
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
           },
           (error, result) => {
             if (error) reject(error);
-            else resolve(result);
+            else resolve(result as UploadApiResponse);
           }
         );
         stream.end(buffer);
@@ -76,9 +77,13 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(updatedUser, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating profile:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+  
+    return NextResponse.json({ error: "Unknown error" }, { status: 500 });
   }
 }
 
@@ -112,12 +117,17 @@ export async function GET(req:NextRequest) {
       
           return NextResponse.json(user, { status: 200 });
     }
-    catch(error)
+    catch(error:unknown)
     {
         console.error("GET /api/profile error:", error);
-        return NextResponse.json(
-        { error: "Internal Server Error" },
-        { status: 500 }
-        );
+        if (error instanceof Error) {
+          return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+      
+        return NextResponse.json({ error: "Unknown error" }, { status: 500 });
+        // return NextResponse.json(
+        // { error: "Internal Server Error" },
+        // { status: 500 }
+        // );
     }
 }

@@ -19,7 +19,7 @@ interface Link {
   id: string;
   linkUrl: string;
   description: string;
-  linkThumbnail?: string | null;
+  linkThumbnail?: string | File | null;
 }
 
 interface Profile {
@@ -121,7 +121,7 @@ export default function LinksManager() {
         formData.append("linkUrl", link.linkUrl || "");
         formData.append("description", link.description || "");
         if (link.linkThumbnail && typeof link.linkThumbnail !== "string") {
-          formData.append("file", link.linkThumbnail as any);
+          formData.append("file", link.linkThumbnail);
         }
         res = await fetch("/api/links", { method: "POST", body: formData });
       } else {
@@ -176,7 +176,7 @@ export default function LinksManager() {
   const handleFileChange = (id: string, file: File) => {
     setLinks((prev) =>
       prev.map((l) =>
-        l.id === id ? { ...l, linkThumbnail: file as any } : l
+        l.id === id ? { ...l, linkThumbnail: file } : l
       )
     );
   };
@@ -212,7 +212,7 @@ export default function LinksManager() {
 
   // Handle loading and redirect logic
   if (status === "loading") {
-    return <p><DashboardLoader /></p>;
+    return <div><DashboardLoader /></div>;
   }
 
     // This redirect is now handled inside the useEffect to follow hook rules.
@@ -229,7 +229,6 @@ export default function LinksManager() {
           username={profile?.username || ""} 
           email={profile?.email || ""} 
           profileimg={profile?.profileimg || ""} 
-          description={profile?.description || ""}
         />
 
         {/* Main Content */}
@@ -242,7 +241,8 @@ export default function LinksManager() {
                 <div className="flex items-center justify-center">
                     <Image 
                     src={linklogo}
-                    className="w-10 h-10"
+                    width={40}
+                    height={40}
                     alt="vector image"
                     />
                     <h1 className="text-3xl font-bold gradient-text">
@@ -297,9 +297,11 @@ export default function LinksManager() {
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           {link.linkThumbnail && typeof link.linkThumbnail === "string" && (
-                            <img
+                            <Image
                               src={link.linkThumbnail}
                               alt="Link thumbnail"
+                              width={40}
+                              height={40}
                               className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
                             />
                           )}
@@ -401,7 +403,7 @@ export default function LinksManager() {
                                   />
                                   {link.linkThumbnail &&
                                     typeof link.linkThumbnail === "string" && (
-                                      <img
+                                      <Image
                                         src={link.linkThumbnail}
                                         alt="Thumbnail"
                                         className="w-12 h-12 rounded-lg object-cover"
@@ -415,7 +417,7 @@ export default function LinksManager() {
                                   size="sm"
                                   onClick={() => handleSaveAndExit(link)}
                                   className="flex-1 text-indigo-600 bg-white border-2 border-indigo-200
-                                  border-ring-2
+                                  ring-2
                                   hover:bg-indigo-600 hover:text-white"
                                 >
                                   <Save className="w-4 h-4 mr-2" />

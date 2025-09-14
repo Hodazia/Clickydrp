@@ -65,7 +65,6 @@ export default function ThemePage() {
           username={profile?.username || ''}
           email={profile?.email || ''}
           profileimg={profile?.profileimg || ''}
-          description={profile?.description || ''}
         />
         <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] text-[#2c2c2c]">
           <div className="max-w-6xl mx-auto space-y-8">

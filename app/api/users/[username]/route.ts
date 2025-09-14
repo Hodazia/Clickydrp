@@ -46,8 +46,8 @@ export async function GET(
     }
 
     return NextResponse.json(user);
-  } catch (e: any) {
-    const msg = e?.message || "Internal Server Error";
+  } catch (e: unknown) {
+    const msg = e instanceof Error? e?.message : "Internal Server Error";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

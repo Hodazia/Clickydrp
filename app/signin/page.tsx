@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { signinSchema } from "@/lib/schema";
 import Image from 'next/image'; // Import the Image component
 import prfpng from "@/public/assets/bad-barbie.png"; // Your image import
+import Link from "next/link";
 
 export default function Signin() {
     const router = useRouter();
@@ -18,7 +19,7 @@ export default function Signin() {
         password: ''
     });
 
-    const handleChange = (e:any) => {
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement> ) => {
         const { id, value } = e.target;
         setFormData(prevData => ({
             ...prevData,
@@ -26,11 +27,11 @@ export default function Signin() {
         }));
     };
 
-    const handleSubmit = async (e:any) => {
+    const handleSubmit = async (e:React.FormEvent<HTMLFormElement> ) => {
         e.preventDefault();
         const toastId = toast.loading("Signing in...");
 
-        const { success, data, error } = signinSchema.safeParse(formData);
+        const { success } = signinSchema.safeParse(formData);
 
         if (!success) {
             toast.error("The data you entered is invalid", { id: toastId });
@@ -51,8 +52,8 @@ export default function Signin() {
                 router.push("/dashboard/profile"); // route to the profile page,
             }
 
-        } catch (error:any) {
-            toast.error(error.message || "Network error. Please try again.", {
+        } catch  {
+            toast.error("Network error. Please try again.", {
                 id: toastId,
             });
         }
@@ -72,7 +73,7 @@ export default function Signin() {
                 toast.success("Successfully signed in with Google!", { id: toastId });
                 router.push("/dashboard");
             }
-        } catch (error) {
+        } catch  {
             toast.error("Something went wrong. Please try again!", { id: toastId });
         }
     };
@@ -91,7 +92,7 @@ export default function Signin() {
                 toast.success("Signed in with GitHub!", { id: toastId });
                 router.push("/dashboard");
             }
-        } catch (error) {
+        } catch  {
             toast.error("Something went wrong. Please try again!", { id: toastId });
         }
     };
@@ -166,10 +167,10 @@ export default function Signin() {
                     {/* Note to the user */}
                     <div className="text-center mt-6">
                         <span className="text-gray-500">
-                           Don't have an account? {" "}
-                           <a href="/signup" className="text-indigo-600 font-semibold hover:underline">
+                           Don&apos;t have an account? {" "}
+                           <Link href="/signup" className="text-indigo-600 font-semibold hover:underline">
                                Sign Up
-                           </a>
+                           </Link>
                         </span>
                     </div>
                 </div>

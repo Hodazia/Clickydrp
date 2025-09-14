@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import  { db } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
-
+import type { UploadApiResponse } from "cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 
 // Configure Cloudinary
@@ -62,7 +62,7 @@ export async function PUT(
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      const uploadResponse = await new Promise<any>((resolve, reject) => {
+      const uploadResponse:UploadApiResponse = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           {
             folder: "linktree-thumbnails",
@@ -70,7 +70,7 @@ export async function PUT(
           },
           (error, result) => {
             if (error) reject(error);
-            else resolve(result);
+            else resolve(result as UploadApiResponse);
           }
         );
         stream.end(buffer);
@@ -91,10 +91,14 @@ export async function PUT(
 
     return NextResponse.json(updatedLink);
   }
-  catch(error:any)
+  catch(error: unknown)
   {
     console.error("Error updating link:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+  
+    return NextResponse.json({ error: "Unknown error" }, { status: 500 });
   }
 }
 

@@ -9,11 +9,11 @@ export async function POST(req:NextRequest)
     // POST /api/register
     const body  = await req.json();
     const {username,email, password} = body;
-    const { success,error } = signupSchema.safeParse(body);
+    const { success } = signupSchema.safeParse(body);
 
     if(!success)
     {
-        return  new Response(JSON.stringify({name,password}),{
+        return  new Response(JSON.stringify({username,password}),{
             status: 403,
         })
 

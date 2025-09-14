@@ -1,6 +1,7 @@
 // app/api/links/route.ts -> GET and POST
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import type { UploadApiResponse } from "cloudinary";
 
 import { authConfig } from "../auth/[...nextauth]/route";
 
@@ -62,7 +63,7 @@ export async function POST(req: NextRequest) {
       const buffer = Buffer.from(bytes);
 
       // Upload to Cloudinary
-      const uploadResponse = await new Promise<any>((resolve, reject) => {
+      const uploadResponse: UploadApiResponse = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           {
             folder: "linktree-thumbnails",
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
           },
           (error, result) => {
             if (error) reject(error);
-            else resolve(result);
+            else resolve(result as UploadApiResponse);
           }
         );
         stream.end(buffer);
@@ -90,8 +91,12 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(newLink, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating link:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+  
+    return NextResponse.json({ error: "Unknown error" }, { status: 500 });
   }
 }

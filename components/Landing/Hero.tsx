@@ -12,6 +12,7 @@ import prfl from "@/public/assets/centerfeature-port.png"
 import {motion} from "framer-motion"
 import { useState } from "react";
 
+
 export default function Hero()
 {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,15 +37,15 @@ export default function Hero()
           <span className="text-3xl">ClickyDrop</span></div>
         </motion.div>
         <nav className="hidden md:flex space-x-6 text-[#6b6b6b] font-medium">
-          <a href="#videodemo" 
+          <Link href="#videodemo" 
           className="hover:text-black transition-colors hover:bg-indigo-600
-          hover:text-white p-2 rounded-full">Demo</a>
-          <a href="#features" className="hover:text-black transition-colors hover:bg-indigo-600
-          hover:text-white p-2 rounded-full">Features</a>
-          <a href="#dashboard" className="hover:text-black transition-colors hover:bg-indigo-600
-          hover:text-white p-2 rounded-full">Dashboard</a>
-          <a href="#faqs" className="hover:text-black transition-colors hover:bg-indigo-600
-          hover:text-white p-2 rounded-full">FAQ's</a>
+          hover:text-white p-2 rounded-full">Demo</Link>
+          <Link href="#features" className="hover:text-black transition-colors hover:bg-indigo-600
+          hover:text-white p-2 rounded-full">Features</Link>
+          <Link href="#dashboard" className="hover:text-black transition-colors hover:bg-indigo-600
+          hover:text-white p-2 rounded-full">Dashboard</Link>
+          <Link href="#faqs" className="hover:text-black transition-colors hover:bg-indigo-600
+          hover:text-white p-2 rounded-full">FAQ&apos;s</Link>
 
 
         
@@ -80,15 +81,30 @@ export default function Hero()
                         <XIcon className="w-8 h-8 text-blue-400" />
                     </button>
                     <nav className="flex flex-col space-y-6 text-[#6b6b6b] text-xl font-medium">
-                        <a href="#videodemo" onClick={() => setIsOpen(false)} className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">Demo</a>
-                        <a href="#features" onClick={() => setIsOpen(false)} className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">Features</a>
-                        <a href="#dashboard" onClick={() => setIsOpen(false)} className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">Dashboard</a>
-                        <a href="#faqs" onClick={() => setIsOpen(false)} className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">FAQ's</a>
+                        <Link href="#videodemo" onClick={() => setIsOpen(false)} 
+                        className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
+                          Demo
+                          </Link>
+                        <Link href="#features" onClick={() => setIsOpen(false)}
+                         className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
+                          Features</Link>
+                        <Link href="#dashboard" onClick={() => setIsOpen(false)} 
+                        className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
+                          Dashboard</Link>
+                        <Link href="#faqs" onClick={() => setIsOpen(false)} 
+                        className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
+                          FAQ&apos;s</Link>
                     </nav>
 
                     <div className="flex flex-col items-center space-y-4 mt-8">
-                        <a href="/signin" onClick={() => setIsOpen(false)} className="text-white px-5 py-2 bg-indigo-600 hover:text-indigo-600 hover:bg-white rounded-full transition-colors hover:ring-2 hover:scale-105 duration-300">Login</a>
-                        <a href="/signup" onClick={() => setIsOpen(false)} className="text-white px-5 py-2 rounded-full font-semibold transition-colors bg-indigo-600 hover:scale-105 duration-200 hover:text-indigo-600 hover:bg-white p-2 rounded-full hover:ring-2">Register</a>
+                        <Link href="/signin" onClick={() => setIsOpen(false)} 
+                        className="text-white px-5 py-2 bg-indigo-600 hover:text-indigo-600 hover:bg-white 
+                        rounded-full transition-colors hover:ring-2 hover:scale-105 duration-300">
+                          Login</Link>
+                        <Link href="/signup" onClick={() => setIsOpen(false)} 
+                        className="text-white px-5 py-2 rounded-full font-semibold transition-colors
+                         bg-indigo-600 hover:scale-105 duration-200 hover:text-indigo-600 hover:bg-white p-2 
+                         rounded-full hover:ring-2">Register</Link>
                     </div>
                 </div>
             )}

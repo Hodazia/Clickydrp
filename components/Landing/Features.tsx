@@ -44,21 +44,21 @@ const securityFeatures = [
   },
 ];
 
-const socialIcons = [
-  { src: '/assets/instagram.svg', alt: 'Instagram', title: 'Instagram' },
-  { src: '/assets/tiktok.svg', alt: 'TikTok', title: 'TikTok' },
-  { src: '/assets/twitter.svg', alt: 'Twitter', title: 'Twitter' },
-  { src: '/assets/youtube.svg', alt: 'YouTube', title: 'YouTube' },
-  { src: '/assets/spotify.svg', alt: 'Spotify', title: 'Spotify' },
-  { src: '/assets/apple-music.svg', alt: 'Apple Music', title: 'Apple Music' },
-];
+// const socialIcons = [
+//   { src: '/assets/instagram.svg', alt: 'Instagram', title: 'Instagram' },
+//   { src: '/assets/tiktok.svg', alt: 'TikTok', title: 'TikTok' },
+//   { src: '/assets/twitter.svg', alt: 'Twitter', title: 'Twitter' },
+//   { src: '/assets/youtube.svg', alt: 'YouTube', title: 'YouTube' },
+//   { src: '/assets/spotify.svg', alt: 'Spotify', title: 'Spotify' },
+//   { src: '/assets/apple-music.svg', alt: 'Apple Music', title: 'Apple Music' },
+// ];
 
-const songs = [
-  'AT LAST',
-  'I JUST WANT MAKE LOVE TO YOU',
-  'A SUNDAY KIND OF LOVE',
-  'STORMY WEATHER',
-];
+// const songs = [
+//   'AT LAST',
+//   'I JUST WANT MAKE LOVE TO YOU',
+//   'A SUNDAY KIND OF LOVE',
+//   'STORMY WEATHER',
+// ];
 
 export default function Features() {
   return (

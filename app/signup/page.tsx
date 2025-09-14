@@ -18,7 +18,7 @@ export default function Signup() {
     });
     const router = useRouter();
 
-    const handleChange = (e:any) => {
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement> ) => {
         const { id, value } = e.target;
         setFormData(prevData => ({
             ...prevData,
@@ -26,7 +26,7 @@ export default function Signup() {
         }));
     };
 
-    const handleSubmit = async (e:any) => {
+    const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
                 // console.log("Signup submitted:", { username, email, password });
         // Add your signup logic here
@@ -59,8 +59,8 @@ export default function Signup() {
                 router.push("/signin");
             }
 
-        } catch (error:any) {
-            toast.error(error.message || "Network error. Please try again.", {
+        } catch {
+            toast.error("Network error. Please try again.", {
                 id: toastId,
             });
         }
@@ -81,7 +81,7 @@ export default function Signup() {
                 toast.success("Successfully registered with Google!", { id: toastId });
                 router.push("/dashboard");
             }
-        } catch (error) {
+        } catch {
             toast.error("Something went wrong. Please try again!", { id: toastId });
         }
     };
@@ -100,7 +100,7 @@ export default function Signup() {
                 toast.success("Successfully registered with GitHub!", { id: toastId });
                 router.push("/dashboard");
             }
-        } catch (error) {
+        } catch {
             toast.error("Something went wrong. Please try again!", { id: toastId });
         }
     };

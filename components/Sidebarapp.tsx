@@ -22,7 +22,6 @@ import logovector from "@/public/assets/Vector.svg";
 interface Sidebarprop {
   username:string,
   email:string,
-  description:string,
   profileimg:string
 }
 
@@ -39,13 +38,13 @@ const mainItems: ItemProps[] = [
     { title: "Themes", url: "/dashboard/theme", Icon: Palette },
 ];
 
-const bottomItems = [
-    { title: "Settings", url: "/dashboard/settings", icon: Settings },
-];
+// const bottomItems = [
+//     { title: "Settings", url: "/dashboard/settings", icon: Settings },
+// ];
 
 
 
-export function AppSidebar({username,email,profileimg,description}: Sidebarprop) {
+export function AppSidebar({username,email,profileimg}: Sidebarprop) {
     const [isMobile, setIsMobile] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
