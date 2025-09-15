@@ -3,10 +3,10 @@ import { db } from "@/lib/prisma";
 
 export async function GET(
   req: Request,
-  context: { params: Record<string, string> }
+  { params }: { params: { username: string } }
 ) {
   try {
-    const { username } = context.params;
+    const { username } = params;
 
     const themeSelect = {
       id: true,
