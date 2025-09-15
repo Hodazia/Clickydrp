@@ -108,7 +108,7 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  context:any
+  context:unknown
 ) {
   const { id } = (context as { params: { id: string } }).params;
   const sessionUser = await requireUser();
