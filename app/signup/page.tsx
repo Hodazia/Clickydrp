@@ -72,14 +72,14 @@ export default function Signup() {
         try {
             const res = await signIn("google", {
                 redirect: false,
-                callbackUrl: "/dashboard/profile",
+                callbackUrl: `${window.location.origin}/dashboard/profile`,
             });
 
             if (res?.error) {
                 toast.error("Google registration failed!", { id: toastId });
-            } else {
+            } else if(res?.url) {
                 toast.success("Successfully registered with Google!", { id: toastId });
-                router.push("/dashboard");
+                router.push(res.url);
             }
         } catch {
             toast.error("Something went wrong. Please try again!", { id: toastId });
@@ -91,14 +91,14 @@ export default function Signup() {
         try {
             const res = await signIn("github", {
                 redirect: false,
-                callbackUrl: "/dashboard/profile",
+                callbackUrl: `${window.location.origin}/dashboard/profile`,
             });
 
             if (res?.error) {
                 toast.error("GitHub registration failed!", { id: toastId });
-            } else {
+            } else if(res?.url) {
                 toast.success("Successfully registered with GitHub!", { id: toastId });
-                router.push("/dashboard");
+                router.push(res.url);
             }
         } catch {
             toast.error("Something went wrong. Please try again!", { id: toastId });
