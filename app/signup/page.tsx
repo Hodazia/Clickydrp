@@ -72,7 +72,7 @@ export default function Signup() {
         try {
             const res = await signIn("google", {
                 redirect: false,
-                callbackUrl: "/dashboard",
+                callbackUrl: "/dashboard/profile",
             });
 
             if (res?.error) {
@@ -91,7 +91,7 @@ export default function Signup() {
         try {
             const res = await signIn("github", {
                 redirect: false,
-                callbackUrl: "/dashboard",
+                callbackUrl: "/dashboard/profile",
             });
 
             if (res?.error) {

@@ -646,7 +646,7 @@ useEffect(() => {
                     />
                   </div>
                   <h4 className="mt-3 font-semibold"
-                  style={{ color: theme.bioFontColor || '#111827'}}>{data?.username}</h4>
+                  style={{ color: theme.bioFontColor || '#111827'}}>@{data?.username}</h4>
                   <p
                     className="text-center text-sm mt-1"
                     style={{ color: theme.bioFontColor || '#111827',

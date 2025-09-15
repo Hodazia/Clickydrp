@@ -154,7 +154,7 @@ export default function Username() {
                         style={{
                             color:theme?.bioFontColor || '#ffffff'
                         }}>
-                            {usermeta.username}
+                            @{usermeta.username}
                         </h1>
                         <div className="mt-2 text-center  max-w-prose"
                         style={{

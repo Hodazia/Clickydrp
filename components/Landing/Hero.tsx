@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link"
-import { Github, MenuIcon, XIcon } from "lucide-react"
+import { Github, MenuIcon, XIcon,Play } from "lucide-react"
 import { useRouter } from "next/navigation"
 import logovector from "@/public/assets/Vector.svg"; 
 import Image from "next/image";
@@ -125,11 +125,26 @@ export default function Hero()
           Multi Benefits
         </h1>
 
-
+          <a
+          href="#videodemo"
+          className="sm:text-lg mt-2 flex justify-center 
+          leading-relaxed "
+          >
+            <div className="bg-indigo-500 
+            hover:bg-white hover:text-indigo-500 
+            hover:ring-2 hover:border-indigo-400
+            hover:scale-105 transition duration-400
+            flex gap-1 text-white p-2 rounded-full">
+            Watch Demo video <span className="text-center">
+              <Play 
+              className="w-6 h-6"
+              /></span>
+            </div>
+            </a>
 
         <p className="text-base mt-5 sm:text-lg text-[#2c2c2c] leading-relaxed">
           ClickyDrop is an open-source alternative to <br className="hidden sm:block" />
-          Linktree for their bio links!
+          Linktree!
           <br />
           Have one URL for all of your links
           <br />
@@ -143,7 +158,7 @@ export default function Hero()
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="flex items-center bg-white border border-gray-200 rounded-full p-2 w-full max-w-sm">
             <span className="text-sm sm:text-base text-[#6b6b6b] pl-3 pr-1 whitespace-nowrap">
-                www.clickydrop.vercel.app/</span>
+                www.clickydrp.vercel.app/</span>
             <input 
               type="text" 
               placeholder="username" 
@@ -175,16 +190,12 @@ export default function Hero()
         </div>
         </motion.div>
         <motion.div
-        initial={{scale:0.5,x:500,opacity:0}}
-        animate={{
-          scale:1,
-          opacity:1,
-          x:0,
-          transition:{
-            duration:1
-          }
-        }}
-        whileHover={{ scale:1.1}}
+                    initial={{ opacity: 0, scale: 0.8, y: 40 , x:100}}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 , x:0}}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    viewport={{ once: true, amount: 0.3 }} 
+                    whileHover={{ scale: 1.1, rotate: 2 }}
+                    whileTap={{ scale: 0.95 }}
         >
         <div className="relative mx-auto mt-8 lg:mt-0">
           <Image 
@@ -203,7 +214,7 @@ export default function Hero()
         animate={{ opacity:1, y:0}}
         transition={{ type: "spring", stiffness: 120, damping: 15 }}
         >
-        <div className="text-center text-white rounded-full p-1
+        <div className="text-center text-white rounded-full p-2
          max-w-4xl text-4xl bg-indigo-400 mx-auto
          hover:bg-indigo-300 hover:scale-105
          transition duration-300">

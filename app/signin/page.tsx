@@ -64,14 +64,14 @@ export default function Signin() {
         try {
             const res = await signIn("google", {
                 redirect: false,
-                callbackUrl: "/dashboard",
+                callbackUrl: "/dashboard/profile",
             });
 
             if (res?.error) {
                 toast.error("Google sign-in failed!", { id: toastId });
             } else {
                 toast.success("Successfully signed in with Google!", { id: toastId });
-                router.push("/dashboard");
+                router.push("/dashboard/profile");
             }
         } catch  {
             toast.error("Something went wrong. Please try again!", { id: toastId });
@@ -83,14 +83,14 @@ export default function Signin() {
         try {
             const res = await signIn("github", {
                 redirect: false,
-                callbackUrl: "/dashboard",
+                callbackUrl: "/dashboard/profile",
             });
 
             if (res?.error) {
                 toast.error("GitHub sign-in failed!", { id: toastId });
             } else {
                 toast.success("Signed in with GitHub!", { id: toastId });
-                router.push("/dashboard");
+                router.push("/dashboard/profile");
             }
         } catch  {
             toast.error("Something went wrong. Please try again!", { id: toastId });
