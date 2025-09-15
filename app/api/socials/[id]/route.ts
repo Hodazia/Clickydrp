@@ -3,21 +3,22 @@ import { db } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 // socials/:id
 
-interface RouteContext {
-  params: { id: string };
-}
+// interface RouteContext {
+//   params: { id: string };
+// }
 
 
 export async function PUT(
   req: NextRequest,
-  context:RouteContext
+  context:unknown
 ) {
+  const { id } = (context as { params: { id: string } }).params;
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     // Ensure the social belongs to the user
     const existing = await db.social.findUnique({
-      where: { id: context.params.id },
+      where: { id},
     });
   
     if (!existing || existing.userId !== sessionUser.id) {
@@ -25,7 +26,7 @@ export async function PUT(
     }
   const body = await req.json();
   const updated = await db.social.update({
-    where: { id: context.params.id, userId: sessionUser.id },
+    where: { id, userId: sessionUser.id },
     data: body,
   });
 
@@ -34,13 +35,14 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  context:RouteContext  
+  context:unknown
 ) {
+  const { id } = (context as { params: { id: string } }).params;
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const existing = await db.social.findUnique({
-    where: { id: context.params.id },
+    where: { id },
   });
 
   if (!existing || existing.userId !== sessionUser.id) {
@@ -48,7 +50,7 @@ export async function DELETE(
   }
   
   await db.social.delete({
-    where: { id: context.params.id, userId: sessionUser.id },
+    where: { id, userId: sessionUser.id },
   });
 
   return NextResponse.json({ success: true });

@@ -11,14 +11,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-interface RouteContext {
-  params: { id: string };
-}
+// interface RouteContext {
+//   params: { id: string };
+// }
 
 // PUT api/links/:id , delete too , 
 export async function PUT(
   req: NextRequest,
-  context:RouteContext
+  context:unknown
 ) {
 
   try{
@@ -26,7 +26,7 @@ export async function PUT(
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = context.params; 
+  const { id } = (context as { params: { id: string } }).params;
     const existingLink = await db.link.findUnique({
       where: { id: id, userId: sessionUser.id as string },
     });
@@ -108,13 +108,14 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  context:RouteContext
+  context:any
 ) {
+  const { id } = (context as { params: { id: string } }).params;
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await db.link.delete({
-    where: { id: context.params.id, userId: sessionUser.id },
+    where: { id , userId: sessionUser.id },
   });
 
   return NextResponse.json({ success: true });
