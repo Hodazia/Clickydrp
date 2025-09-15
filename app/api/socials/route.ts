@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest,NextResponse } from "next/server";
 import { db } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 /*
@@ -20,7 +20,7 @@ export async function GET() {
 
 
 // add the socials, 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

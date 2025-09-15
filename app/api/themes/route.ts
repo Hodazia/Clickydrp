@@ -156,6 +156,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import type { Prisma } from "@prisma/client";
+import { NextRequest } from "next/server";
 
 // SELECT fields (shared for GET and POST)
 const themeSelect = {
@@ -226,7 +227,7 @@ export async function GET() {
 }
 
 // POST to upsert the current user's theme
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const sessionUser = await requireUser();
     if (!sessionUser) {

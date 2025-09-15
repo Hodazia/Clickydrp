@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse , NextRequest} from "next/server";
 import  { db } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import type { UploadApiResponse } from "cloudinary";
@@ -11,10 +11,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
+interface RouteContext {
+  params: { id: string };
+}
+
 // PUT api/links/:id , delete too , 
 export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } } 
+  req: NextRequest,
+  context:RouteContext
 ) {
 
   try{
@@ -22,7 +26,7 @@ export async function PUT(
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = params; 
+  const { id } = context.params; 
     const existingLink = await db.link.findUnique({
       where: { id: id, userId: sessionUser.id as string },
     });
@@ -103,14 +107,14 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } } 
+  req: NextRequest,
+  context:RouteContext
 ) {
   const sessionUser = await requireUser();
   if (!sessionUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await db.link.delete({
-    where: { id: params.id, userId: sessionUser.id },
+    where: { id: context.params.id, userId: sessionUser.id },
   });
 
   return NextResponse.json({ success: true });

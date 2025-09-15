@@ -1,12 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest,NextResponse } from "next/server";
 import { db } from "@/lib/prisma";
 
+interface RouteContext {
+  params: { username: string };
+}
+
+
 export async function GET(
-  req: Request,
-  { params }: { params: { username: string } }
+  req: NextRequest,
+  context:RouteContext
 ) {
   try {
-    const { username } = params;
+    const { username } = context.params;
 
     const themeSelect = {
       id: true,
