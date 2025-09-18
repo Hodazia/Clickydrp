@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# ClickyDrop
 
-First, run the development server:
+One link for everything you share. Open-source, themeable, and social-first.
 
+
+## Live Link
+
+- App: https://clickydrp.vercel.app/
+
+## What is this project?
+
+ClickyDrop is an open-source Link-in-bio platform where creators can bundle all their links and socials into a single, beautiful page. It includes a rich dashboard to manage links, socials, and a powerful theme editor to customize the look-and-feel of your public page.
+
+## Features
+
+- Landing page with responsive marketing sections (Hero, Features, Dashboard preview, FAQ)
+- Authenticated dashboard with sidebar navigation
+- Links Manager
+  - Add, edit, delete links
+  - Optional thumbnails (upload)
+- Socials Manager
+  - Quick add/edit/delete support
+  - 15+ popular platform icons with status badges
+- Profile Management
+  - Username, email, bio, avatar upload (Cloudinary-backed)
+- Theme Editor (SaaS-like)
+  - Background: color/gradient/image
+  - Links styling: background, text color, radius, spacing, hover color
+  - Text: bio font color, size, family
+  - Socials: icon color, hover color, size
+  - Profile: avatar shape and border
+  - Live mobile preview 
+- Dark/Light mode
+  - Global ThemeToggle component (persists via localStorage)
+  - Applied to landing pages and dashboard pages (Profile, Links, Theme)
+
+## Tech Used
+
+- Framework: Next.js (App Router)
+- Language: TypeScript, React
+- Styling: Tailwind CSS v4
+- Animations: Framer Motion
+- UI Library: ShadCn
+- Icons: lucide-react
+- Auth: NextAuth (with Prisma adapter)
+- Database: PostgreSQL via Prisma ORM
+- Storage: Cloudinary (for images)
+- Toasts: sonner
+
+## Local Development
+
+1) Install dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2) Set environment variables
+- DATABASE_URL
+- NEXTAUTH_SECRET
+- NEXTAUTH_URL
+- CLOUDINARY_* (if using uploads)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3) Run Prisma
+```bash
+npx prisma migrate deploy
+npx prisma generate
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4) Start the dev server
+```bash
+npm run dev
+# open http://localhost:3000
+```
 
-## Learn More
+## Project Structure (high-level)
 
-To learn more about Next.js, take a look at the following resources:
+- `app/` – Next.js routes (landing, dashboard, API routes)
+- `components/` – Reusable UI components and feature modules (Theme Editor, Landing sections, etc.)
+- `lib/` – Prisma client, auth helpers, utilities
+- `prisma/` – Prisma schema and migrations
+- `public/` – Static assets
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Dark mode is controlled by adding/removing the `dark` class on `document.documentElement`. The ThemeToggle handles persistence (localStorage) and system preference.
+- The theme editor is compatible with the current Prisma Theme schema (card background fields removed).
 
-## Deploy on Vercel
+## Notion
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- The below is a notion link to the page of how i implement this project!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[Notion Page](https://hospitable-page-c67.notion.site/v1-27262da32a8d804fa0cbcd51f72327e8)

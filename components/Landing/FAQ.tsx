@@ -112,7 +112,8 @@ export default function FAQsection(){
         </motion.div>
                 </div>
             </div>
-            <div className="bg-[#fffbf0] dark:bg-black  text-gray-400 dark:text-gray-500 flex justify-between
+            <div className="bg-[#fffbf0] dark:bg-black  text-gray-400 dark:text-gray-500 
+            flex flex-col items-center
              max-w-4xl mx-auto px-4 py-4 sm:px-6 lg:px-8
             text-2xl transition-colors duration-300
             ">
@@ -139,7 +140,10 @@ export default function FAQsection(){
                 >
                     <span className="text-black dark:text-white">&copy;
                     </span>
-                    <span className="dark:text-white text-black">2025 Ziaul Hoda All rights reserved</span>
+                    <span className="dark:text-white text-black">2025 Ziaul Hoda</span>
+                </motion.div>
+                <motion.div>
+                    <span className="dark:text-white text-black">All rights reserved!</span>
                 </motion.div>
             </div>
         </section>
