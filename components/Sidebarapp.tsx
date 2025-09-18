@@ -121,8 +121,9 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
                             {/* <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
                                 {username.charAt(0)}{description.charAt(0)}
                             </AvatarFallback> */}
-                            <div className="text-lg font-bold text-gray-600
-                             flex justify-center items-center
+                            <div className="text-xl font-bold text-gray-600
+                             flex justify-center items-center 
+                             dark:text-white 
                             ">
                                 Clickydrop
                             </div>

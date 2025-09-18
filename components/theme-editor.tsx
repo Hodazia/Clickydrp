@@ -143,7 +143,7 @@ export default function ThemeEditor() {
   const Section = ({ children, title, isOpen = true, onToggle, icon}:
      { children: React.ReactNode; title: string; isOpen?: boolean; onToggle?: () => void;
        icon?: React.ReactNode, }) => (
-    <Card className="glass-card bg-gray-50 border-accent/20"
+    <Card className="glass-card bg-gray-50 border-accent/20 dark:bg-gray-800"
     style={{
       color: isOpen? 'indigo-200' : 'white'
     }}>
@@ -159,7 +159,7 @@ export default function ThemeEditor() {
               {title}
             </h3>
           </div>
-          <ChevronDown className={`h-6 w-6 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`h-6 w-6 text-gray-400 transition-transform dark:text-white ${isOpen ? 'rotate-180' : ''}`} />
         </button>
         {isOpen && (
           <div className="grid gap-4 mt-4">{children}</div>
@@ -267,11 +267,11 @@ useEffect(() => {
         <Separator />
 
         <Section title="Background Settings" 
-        icon={<PiSelectionBackgroundBold className="h-6 w-6 text-indigo-400" />} 
+        icon={<PiSelectionBackgroundBold className="h-6 w-6 text-indigo-400 " />} 
         isOpen={openSections.Background} onToggle={() => toggleSection('Background')}>
           {openSections.Background && (
             <>
-            <div>
+            <div className='dark:text-white '>
               <Label className="text-sm">
                 Background Type</Label>
               <select
@@ -288,7 +288,7 @@ useEffect(() => {
             </div>
 
             {theme.viewportType === 'color' && (
-              <div>
+              <div className='dark:text-white '>
                 <Label className="text-sm">Background Color</Label>
                 <div className="mt-1 flex items-center gap-3">
                   <input
@@ -308,20 +308,20 @@ useEffect(() => {
             )}
 
             {theme.viewportType === 'gradient' && (
-              <div>
+              <div className='dark:text-white'>
                 <Label className="text-sm">CSS Gradient</Label>
                     <Input
                   placeholder="linear-gradient(135deg,#e9efff,#fff0f5)"
                   value={theme.viewportGradient || ''}
                   className='border border-2 border-indigo-200
-                  hover:border-ring-2'
+                  hover:border-ring-2 dark:text-white'
                   onChange={(e) => setTheme((v) => ({ ...v, viewportGradient: e.target.value }))}
                     />
                   </div>
             )}
 
             {theme.viewportType === 'image' && (
-              <div>
+              <div className='dark:text-white'>
                 <Label className="text-sm">Background Image URL</Label>
                     <Input
                   placeholder="https://..."
@@ -337,10 +337,11 @@ useEffect(() => {
           </Section>
         
 
-        <Section title="Text Settings" icon={<TypeIcon className="h-6 w-6 text-indigo-400" />} isOpen={openSections.Text} onToggle={() => toggleSection('Text')}>
+        <Section title="Text Settings" icon={<TypeIcon className="h-6 w-6 text-indigo-400 
+        " />} isOpen={openSections.Text} onToggle={() => toggleSection('Text')}>
           {openSections.Text && (
             <>
-            <div>
+            <div className='dark:text-white'>
               <Label className="text-sm">Bio Font Color</Label>
               <div className="mt-1 flex items-center gap-3">
                 <input
@@ -359,7 +360,7 @@ useEffect(() => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div>
+              <div className='dark:text-white'>
                 <Label className="text-sm">Font Size (px)</Label>
                 <Input
                   type="number"
@@ -367,17 +368,17 @@ useEffect(() => {
                   max={28}
                   value={theme.bioFontSize || 16}
                   className='border border-2 border-indigo-200
-                  hover:border-ring-2'
+                  hover:border-ring-2 dark:text-white'
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontSize: Number(e.target.value) }))}
                 />
               </div>
-              <div>
+              <div className='dark:text-white'>
                 <Label className="text-sm">Font Family</Label>
                 <Input
                   placeholder="Inter, Roboto, ..."
                   value={theme.bioFontFamily || ''}
                   className='border border-2 border-indigo-200
-                  hover:border-ring-2'
+                  hover:border-ring-2 dark:text-white'
                   onChange={(e) => setTheme((v) => ({ ...v, bioFontFamily: e.target.value }))}
                     />
                   </div>
@@ -390,7 +391,7 @@ useEffect(() => {
           {openSections.Buttons && (
             <>
             <div className="grid grid-cols-2 gap-4">
-              <div>
+              <div className='dark:text-white'>
                 <Label className="text-sm">Background</Label>
                 <div className="mt-1 flex items-center gap-3">
                   <input
@@ -407,7 +408,7 @@ useEffect(() => {
                   /> */}
                 </div>
               </div>
-              <div>
+              <div className='dark:text-white'>
                 <Label className="text-sm">Text Color</Label>
                 <div className="mt-1 flex items-center gap-3">
                   <input
@@ -427,7 +428,7 @@ useEffect(() => {
               </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <div>
+              <div className='dark:text-white'>
                 <Label className="text-sm">Border Radius</Label>
                 <Input
                   type="number"
@@ -435,11 +436,11 @@ useEffect(() => {
                   max={30}
                   value={theme.linksBorderRadius || 16}
                   className='border border-2 border-indigo-200
-                  hover:border-ring-2'
+                  hover:border-ring-2 dark:text-white'
                   onChange={(e) => setTheme((v) => ({ ...v, linksBorderRadius: Number(e.target.value) }))}
                 />
               </div>
-              <div>
+              <div className='dark:text-white'>
                 <Label className="text-sm">Spacing</Label>
                   <Input
                   type="number"
@@ -447,11 +448,11 @@ useEffect(() => {
                   max={32}
                   value={theme.linksSpacing || 12}
                   className='border border-2 border-indigo-200
-                  hover:border-ring-2'
+                  hover:border-ring-2 dark:text-white'
                   onChange={(e) => setTheme((v) => ({ ...v, linksSpacing: Number(e.target.value) }))}
                 />
               </div>
-              <div>
+              <div className='dark:text-white'>
                 <Label className="text-sm">Hover Color</Label>
                 <div className="mt-1 flex items-center gap-3">
                   <input

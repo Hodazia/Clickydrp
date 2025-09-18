@@ -11,6 +11,8 @@ import { signinSchema } from "@/lib/schema";
 import Image from 'next/image'; // Import the Image component
 import prfpng from "@/public/assets/bad-barbie.png"; // Your image import
 import Link from "next/link";
+import ThemeToggle from "@/components/ThemeToggle";
+
 
 export default function Signin() {
     const router = useRouter();
@@ -60,54 +62,36 @@ export default function Signin() {
     };
 
     const handleGoogleLogin = async () => {
-        const toastId = toast.loading("Signing in with Google...");
-        try {
-            const res = await signIn("google", {
-                // redirect: false, -> auto-redirect 
-                callbackUrl: `${window.location.origin}/dashboard/profile`,
-            });
-
-            if (res?.error) {
-                toast.error("Google sign-in failed!", { id: toastId });
-            } else if (res?.url){
-                toast.success("Successfully signed in with Google!", { id: toastId });
-                router.push(res.url);
-            }
-        } catch  {
-            toast.error("Something went wrong. Please try again!", { id: toastId });
-        }
+        // toast.loading("Signing in with Google...");
+        signIn("google", {
+            callbackUrl: "/dashboard/profile",  // relative is fine
+          });
     };
 
     const handleGitHubLogin = async () => {
-        const toastId = toast.loading("Signing in with GitHub...");
-        try {
-            const res = await signIn("github", {
-                redirect: false,
-                callbackUrl: `${window.location.origin}/dashboard/profile`,
-            });
-
-            if (res?.error) {
-                toast.error("GitHub sign-in failed!", { id: toastId });
-            } else if(res?.url){
-                toast.success("Signed in with GitHub!", { id: toastId });
-                router.push(res.url);
-            }
-        } catch  {
-            toast.error("Something went wrong. Please try again!", { id: toastId });
-        }
+        // toast.loading("Signing in with GitHub...");
+        signIn("github", {
+            callbackUrl: "/dashboard/profile",  // relative is fine
+          });
     };
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-6xl mx-auto bg-[#fffbf0] text-[#2c2c2c] rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+            <div className="w-full max-w-6xl mx-auto
+            dark:bg-black
+            bg-[#fffbf0] text-[#2c2c2c] rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
                 {/* Left Side: Signup Form */}
                 <div className="flex-1 p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
                     {/* Logo and Title */}
+                    <span > <ThemeToggle /></span>
                     <div className="flex flex-col mb-8 sm:mb-12">
-                        <span className="text-4xl sm:text-5xl font-extrabold text-[#161615] leading-tight">
+                        
+                        <span className="text-4xl sm:text-5xl font-extrabold 
+                        dark:text-white
+                        text-[#161615] leading-tight">
                             Login to <br /> ClickyDrop
                         </span>
-                        <p className="text-lg text-gray-500 mt-4">
+                        <p className="text-lg text-gray-500 mt-4 dark:text-white">
                             Manage your links & customize your profile.
                         </p>
                     </div>
@@ -119,14 +103,14 @@ export default function Signin() {
                             className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
                         >
                             <FcGoogle className="h-6 w-6" />
-                            <span className="font-semibold">Sign in with Google</span>
+                            <span className="font-semibold dark:text-white dark:hover:text-black ">Sign in with Google</span>
                         </button>
                         <button
                             onClick={handleGitHubLogin}
                             className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
                         >
                             <SiGithub className="h-6 w-6" />
-                            <span className="font-semibold">Sign in with GitHub</span>
+                            <span className="font-semibold dark:text-white dark:hover:text-black ">Sign in with GitHub</span>
                         </button>
                     </div>
 
@@ -144,7 +128,9 @@ export default function Signin() {
                             placeholder="Email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
+                            className="w-full 
+                            dark:text-white
+                            px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
                             required
                         />
                         <input
@@ -153,7 +139,8 @@ export default function Signin() {
                             placeholder="Password"
                             value={formData.password}
                             onChange={handleChange}
-                            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
+                            className="w-full px-5 py-3 border border-gray-300 
+                            dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
                             required
                         />
                         <button
@@ -166,9 +153,11 @@ export default function Signin() {
                     
                     {/* Note to the user */}
                     <div className="text-center mt-6">
-                        <span className="text-gray-500">
+                        <span className="text-gray-500 dark:text-white">
                            Don&apos;t have an account? {" "}
-                           <Link href="/signup" className="text-indigo-600 font-semibold hover:underline">
+                           <Link href="/signup" className="text-indigo-600
+                           
+                           font-semibold hover:underline">
                                Sign Up
                            </Link>
                         </span>
@@ -182,7 +171,8 @@ export default function Signin() {
                         <Image
                             src={prfpng}
                             alt="App preview of a bio link page"
-                            className="w-full h-full object-contain rounded-2xl"
+                            className="w-full h-full object-contain rounded-2xl
+                            hover:scale-105 transition duration-300"
                         />
                     </div>
                 </div>

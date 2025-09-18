@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import linklogo from "@/public/assets/links-link-svgrepo-com.svg"
 import DashboardLoader from "@/components/Loader";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface Link {
   id: string;
@@ -232,7 +233,7 @@ export default function LinksManager() {
         />
 
         {/* Main Content */}
-        <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] text-[#2c2c2c]">
+        <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] dark:bg-gray-900 text-[#2c2c2c] dark:text-white transition-colors duration-300">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Header */}
             <div className="flex items-center justify-between">
@@ -249,19 +250,26 @@ export default function LinksManager() {
                     Link Manager</h1>
                 </div>
 
-                <p className="text-muted-foreground text-md mt-1">Create and manage your links</p>
+                <p className="text-muted-foreground dark:text-gray-400 text-md mt-1">Create and manage your links</p>
               </div>
-              <Button
-                onClick={handleAdd}
-                className="glass-card border border-indigo-200 hover:border-accent/50 bg-white
-                text-indigo-600 
-                hover:bg-indigo-600 hover:text-white
-                "
-                size="lg"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Add New Link
-              </Button>
+              <div className="flex items-center gap-3">
+                <ThemeToggle />
+                <Button
+                  onClick={handleAdd}
+                  className="glass-card border border-indigo-200 dark:border-indigo-600 hover:border-accent/50 bg-white dark:bg-gray-800
+                  text-indigo-600 dark:text-black
+                  dark:bg-white
+                  dark:hover:text-white
+                  hover:dark:bg-indigo-500 hover:text-white
+                  hover:bg-indigo-500
+                  dark:border-2 dark:ring-2
+                  "
+                  size="lg"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  Add New Link
+                </Button>
+              </div>
             </div>
 
             {loading && (
@@ -287,7 +295,7 @@ export default function LinksManager() {
                 return (
                   <div key={link.id} className="w-full sm:w-1/2 lg:w-1/3 px-3 mb-6">
                   <Card
-                    className={`glass-card border-indigo-200 transition-all
+                    className={`glass-card border-indigo-200 dark:border-indigo-600 bg-white dark:bg-gray-800 transition-all
                        duration-300 hover:shadow-lg ${
                       isNewLink ? 'ring-2 ring-accent/30' : ''
                     }`}
@@ -309,7 +317,7 @@ export default function LinksManager() {
                             <h3 className="font-semibold text-foreground truncate">
                               {link.description || "Untitled Link"}
                             </h3>
-                            <p className="text-sm text-muted-foreground truncate">
+                            <p className="text-sm text-muted-foreground dark:text-gray-400 truncate">
                               {link.linkUrl || "No URL set"}
                             </p>
                           </div>
@@ -367,7 +375,7 @@ export default function LinksManager() {
                                       )
                                     )
                                   }
-                                  className="mt-1"
+                                  className="mt-1 dark:bg-gray-900 dark:border-gray-700"
                                 />
                               </div>
 
@@ -385,7 +393,7 @@ export default function LinksManager() {
                                       )
                                     )
                                   }
-                                  className="mt-1"
+                                  className="mt-1 dark:bg-gray-900 dark:border-gray-700"
                                 />
                               </div>
 
@@ -399,7 +407,7 @@ export default function LinksManager() {
                                       e.target.files?.[0] &&
                                       handleFileChange(link.id, e.target.files[0])
                                     }
-                                    className="flex-1"
+                                    className="flex-1 dark:bg-gray-900 dark:border-gray-700"
                                   />
                                   {link.linkThumbnail &&
                                     typeof link.linkThumbnail === "string" && (

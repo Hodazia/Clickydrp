@@ -7,12 +7,12 @@ import Features from "@/components/Landing/Features";
 
 export default function Home() {
   return (
-    <>
-    <Hero />
-    <Dashboardedit />
-    <Features />
-    <VideoDemo />
-    <FAQsection />
-    </>
+    <div className="min-h-screen">
+      <Hero />
+      <Dashboardedit />
+      <Features />
+      <VideoDemo />
+      <FAQsection />
+    </div>
   );
 }

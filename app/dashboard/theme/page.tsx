@@ -8,6 +8,8 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardLoader from "@/components/Loader";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import ThemeToggle from "@/components/ThemeToggle";
+
 
 interface Profile {
   username: string;
@@ -66,8 +68,12 @@ export default function ThemePage() {
           email={profile?.email || ''}
           profileimg={profile?.profileimg || ''}
         />
-        <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] text-[#2c2c2c]">
+        <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] dark:bg-gray-900 text-[#2c2c2c] dark:text-white transition-colors duration-300">
           <div className="max-w-6xl mx-auto space-y-8">
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-semibold">Theme</h1>
+              <ThemeToggle />
+            </div>
             <ThemeEditor />
           </div>
         </main>

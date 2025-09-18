@@ -66,11 +66,13 @@ export default function FAQsection(){
         <>
         <section
         id="faqs" 
-        className="bg-[#fffbf0] text-[#2c2c2c]"
+        className="bg-[#fffbf0] 
+        dark:bg-black text-[#2c2c2c] dark:text-white transition-colors duration-300"
         >
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 ">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-5xl p-2 font-bold text-indigo-400">
+                    <h2 className="text-3xl md:text-5xl p-2 font-bold
+                     text-indigo-400 dark:text-white">
                         Frequently Asked Questions!
                     </h2>
                     <motion.div
@@ -85,8 +87,8 @@ export default function FAQsection(){
                 {faqs.map((item, index) => (
                     <div
                     key={index}
-                    className="border border-[#dcdcdc] rounded-xl p-6 cursor-pointer
-                     text-white bg-indigo-600 transition-colors duration-300"
+                    className="border border-[#dcdcdc] dark:border-gray-600 rounded-xl p-6 cursor-pointer
+                     text-white bg-indigo-600 dark:bg-indigo-700 transition-colors duration-300"
                     onClick={() => toggleFAQ(index)}
                     >
                     <div className="flex justify-between items-center">
@@ -110,16 +112,16 @@ export default function FAQsection(){
         </motion.div>
                 </div>
             </div>
-            <div className="bg-[#fffbf0] text-gray-400 flex justify-between
+            <div className="bg-[#fffbf0] dark:bg-black  text-gray-400 dark:text-gray-500 flex justify-between
              max-w-4xl mx-auto px-4 py-4 sm:px-6 lg:px-8
-            text-2xl 
+            text-2xl transition-colors duration-300
             ">
 
 
                     <motion.div 
                     whileHover={{ scale:1.2, rotate:2}}
                     className="flex ">
-                        <span className="text-black ">ClickyDrop
+                        <span className="text-black dark:text-white ">ClickyDrop
                     </span>
 
                 <span className="">
@@ -135,8 +137,9 @@ export default function FAQsection(){
                 <motion.div
                 
                 >
-                    <span className="text-black">&copy;
-                    </span>2025 Ziaul Hoda All rights reserved
+                    <span className="text-black dark:text-white">&copy;
+                    </span>
+                    <span className="dark:text-white text-black">2025 Ziaul Hoda All rights reserved</span>
                 </motion.div>
             </div>
         </section>

@@ -18,6 +18,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardLoader from "@/components/Loader";
 import ProfileSkeleton from "@/components/ProfileSkeleton";
 import { Separator } from "@/components/ui/separator";
+import ThemeToggle from "@/components/ThemeToggle";
 
 import ShareLinkModal from "@/components/ShareModal";
 
@@ -338,7 +339,7 @@ export default function Dashboard() {
 
 
     {/*Main Content */}
-    <main className="flex-1 overflow-y-auto bg-[#fffbf0] text-[#2c2c2c]">
+    <main className="flex-1 overflow-y-auto bg-[#fffbf0] dark:bg-gray-900 text-[#2c2c2c] dark:text-white transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 py-6 md:py-8 space-y-6">
         {/* Header with hierarchy */}
         <div className="space-y-4">
@@ -347,7 +348,8 @@ export default function Dashboard() {
               <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Profile</h1>
               <p className="text-muted-foreground">Manage your profile and social presence</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
               <Button
                 onClick={() => setIsEditModalOpen(true)}
                 className="bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white 
@@ -367,7 +369,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <Separator className="bg-indigo-100" />
+          <Separator className="bg-indigo-100 dark:bg-gray-700" />
         </div>
 
         {/* Main grid */}
@@ -375,11 +377,12 @@ export default function Dashboard() {
           {/* Profile Section (denser) */}
           <div className="space-y-6 flex justify-center items-center lg:col-span-1">
             {!profile ? <ProfileSkeleton /> : (
-              <Card className="border border-border/60 shadow-sm bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+              <Card className="border border-border/60 shadow-sm bg-card/70 dark:bg-gray-800 backdrop-blur supports-[backdrop-filter]:bg-card/60">
                 <CardContent className="p-6 md:p-6">
                   <div className="flex items-start gap-4">
                     <div className="relative">
-                      <Avatar className="h-16 w-16 md:h-20 md:w-20 ring-1 border-indigo-100 cursor-pointer" onClick={() => setIsEditModalOpen(true)}>
+                      <Avatar className="h-16 w-16 md:h-20 md:w-20 ring-1 
+                      border-indigo-100 cursor-pointer" onClick={() => setIsEditModalOpen(true)}>
                         <AvatarImage src={profile.profileimg} />
                         <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
                           {profile.username.split(" ").map((n) => n[0]).join("")}
@@ -387,10 +390,10 @@ export default function Dashboard() {
                       </Avatar>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h2 className="text-2xl font-semibold text-foreground truncate">@{profile.username}</h2>
-                      <p className="text-black text-md truncate">{profile.email}</p>
+                      <h2 className="text-2xl dark:text-white font-semibold text-foreground truncate">@{profile.username}</h2>
+                      <p className="text-black dark:text-white text-md truncate">{profile.email}</p>
                       {profile.description && (
-                        <p className="mt-2 text-black text-md line-clamp-3">{profile.description}</p>
+                        <p className="mt-2 text-black dark:text-white text-md line-clamp-3">{profile.description}</p>
                       )}
                       <div className="mt-3 flex items-center gap-2">
                         <span className="inline-flex items-center rounded-full
@@ -407,12 +410,12 @@ export default function Dashboard() {
 
           {/* Social Links Section (wider) */}
           <div className="lg:col-span-2">
-            <Card className="border border-border/60 shadow-sm bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+            <Card className="border border-border/60 shadow-sm bg-card/70 dark:bg-gray-800 backdrop-blur supports-[backdrop-filter]:bg-card/60">
               <CardContent className="p-6 md:p-6">
                 <div className="mb-4">
-                  <h3 className="text-2xl font-semibold text-foreground">Social Links</h3>
-                  <p className="text-md text-black/80 mt-2 mb-2">Add social links to your app! </p>
-                  <p className="text-md text-black/80 mb-2">They will appear on top of your regular Links.</p>
+                  <h3 className="text-2xl  dark:text-white font-semibold text-foreground">Social Links</h3>
+                  <p className="text-md  dark:text-white text-black/80 mt-2 mb-2">Add social links to your app! </p>
+                  <p className="text-md  dark:text-white text-black/80 mb-2">They will appear on top of your regular Links.</p>
                 </div>
 
                 {/* Social Icons Grid */}
@@ -429,7 +432,7 @@ export default function Dashboard() {
                           className={`w-full h-24 rounded-2xl border transition-all duration-200 flex flex-col items-center justify-center gap-2 group-hover:shadow ${
                             isAdded 
                               ? 'border-emerald-300/70 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white ring-1 ring-emerald-300/40 hover:translate-y-[-2px]'
-                              : 'border-border bg-white/70 hover:bg-white text-muted-foreground hover:text-foreground hover:translate-y-[-2px]'
+                              : 'border-border bg-white/70 dark:text-black hover:bg-white text-muted-foreground hover:text-foreground hover:translate-y-[-2px]'
                           }`}
                         >
                           <div className={`w-9 h-9 rounded-full flex items-center justify-center ${isAdded ? 'bg-white/20' : 'bg-indigo-50'}`}>
@@ -473,18 +476,18 @@ export default function Dashboard() {
                         return (
                           <div key={social.id} className="flex items-center justify-between p-3 bg-white 
                           rounded-lg border border-indigo-100 hover:border-indigo-200
-                          border-1 border-indigo-400
+                          border-1 border-indigo-400 
                            hover:bg-indigo-600 hover:text-white ">
                             <div className="flex items-center gap-3  
                             min-w-0 hover:text-white">
                               <div className="w-8 h-8 rounded-full
-                               bg-indigo-50 flex items-center justify-center">
+                               bg-indigo-50 flex items-center dark:text-black justify-center">
                                 {IconComponent && <IconComponent className="w-4 h-4 
-                                text-indigo-700" />}
+                                text-indigo-700 " />}
                               </div>
                               <div className="flex-1 overflow-hidden">
-                                <p className="font-medium text-sm capitalize  ">{social.platform}</p>
-                                <p className="text-xs  w-full truncate ">{social.url}</p>
+                                <p className="font-medium text-sm dark:text-black capitalize  ">{social.platform}</p>
+                                <p className="text-xs dark:text-black  w-full truncate ">{social.url}</p>
                               </div>
                             </div>
                             <div className="flex gap-1.5">
@@ -492,7 +495,7 @@ export default function Dashboard() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => handleEditSocial(social)}
-                                className="h-8 px-2"
+                                className="h-8 px-2 dark:text-black"
                               >
                                 <Edit className="w-4 h-4" />
                               </Button>

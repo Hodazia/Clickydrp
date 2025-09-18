@@ -11,6 +11,7 @@ import ronaldo from "@/public/assets/rnld-portrait.png"
 import prfl from "@/public/assets/centerfeature-port.png"
 import {motion} from "framer-motion"
 import { useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 
 export default function Hero()
@@ -19,7 +20,8 @@ export default function Hero()
     const router = useRouter();
     return (
         <>
-        <div className="bg-[#fffbf0] text-[#2c2c2c] min-h-screen">
+        <div className="bg-[#fffbf0] dark:bg-black text-[#2c2c2c] 
+        dark:text-white min-h-screen transition-colors duration-300">
       {/* Header */}
       <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 
       flex justify-between items-center">
@@ -28,7 +30,9 @@ export default function Hero()
         animate={{ opacity:1, scale:1, transition: {duration: 1}}}
         whileHover={{ opacity:1,scale:1.2, rotate:2 }}
         >
-        <div className="flex  gap-1 justify-center items-center text-4xl font-bold text-[#e9c882]">
+        <div className="flex  
+        gap-1 justify-center items-center text-4xl font-bold text-[#e9c882] 
+        dark:text-yellow-100">
           <Image 
           src={logovector}
           className=""
@@ -36,20 +40,21 @@ export default function Hero()
           /> 
           <span className="text-3xl">ClickyDrop</span></div>
         </motion.div>
-        <nav className="hidden md:flex space-x-6 text-[#6b6b6b] font-medium">
+        <nav className="hidden md:flex space-x-6 text-[#6b6b6b] dark:text-gray-300 font-medium">
           <Link href="#videodemo" 
-          className="hover:text-black transition-colors hover:bg-indigo-600
+          className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">Demo</Link>
-          <Link href="#features" className="hover:text-black transition-colors hover:bg-indigo-600
+          <Link href="#features" className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">Features</Link>
-          <Link href="#dashboard" className="hover:text-black transition-colors hover:bg-indigo-600
+          <Link href="#dashboard" className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">Dashboard</Link>
-          <Link href="#faqs" className="hover:text-black transition-colors hover:bg-indigo-600
+          <Link href="#faqs" className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600
           hover:text-white p-2 rounded-full">FAQ&apos;s</Link>
 
 
         
         <div className="hidden md:flex items-center space-x-4">
+          <ThemeToggle />
           <Link href="/signin" className="text-white px-5 py-2 bg-indigo-600 hover:text-indigo-600 
           hover:bg-white rounded-full transition-colors hover:ring-2
           hover:scale-105 transition duration 800
@@ -66,33 +71,34 @@ export default function Hero()
 
       </nav>
                   {/* Mobile Hamburger Menu Button */}
-                  <div className="md:hidden flex items-center">
-                  <button onClick={() => setIsOpen(!isOpen)}>
-                      <MenuIcon className="w-8 h-8 text-indigo-400" />
-                  </button>
+                  <div className="md:hidden flex items-center space-x-2">
+                    <ThemeToggle />
+                    <button onClick={() => setIsOpen(!isOpen)}>
+                        <MenuIcon className="w-8 h-8 text-indigo-400" />
+                    </button>
             </div>
       </header>
 
 {/* Mobile Menu */}
 {isOpen && (
-                <div className="relative top-0 left-0 w-full h-full bg-[#fffbf0] z-50 flex 
-                flex-col items-center justify-start animate-fade-in border-b-indigo-200 border-2 pb-2">
-                    <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 text-[#2c2c2c]">
+                <div className="relative top-0 left-0 w-full h-full bg-[#fffbf0] dark:bg-gray-900 z-50 flex 
+                flex-col items-center justify-start animate-fade-in border-b-indigo-200 dark:border-gray-700 border-2 pb-2 transition-colors duration-300">
+                    <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 text-[#2c2c2c] dark:text-white">
                         <XIcon className="w-8 h-8 text-blue-400" />
                     </button>
-                    <nav className="flex flex-col space-y-6 text-[#6b6b6b] text-xl font-medium">
+                    <nav className="flex flex-col space-y-6 text-[#6b6b6b] dark:text-gray-300 text-xl font-medium">
                         <Link href="#videodemo" onClick={() => setIsOpen(false)} 
-                        className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
+                        className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
                           Demo
                           </Link>
                         <Link href="#features" onClick={() => setIsOpen(false)}
-                         className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
+                         className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
                           Features</Link>
                         <Link href="#dashboard" onClick={() => setIsOpen(false)} 
-                        className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
+                        className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
                           Dashboard</Link>
                         <Link href="#faqs" onClick={() => setIsOpen(false)} 
-                        className="hover:text-black transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
+                        className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600 hover:text-white p-2 rounded-full">
                           FAQ&apos;s</Link>
                     </nav>
 
@@ -120,9 +126,9 @@ export default function Hero()
           }}}
           >
 
-          <h1 className="text-6xl sm:text-7xl md:text-8xl font-playfair-display leading-tight">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-playfair-display leading-tight">
           Single Link <br />
-          Multi Benefits
+          <span className="font-thin">Multi Benefits</span>
         </h1>
 
           <a
@@ -142,7 +148,8 @@ export default function Hero()
             </div>
             </a>
 
-        <p className="text-base mt-5 sm:text-lg text-[#2c2c2c] leading-relaxed">
+        <p className="text-base mt-5 
+        sm:text-xl text-[#2c2c2c] dark:text-gray-300 leading-relaxed">
           ClickyDrop is an open-source alternative to <br className="hidden sm:block" />
           Linktree!
           <br />
@@ -150,20 +157,20 @@ export default function Hero()
           <br />
           Check out the repo 
           <a href="https://github.com/Hodazia/Clickydrp" target="__blank">
-          <Github className="w-8 h-8 mx-auto bg-black text-white p-1 rounded-full"/>
+          <Github className="w-8 h-8 mx-auto bg-black dark:bg-white text-white dark:text-black p-1 rounded-full"/>
           </a>
           
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
-          <div className="flex items-center bg-white border border-gray-200 rounded-full p-2 w-full max-w-sm">
-            <span className="text-sm sm:text-base text-[#6b6b6b] pl-3 pr-1 whitespace-nowrap">
+          <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-full p-2 w-full max-w-sm transition-colors duration-300">
+            <span className="text-sm sm:text-base text-[#6b6b6b] dark:text-gray-400 pl-3 pr-1 whitespace-nowrap">
                 www.clickydrp.vercel.app/</span>
             <input 
               type="text" 
               placeholder="username" 
               className="flex-1 bg-transparent outline-none
-               text-sm sm:text-base text-[#2c2c2c] placeholder-[#a0a0a0]" 
+               text-sm sm:text-base text-[#2c2c2c] dark:text-white placeholder-[#a0a0a0] dark:placeholder-gray-500" 
             />
           </div>
           <a 
@@ -215,8 +222,8 @@ export default function Hero()
         transition={{ type: "spring", stiffness: 120, damping: 15 }}
         >
         <div className="text-center text-white rounded-full p-2
-         max-w-4xl text-4xl bg-indigo-400 mx-auto
-         hover:bg-indigo-300 hover:scale-105
+         max-w-4xl text-4xl bg-indigo-400 dark:bg-indigo-600 mx-auto
+         hover:bg-indigo-300 dark:hover:bg-indigo-500 hover:scale-105
          transition duration-300">
           Create your profile in minutes just like the ones below! 👇
         </div>

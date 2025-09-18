@@ -26,15 +26,16 @@ export default function ShareLinkModal({username,isOpen,onClose}: usernamelink) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-md bg-white rounded-2xl shadow-lg p-6">
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-md bg-white dark:bg-black 
+      rounded-2xl shadow-lg p-6">
         <DialogHeader className="text-center">
-          <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-800">
+          <DialogTitle className="text-lg sm:text-xl font-semibold dark:text-white  text-gray-800">
             Share your Link with others so they can follow you!</DialogTitle>
         </DialogHeader>
 
         <Card className="mt-4 border-none ">
           <CardContent className="flex flex-col sm:flex-row items-start sm:items-center 
-          justify-between gap-3 bg-indigo-50 rounded-xl px-4 py-3">
+          justify-between gap-3 bg-indigo-50 rounded-xl px-4 py-3 ">
             <span className="text-sm text-gray-700 w-full break-words">{link}</span>
             <Button 
               size="icon" 

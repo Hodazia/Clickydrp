@@ -10,17 +10,17 @@ import {motion} from "framer-motion"
 
 const features = [
   {
-    icon: <User className="h-6 w-6 text-[#9a55ff]" />,
+    icon: <User className="h-6 w-6 text-[#9a55ff] dark:text-white" />,
     title: 'PERSONAL URL',
     description: 'Create your personal Url and place it in your Instagram Bio.',
   },
   {
-    icon: <Link className="h-6 w-6 text-[#9a55ff]" />,
+    icon: <Link className="h-6 w-6 text-[#9a55ff] dark:text-white" />,
     title: 'UNLIMITED LINKS',
     description: 'Add as many links as you wish, change them as often as you want.',
   },
   {
-    icon: <Sparkles className="h-6 w-6 text-[#9a55ff]" />,
+    icon: <Sparkles className="h-6 w-6 text-[#9a55ff] dark:text-white" />,
     title: 'ELEGANT AND PERFECT',
     description: 'With a cutting-edge interface, followers clicking on your Url will experience a great visual.',
   },
@@ -28,17 +28,17 @@ const features = [
 
 const securityFeatures = [
   {
-    icon:  <Palette className="h-6 w-6 text-[#9a55ff]" />,
+    icon:  <Palette className="h-6 w-6 text-[#9a55ff] dark:text-white" />,
     title: 'THEME EDITOR',
     description: 'U can edit the display of your clickydrop with the custom theme-editor feature provided in the app',
   },
   {
-    icon: <Share2 className="h-6 w-6 text-[#9a55ff]" />,
+    icon: <Share2 className="h-6 w-6 text-[#9a55ff] dark:text-white" />,
     title: 'SOCIAL FIRST',
     description: 'Cross-link all your social profiles and optimize the engagement across your different channels.',
   },
   {
-    icon: <Globe className="h-6 w-6 text-[#9a55ff]" />,
+    icon: <Globe className="h-6 w-6 text-[#9a55ff] dark:text-white" />,
     title: 'WEB-BASED',
     description: 'No need to install anything, just access anytime via browser from any device.',
   },
@@ -64,7 +64,8 @@ export default function Features() {
   return (
     <>
     <section id='features'>
-    <div className="bg-[#fffbf0] text-[#2c2c2c] p-10 md:p-20 font-sans min-h-screen">
+    <div className="bg-[#fffbf0] dark:bg-black text-[#2c2c2c] 
+    dark:text-white p-10 md:p-20 font-sans min-h-screen transition-colors duration-300">
       <motion.div
       initial={{ scale:0.5,}}
       whileInView={{ scale:1, }}
@@ -82,7 +83,7 @@ export default function Features() {
       </motion.div>
 
       <div className='text-center mt-4'>
-      <span className='items-center text-3xl text-indigo-300 '>
+      <span className='items-center text-3xl text-indigo-300 dark:text-indigo-400 '>
         A lot of amazing & cool features
       </span>
       </div>
@@ -96,12 +97,12 @@ export default function Features() {
             md:flex-row items-center md:items-start text-center
             ml-2
             md:text-left gap-4">
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#f3e8ff]">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#f3e8ff] dark:bg-indigo-900">
                 {feature.icon}
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-lg">{feature.title}</h3>
-                <p className="mt-1 text-sm">{feature.description}</p>
+                <h3 className="font-bold text-lg dark:text-white">{feature.title}</h3>
+                <p className="mt-1 text-sm dark:text-gray-300">{feature.description}</p>
               </div>
             </div>
           ))}
@@ -127,12 +128,12 @@ export default function Features() {
         <div className="flex flex-col gap-10">
           {securityFeatures.map((feature, index) => (
             <div key={index} className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4">
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#f3e8ff]">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#f3e8ff] dark:bg-indigo-900">
                 {feature.icon}
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-lg">{feature.title}</h3>
-                <p className="mt-1 text-sm">{feature.description}</p>
+                <h3 className="font-bold text-lg dark:text-white">{feature.title}</h3>
+                <p className="mt-1 text-sm dark:text-gray-300">{feature.description}</p>
               </div>
             </div>
           ))}

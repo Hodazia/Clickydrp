@@ -1,14 +1,15 @@
 'use client'
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
 import { SiGithub } from "react-icons/si";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import logoright from "@/public/assets/ishowspeedright.png"
 import Image from "next/image"
 import Link from "next/link"
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Signup() {
     const [formData, setFormData] = useState({
@@ -17,6 +18,24 @@ export default function Signup() {
         password: ''
     });
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const { data: session } = useSession();
+
+
+      // Show OAuth error if redirected with ?error=
+  useEffect(() => {
+    const error = searchParams.get("error");
+    if (error) {
+      toast.error(`OAuth error: ${error}`);
+    }
+  }, [searchParams]);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (session) {
+      router.push("/dashboard/profile");
+    }
+  }, [session, router]);
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement> ) => {
         const { id, value } = e.target;
@@ -67,56 +86,37 @@ export default function Signup() {
     };
 
     const handleGoogleRegister = async () => {
-        const toastId = toast.loading("Signing up with Google...");
-        console.log("Google button clicked ! ")
-        try {
-            const res = await signIn("google", {
-                redirect: false,
-                callbackUrl: `${window.location.origin}/dashboard/profile`,
-            });
-
-            if (res?.error) {
-                toast.error("Google registration failed!", { id: toastId });
-            } else if(res?.url) {
-                toast.success("Successfully registered with Google!", { id: toastId });
-                router.push(res.url);
-            }
-        } catch {
-            toast.error("Something went wrong. Please try again!", { id: toastId });
-        }
+        // toast.loading("Signing in with Google...");
+        signIn("google", {
+            callbackUrl: "/dashboard/profile",  // relative is fine
+          });
     };
 
     const handleGitHubRegister = async () => {
-        const toastId = toast.loading("Signing up with GitHub...");
-        try {
-            const res = await signIn("github", {
-                redirect: false,
-                callbackUrl: `${window.location.origin}/dashboard/profile`,
-            });
-
-            if (res?.error) {
-                toast.error("GitHub registration failed!", { id: toastId });
-            } else if(res?.url) {
-                toast.success("Successfully registered with GitHub!", { id: toastId });
-                router.push(res.url);
-            }
-        } catch {
-            toast.error("Something went wrong. Please try again!", { id: toastId });
-        }
+        // toast.loading("Signing in with GitHub...");
+        signIn("github", {
+            callbackUrl: "/dashboard/profile",  // relative is fine
+          });
     };
+    
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-6xl mx-auto bg-[#fffbf0] rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+            <div className="w-full max-w-6xl 
+            dark:bg-black
+            mx-auto bg-[#fffbf0] rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
                 {/* Left Side: Signup Form */}
                 <div className="flex-1 p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
                     {/* Logo and Title */}
                     <div className="flex flex-col mb-8 sm:mb-12">
+                        <span>
+                        <ThemeToggle />
+                        </span>
                         <span className="text-4xl sm:text-5xl font-extrabold text-[#161615]
-                         leading-tight">
+                         leading-tight dark:text-white">
                             Register to <br /> ClickyDrop
                         </span>
-                        <p className="text-lg text-gray-500 mt-4">
+                        <p className="text-lg text-gray-500   dark:text-white mt-4">
                            Create your free bio page in minutes!
                         </p>
                     </div>
@@ -128,14 +128,16 @@ export default function Signup() {
                             className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
                         >
                             <FcGoogle className="h-6 w-6" />
-                            <span className="font-semibold">Sign up with Google</span>
+                            <span className="font-semibold  dark:text-white dark:hover:text-black ">Sign up with Google</span>
                         </button>
                         <button
                             onClick={handleGitHubRegister}
-                            className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                            className="w-full flex items-center justify-center gap-3 py-3 px-4 
+                            border border-gray-300 rounded-xl shadow-sm text-gray-700 
+                            hover:bg-gray-50 transition-colors duration-200"
                         >
                             <SiGithub className="h-6 w-6" />
-                            <span className="font-semibold">Sign up with GitHub</span>
+                            <span className="font-semibold  dark:text-white dark:hover:text-black ">Sign up with GitHub</span>
                         </button>
                     </div>
 
@@ -184,7 +186,7 @@ export default function Signup() {
 
                     {/* Note to the user */}
                     <div className="text-center mt-6">
-                        <span className="text-gray-500">
+                        <span className="text-gray-500 dark:text-white">
                            Already have an account? {" "}
                            <Link href="/signin" className="text-indigo-600 font-semibold hover:underline">
                                Sign In
@@ -200,7 +202,8 @@ export default function Signup() {
                         <Image
                             src={logoright}
                             alt="App preview of a bio link page"
-                            className="w-full h-full object-contain rounded-2xl"
+                            className="w-full h-full object-contain rounded-2xl
+                            hover:scale-105 transition duration-300"
                         />
                     </div>
                 </div>
