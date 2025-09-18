@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useEffect, useState,Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState} from "react";
+import { useRouter} from "next/navigation";
 import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
 import { SiGithub } from "react-icons/si";
@@ -10,7 +10,6 @@ import logoright from "@/public/assets/ishowspeedright.png"
 import Image from "next/image"
 import Link from "next/link"
 import ThemeToggle from "@/components/ThemeToggle";
-import DashboardLoader from "@/components/Loader";
 
 export default function Signup() {
     const [formData, setFormData] = useState({
@@ -19,17 +18,18 @@ export default function Signup() {
         password: ''
     });
     const router = useRouter();
-    const searchParams = useSearchParams();
+    // const searchParams = useSearchParams();
     const { data: session } = useSession();
 
 
       // Show OAuth error if redirected with ?error=
-  useEffect(() => {
-    const error = searchParams.get("error");
-    if (error) {
-      toast.error(`OAuth error: ${error}`);
-    }
-  }, [searchParams]);
+      useEffect(() => {
+        if (typeof window !== "undefined") {
+          const params = new URLSearchParams(window.location.search);
+          const error = params.get("error");
+          if (error) toast.error(`OAuth error: ${error}`);
+        }
+      }, []);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -102,7 +102,6 @@ export default function Signup() {
     
 
     return (
-        <Suspense fallback={<DashboardLoader />}>
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="w-full max-w-6xl 
             dark:bg-black
@@ -211,7 +210,5 @@ export default function Signup() {
                 </div>
             </div>
         </div>
-        </Suspense>
-        
     );
 }
