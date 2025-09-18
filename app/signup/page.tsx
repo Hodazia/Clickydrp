@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
@@ -10,6 +10,7 @@ import logoright from "@/public/assets/ishowspeedright.png"
 import Image from "next/image"
 import Link from "next/link"
 import ThemeToggle from "@/components/ThemeToggle";
+import DashboardLoader from "@/components/Loader";
 
 export default function Signup() {
     const [formData, setFormData] = useState({
@@ -101,7 +102,8 @@ export default function Signup() {
     
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Suspense fallback={<DashboardLoader />}>
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="w-full max-w-6xl 
             dark:bg-black
             mx-auto bg-[#fffbf0] rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
@@ -209,5 +211,7 @@ export default function Signup() {
                 </div>
             </div>
         </div>
+        </Suspense>
+        
     );
 }
