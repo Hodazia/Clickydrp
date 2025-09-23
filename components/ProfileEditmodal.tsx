@@ -85,7 +85,7 @@ export function ProfileEditModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass-card border-accent/20 max-w-md">
+      <DialogContent className="glass-card border-accent/20 max-w-md dark:bg-[#0f0f0f]">
         <DialogHeader className="relative">
           <DialogTitle className="text-xl font-semibold text-center gradient-text">
             Edit Profile

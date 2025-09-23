@@ -10,18 +10,33 @@ import ishowspeed from "@/public/assets/ishow-speed.png"
 import ronaldo from "@/public/assets/rnld-portrait.png"
 import prfl from "@/public/assets/centerfeature-port.png"
 import {motion} from "framer-motion"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 
 
 export default function Hero()
 {
   const [isOpen, setIsOpen] = useState(false);
+  const [textColor, setTextColor] = useState('#cb6ce6'); // Initial color (purple)
+
+  useEffect(() => {
+    const colors = ['#cb6ce6', '#7dd3fc', '#a78bfa', '#f472b6']; // Purple, Light Blue, Indigo, Pink
+    let currentIndex = 0;
+
+    const interval = setInterval(() => {
+      currentIndex = (currentIndex + 1) % colors.length;
+      setTextColor(colors[currentIndex]);
+    }, 2000); // Change color every 2 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
+
     const router = useRouter();
     return (
         <>
-        <div className="bg-[#fffbf0] dark:bg-black text-[#2c2c2c] 
-        dark:text-white min-h-screen transition-colors duration-300">
+        <div className=" dark:bg-black text-[#2c2c2c] 
+        dark:text-white min-h-screen transition-colors duration-300 py-2">
       {/* Header */}
       <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 
       flex justify-between items-center">
@@ -31,7 +46,7 @@ export default function Hero()
         whileHover={{ opacity:1,scale:1.2, rotate:2 }}
         >
         <div className="flex  
-        gap-1 justify-center items-center text-4xl font-bold text-[#e9c882] 
+        gap-2 justify-center items-center text-4xl font-bold text-[#e9c882] 
         dark:text-yellow-100">
           <Image 
           src={logovector}
@@ -124,11 +139,24 @@ export default function Hero()
             transition: {
             duration:1
           }}}
+          className=""
+          
           >
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-playfair-display leading-tight">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl 
+          bg-[linear-gradient(244.22deg,#61d3ff_4.88%,#fcadfe_40.37%,#9381f5_57.46%,#e8f0d0_87.65%,#61d3ff)] 
+          bg-[length:300%_100%] bg-repeat-x text-transparent bg-clip-text 
+          animate-[gradient-x_6s_ease_infinite]
+          font-playfair-display leading-tight">
           Single Link <br />
           <span className="font-thin">Multi Benefits</span>
+                {/* Inline keyframes since we can’t touch tailwind.config.js */}
+          <style>{`
+            @keyframes gradient-x {
+              0%, 100% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+            }
+          `}</style>
         </h1>
 
           <a
@@ -149,7 +177,8 @@ export default function Hero()
             </a>
 
         <p className="text-base mt-5 
-        sm:text-xl text-[#2c2c2c] dark:text-gray-300 leading-relaxed">
+        sm:text-xl text-[#2c2c2c] dark:text-gray-300 leading-relaxed" 
+        >
           ClickyDrop is an open-source alternative to <br className="hidden sm:block" />
           Linktree!
           <br />
@@ -245,7 +274,7 @@ export default function Hero()
             <Image
               src={img}
               alt={`profile-${i}`}
-              className="h-auto rounded-xl object-cover shadow-md"
+              className="h-auto rounded-xl object-cover "
             />
           </motion.div>
         ))}

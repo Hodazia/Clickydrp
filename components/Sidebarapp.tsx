@@ -79,7 +79,8 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
 
     if (isMobile) {
         return (
-            <div className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 shadow-lg border-t border-indigo-600 z-50 md:hidden">
+            <div className="fixed bottom-0 left-0 w-full bg-white dark:bg-black
+             shadow-lg border-t border-indigo-600 z-50 md:hidden">
                 <nav className="flex justify-around items-center h-16">
                     {mainItems.map((item) => (
                         <Link 
@@ -107,10 +108,11 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
 
     return (
         <Sidebar
-            className="w-64 glass-card border-r-indigo-600 md:block hidden"
+            className="w-64 glass-card 
+             border-r-indigo-600 md:block hidden"
             collapsible="icon"
         >
-            <SidebarHeader className="p-4">
+            <SidebarHeader className="p-4 dark:bg-black">
                 <div className="flex items-center gap-3">
                     <Avatar className="h-20 w-20">
                         <div className="flex gap-3">
@@ -140,7 +142,7 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
                 </div>
             </SidebarHeader>
 
-            <SidebarContent className="border border-t-indigo-600 px-3 py-4">
+            <SidebarContent className="border border-t-indigo-600 dark:bg-black px-3 py-4">
                 <SidebarGroup>
                     <SidebarGroupLabel className="text-base
                     uppercase tracking-wider text-xl p-3 mb-2">

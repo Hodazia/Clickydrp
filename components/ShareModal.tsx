@@ -26,7 +26,7 @@ export default function ShareLinkModal({username,isOpen,onClose}: usernamelink) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-md bg-white dark:bg-black 
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-md bg-white dark:bg-[#0f0f0f]
       rounded-2xl shadow-lg p-6">
         <DialogHeader className="text-center">
           <DialogTitle className="text-lg sm:text-xl font-semibold dark:text-white  text-gray-800">

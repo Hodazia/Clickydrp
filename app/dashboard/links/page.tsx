@@ -233,7 +233,8 @@ export default function LinksManager() {
         />
 
         {/* Main Content */}
-        <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] dark:bg-gray-900 text-[#2c2c2c] dark:text-white transition-colors duration-300">
+        <main className="flex-1 p-6 overflow-y-auto dark:bg-black text-[#2c2c2c]
+         dark:text-white transition-colors duration-300">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Header */}
             <div className="flex items-center justify-between">
@@ -295,7 +296,8 @@ export default function LinksManager() {
                 return (
                   <div key={link.id} className="w-full sm:w-1/2 lg:w-1/3 px-3 mb-6">
                   <Card
-                    className={`glass-card border-indigo-200 dark:border-indigo-600 bg-white dark:bg-gray-800 transition-all
+                    className={`glass-card border-indigo-200 dark:border-indigo-600 bg-white 
+                      dark:bg-[#0f0f0f] transition-all
                        duration-300 hover:shadow-lg ${
                       isNewLink ? 'ring-2 ring-accent/30' : ''
                     }`}
@@ -413,6 +415,8 @@ export default function LinksManager() {
                                     typeof link.linkThumbnail === "string" && (
                                       <Image
                                         src={link.linkThumbnail}
+                                        width={20}
+                                        height={20}
                                         alt="Thumbnail"
                                         className="w-12 h-12 rounded-lg object-cover"
                                       />

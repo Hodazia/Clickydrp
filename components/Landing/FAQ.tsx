@@ -10,8 +10,6 @@ Coding an FAQ Section! , ,
 
 import { useState } from "react"
 import { ArrowDown } from "lucide-react"
-import logo from "@/public/assets/Vector.svg"
-import Image from "next/image"
 import {motion} from "framer-motion"
 
 
@@ -66,11 +64,11 @@ export default function FAQsection(){
         <>
         <section
         id="faqs" 
-        className="bg-[#fffbf0] 
+        className="
         dark:bg-black text-[#2c2c2c] dark:text-white transition-colors duration-300"
         >
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 ">
-                <div className="text-center mb-12">
+                <div className="text-center ">
                     <h2 className="text-3xl md:text-5xl p-2 font-bold
                      text-indigo-400 dark:text-white">
                         Frequently Asked Questions!
@@ -112,40 +110,7 @@ export default function FAQsection(){
         </motion.div>
                 </div>
             </div>
-            <div className="bg-[#fffbf0] dark:bg-black  text-gray-400 dark:text-gray-500 
-            flex flex-col items-center
-             max-w-4xl mx-auto px-4 py-4 sm:px-6 lg:px-8
-            text-2xl transition-colors duration-300
-            ">
-
-
-                    <motion.div 
-                    whileHover={{ scale:1.2, rotate:2}}
-                    className="flex ">
-                        <span className="text-black dark:text-white ">ClickyDrop
-                    </span>
-
-                <span className="">
-                    <Image 
-                    src={logo}
-                    alt="logo"
-                    className="text-indigo-600 "
-                    />
-                </span>
-                </motion.div>
-                    
-
-                <motion.div
-                
-                >
-                    <span className="text-black dark:text-white">&copy;
-                    </span>
-                    <span className="dark:text-white text-black">2025 Ziaul Hoda</span>
-                </motion.div>
-                <motion.div>
-                    <span className="dark:text-white text-black">All rights reserved!</span>
-                </motion.div>
-            </div>
+            {/* Global footer is rendered in app/page.tsx */}
         </section>
         
         

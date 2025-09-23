@@ -64,8 +64,9 @@ export default function Features() {
   return (
     <>
     <section id='features'>
-    <div className="bg-[#fffbf0] dark:bg-black text-[#2c2c2c] 
-    dark:text-white p-10 md:p-20 font-sans min-h-screen transition-colors duration-300">
+    <div className=" dark:bg-black text-[#2c2c2c] 
+    dark:text-white p-10 md:p-20 font-sans
+     min-h-screen transition-colors duration-300">
       <motion.div
       initial={{ scale:0.5,}}
       whileInView={{ scale:1, }}

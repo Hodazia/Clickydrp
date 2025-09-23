@@ -143,7 +143,9 @@ export default function ThemeEditor() {
   const Section = ({ children, title, isOpen = true, onToggle, icon}:
      { children: React.ReactNode; title: string; isOpen?: boolean; onToggle?: () => void;
        icon?: React.ReactNode, }) => (
-    <Card className="glass-card bg-gray-50 border-accent/20 dark:bg-gray-800"
+    <Card className="glass-card bg-white border-accent/20 border-ring-1 
+    shadow-md border-1 border-indigo-200
+     dark:bg-[#0f0f0f]"
     style={{
       color: isOpen? 'indigo-200' : 'white'
     }}>
@@ -595,7 +597,8 @@ useEffect(() => {
 
       {/* Preview */}
       <div className="lg:col-span-8 ">
-        <Card className="border-accent/20 bg-gray-50 sticky top-6">
+        <Card className="border-accent/20 bg-white shadow-md border-indigo-600
+        border-2 border-ring-2 sticky top-6">
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold mb-4">Preview</h3>
             {/* Phone frame */}

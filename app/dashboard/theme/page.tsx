@@ -68,7 +68,8 @@ export default function ThemePage() {
           email={profile?.email || ''}
           profileimg={profile?.profileimg || ''}
         />
-        <main className="flex-1 p-6 overflow-y-auto bg-[#fffbf0] dark:bg-gray-900 text-[#2c2c2c] dark:text-white transition-colors duration-300">
+        <main className="flex-1 p-6 overflow-y-auto bg-white dark:bg-black
+         text-[#2c2c2c] dark:text-white transition-colors duration-300">
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-semibold">Theme</h1>

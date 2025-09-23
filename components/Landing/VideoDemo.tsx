@@ -7,12 +7,12 @@
 
 export function VideoDemo() {
     return (
-      <section id="videodemo" className="p-2 pb-3 bg-[#fffbf0] dark:bg-black ">
+      <section id="videodemo" className="p-2 pb-3  dark:bg-black ">
         {/* Heading Section */}
-        <div className="bg-[#fffbf0] dark:bg-black text-center py-6 transition-colors duration-300">
+        <div className=" dark:bg-black text-center py-6 transition-colors duration-300">
           <div className="flex flex-col items-center gap-4">
-            <h2 className="text-lg md:text-3xl text-indigo-400 dark:text-indigo-500
-             max-w-4xl mx-auto">
+            <h2 className="text-lg md:text-5xl text-indigo-400 dark:text-indigo-500
+             max-w-6xl mx-auto">
               Want to see how ClickDrp works? Check out this video 👇
             </h2>
           </div>
