@@ -2,7 +2,7 @@ import React from 'react';
 
 const ProfileSkeleton = () => {
   return (
-    <div className=" flex justify-center items-center rounded-3xl p-4 border overflow-hidden relative">
+    <div className=" flex justify-center items-center rounded-3xl p-4 border-2 border-foreground nb-shadow overflow-hidden relative bg-white dark:bg-[#0f0f0f]">
       <style>
         {`
         @keyframes shimmer {
@@ -19,17 +19,17 @@ const ProfileSkeleton = () => {
       <div className="flex justify-center items-center">
         <div className='flex justify-center items-center gap-3'>
         {/* Profile Image Skeleton */}
-            <div className="w-20 h-20 rounded-full bg-gray-200 shimmer-bg">
+            <div className="w-20 h-20 rounded-full bg-gray-200 dark:bg-[#1f1f1f] shimmer-bg border-2 border-foreground nb-shadow-sm">
                 
             </div>
         <div className='flex flex-col gap-2'>
         {/* Username Skeleton */}
-        <div className="mt-3 h-4 w-32 rounded-lg bg-gray-200 shimmer-bg"></div>
+        <div className="mt-3 h-4 w-32 rounded-lg bg-gray-200 dark:bg-[#1f1f1f] shimmer-bg border-2 border-foreground nb-shadow-sm"></div>
         {/*Email Skeleton */}
-        <div className="mt-2 h-3 w-48 rounded-lg bg-gray-200 shimmer-bg"></div>
+        <div className="mt-2 h-3 w-48 rounded-lg bg-gray-200 dark:bg-[#1f1f1f] shimmer-bg border-2 border-foreground nb-shadow-sm"></div>
         {/* Bio Skeleton */}
-        <div className="mt-2 h-3 w-48 rounded-lg bg-gray-200 shimmer-bg"></div>
-        <div className='mt-2 h-3 w-20 rounded-xl bg-gray-200 '></div>
+        <div className="mt-2 h-3 w-48 rounded-lg bg-gray-200 dark:bg-[#1f1f1f] shimmer-bg border-2 border-foreground nb-shadow-sm"></div>
+        <div className='mt-2 h-3 w-20 rounded-xl bg-gray-200 dark:bg-[#1f1f1f] border-2 border-foreground nb-shadow-sm'></div>
         </div>
 
         </div>

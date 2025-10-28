@@ -5,7 +5,7 @@ import logovector from "@/public/assets/Vector.svg";
 import Image from 'next/image';
 export default function Footer() {
   return (
-    <footer className="border-t border-indigo-100 dark:border-black dark:bg-black
+    <footer className="border-2 border-foreground nb-shadow dark:bg-black
       text-[#2c2c2c] dark:text-gray-300">
       <div className="mx-auto max-w-7xl px-4
        sm:px-6 lg:px-8 py-8 grid grid-cols-1
@@ -37,7 +37,7 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-indigo-100 dark:border-gray-800">
+      <div className="border-t border-foreground">
         <div className="mx-auto max-w-7xl px-4 
         sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center 
         justify-between text-xl text-gray-500">

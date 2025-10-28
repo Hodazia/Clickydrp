@@ -62,10 +62,8 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
 
     const getNavCls = ({ isActive }: { isActive: boolean }) =>
         isActive 
-          ? `bg-indigo-50 text-indigo-600 border-indigo-600 hover:bg-gray-100
-          hover:ring-2 hover:ring-indigo-600 active:shadow-none glow-shadow`
-          : `hover:bg-accent/10 hover:text-accent-foreground hover:ring-2 
-          hover:ring-indigo-600`;
+          ? `bg-indigo-50 text-indigo-600 border-2 border-foreground nb-shadow`
+          : `bg-white text-gray-600 border-2 border-foreground hover:bg-indigo-50 nb-pressable nb-shadow`;
 
     const handlelogout = async () => {
       setTimeout(async () => {
@@ -80,13 +78,13 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
     if (isMobile) {
         return (
             <div className="fixed bottom-0 left-0 w-full bg-white dark:bg-black
-             shadow-lg border-t border-indigo-600 z-50 md:hidden">
+             border-2 border-foreground nb-shadow z-50 md:hidden">
                 <nav className="flex justify-around items-center h-16">
                     {mainItems.map((item) => (
                         <Link 
                             key={item.title} 
                             href={item.url}
-                            className={`flex flex-col items-center justify-center p-2 text-sm transition-all duration-200 
+                            className={`flex flex-col items-center justify-center p-2 text-sm transition-all duration-200 border-2 border-foreground rounded-lg nb-pressable nb-shadow 
                                 ${isActive(item.url) ? 'text-indigo-600' : 'text-gray-500 hover:text-indigo-600'}`}
                         >
                             <item.Icon className="h-6 w-6" />
@@ -96,7 +94,7 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
                     
                     <button 
                         onClick={handlelogout}
-                        className="flex flex-col items-center justify-center p-2 text-sm transition-all duration-200 text-gray-500 hover:text-red-500"
+                        className="flex flex-col items-center justify-center p-2 text-sm transition-all duration-200 text-gray-500 hover:text-red-500 border-2 border-foreground rounded-lg nb-pressable nb-shadow"
                     >
                         <LogOut className="h-6 w-6" />
                         <span className="mt-1 text-xs">Logout</span>
@@ -108,23 +106,21 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
 
     return (
         <Sidebar
-            className="w-64 glass-card 
-             border-r-indigo-600 md:block hidden"
+            className="w-64 border-2 border-foreground nb-shadow md:block hidden"
             collapsible="icon"
         >
-            <SidebarHeader className="p-4 dark:bg-black">
+            <SidebarHeader className="p-4 dark:bg-black border-b-2 border-foreground">
                 <div className="flex items-center gap-3">
                     <Avatar className="h-20 w-20">
                         <div className="flex gap-3">
                             <Image src={logovector} 
                             alt="logo"
-                            className="rounded-xl p-1 border border-gray-300 border-2 border-ring-2
-                            h-13 w-13 object-cover bg-indigo-600" />
+                            className="rounded-xl p-1 border-2 border-foreground h-13 w-13 object-cover bg-indigo-600" />
                             {/* <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xl">
                                 {username.charAt(0)}{description.charAt(0)}
                             </AvatarFallback> */}
                             <div className="text-xl font-bold text-gray-600
-                             flex justify-center items-center 
+                             flex justify-center items-center border-2 border-foreground rounded-lg px-2 nb-shadow
                              dark:text-white 
                             ">
                                 Clickydrop
@@ -142,7 +138,7 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
                 </div>
             </SidebarHeader>
 
-            <SidebarContent className="border border-t-indigo-600 dark:bg-black px-3 py-4">
+            <SidebarContent className="border-t-2 border-foreground dark:bg-black px-3 py-4">
                 <SidebarGroup>
                     <SidebarGroupLabel className="text-base
                     uppercase tracking-wider text-xl p-3 mb-2">
@@ -189,9 +185,7 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
                             <SidebarMenuItem>
 
                                 <div className="text-black flex flex-col justify-between text-xl mb-2">
-                                    <div className="flex gap-3 border border-2 border-indigo-400 
-                                    border-ring-2
-                                    bg-indigo-300 p-1 rounded-xl">
+                                    <div className="flex gap-3 border-2 border-foreground bg-indigo-300 p-2 rounded-xl nb-shadow">
                                         {profileimg && (
                                         <Image 
                                         src={profileimg}
@@ -213,9 +207,7 @@ export function AppSidebar({username,email,profileimg}: Sidebarprop) {
 
                                 <Button
                                     variant="ghost"
-                                    className="w-full hover:bg-white hover:text-indigo-600 
-                                    hover:border-2 hover:border-indigo-200 hover:ring-2
-                                    bg-indigo-400 text-white
+                                    className="w-full bg-indigo-400 text-white hover:bg-white hover:text-indigo-600 border-2 border-foreground nb-pressable nb-shadow
                                      rounded-lg p-3 justify-start flex items-center space-x-3"
                                     onClick={handlelogout}
                                 >

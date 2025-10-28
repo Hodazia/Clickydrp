@@ -234,10 +234,10 @@ export default function LinksManager() {
 
         {/* Main Content */}
         <main className="flex-1 p-6 overflow-y-auto dark:bg-black text-[#2c2c2c]
-         dark:text-white transition-colors duration-300">
+         dark:text-white transition-colors duration-300 border-l-2 border-foreground">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-2 border-foreground rounded-xl p-4 nb-shadow">
               <div>
 
                 <div className="flex items-center justify-center">
@@ -257,14 +257,7 @@ export default function LinksManager() {
                 <ThemeToggle />
                 <Button
                   onClick={handleAdd}
-                  className="glass-card border border-indigo-200 dark:border-indigo-600 hover:border-accent/50 bg-white dark:bg-gray-800
-                  text-indigo-600 dark:text-black
-                  dark:bg-white
-                  dark:hover:text-white
-                  hover:dark:bg-indigo-500 hover:text-white
-                  hover:bg-indigo-500
-                  dark:border-2 dark:ring-2
-                  "
+                  className="bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white border-2 border-foreground nb-pressable nb-shadow"
                   size="lg"
                 >
                   <Plus className="w-5 h-5 mr-2" />
@@ -296,9 +289,8 @@ export default function LinksManager() {
                 return (
                   <div key={link.id} className="w-full sm:w-1/2 lg:w-1/3 px-3 mb-6">
                   <Card
-                    className={`glass-card border-indigo-200 dark:border-indigo-600 bg-white 
-                      dark:bg-[#0f0f0f] transition-all
-                       duration-300 hover:shadow-lg ${
+                    className={`bg-white dark:bg-[#0f0f0f] transition-all border-2 border-foreground nb-shadow
+                       duration-300 ${
                       isNewLink ? 'ring-2 ring-accent/30' : ''
                     }`}
                   >
@@ -359,7 +351,7 @@ export default function LinksManager() {
 
                       {/* Expanded Content */}
                       {isExpanded && (
-                        <div id={`link-panel-${link.id}`} className="space-y-4 border-t pt-4">
+                        <div id={`link-panel-${link.id}`} className="space-y-4 border-t border-foreground pt-4">
                           {isEditing ? (
                             // Edit Mode
                             <div className="space-y-4">
@@ -377,7 +369,7 @@ export default function LinksManager() {
                                       )
                                     )
                                   }
-                                  className="mt-1 dark:bg-gray-900 dark:border-gray-700"
+                                  className="mt-1 border-2 border-foreground nb-shadow-sm bg-white dark:bg-gray-900"
                                 />
                               </div>
 
@@ -395,7 +387,7 @@ export default function LinksManager() {
                                       )
                                     )
                                   }
-                                  className="mt-1 dark:bg-gray-900 dark:border-gray-700"
+                                  className="mt-1 border-2 border-foreground nb-shadow-sm bg-white dark:bg-gray-900"
                                 />
                               </div>
 
@@ -409,7 +401,7 @@ export default function LinksManager() {
                                       e.target.files?.[0] &&
                                       handleFileChange(link.id, e.target.files[0])
                                     }
-                                    className="flex-1 dark:bg-gray-900 dark:border-gray-700"
+                                    className="flex-1 border-2 border-foreground nb-shadow-sm bg-white dark:bg-gray-900"
                                   />
                                   {link.linkThumbnail &&
                                     typeof link.linkThumbnail === "string" && (
@@ -428,9 +420,7 @@ export default function LinksManager() {
                                 <Button
                                   size="sm"
                                   onClick={() => handleSaveAndExit(link)}
-                                  className="flex-1 text-indigo-600 bg-white border-2 border-indigo-200
-                                  ring-2
-                                  hover:bg-indigo-600 hover:text-white"
+                                  className="flex-1 text-white bg-indigo-600 border-2 border-foreground nb-pressable nb-shadow hover:bg-white hover:text-indigo-600"
                                 >
                                   <Save className="w-4 h-4 mr-2" />
                                   Save
@@ -439,7 +429,7 @@ export default function LinksManager() {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => toggleEditing(link.id)}
-                                  className="flex-1"
+                                  className="flex-1 border-2 border-foreground nb-pressable nb-shadow"
                                 >
                                   Cancel
                                 </Button>
@@ -463,7 +453,7 @@ export default function LinksManager() {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => toggleEditing(link.id)}
-                                  className="flex-1"
+                                  className="flex-1 border-2 border-foreground nb-pressable nb-shadow"
                                 >
                                   <Edit className="w-4 h-4 mr-2" />
                                   Edit
@@ -472,8 +462,7 @@ export default function LinksManager() {
                                   <Button
                                     size="sm"
                                     onClick={() => handleDelete(link.id)}
-                                    className="flex-1 bg-white border-2 border-indigo-200
-                                     text-indigo-600 hover:bg-indigo-600 hover:text-white"
+                                    className="flex-1 text-white bg-indigo-600 border-2 border-foreground nb-pressable nb-shadow hover:bg-white hover:text-indigo-600"
                                   >
                                     <Trash2 className="w-4 h-4 mr-2" />
                                     Delete

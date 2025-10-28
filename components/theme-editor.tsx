@@ -597,7 +597,7 @@ useEffect(() => {
 
       {/* Preview */}
       <div className="lg:col-span-8 ">
-        <Card className="border-accent/20 bg-white shadow-md border-indigo-600
+        <Card className="border-accent/20 bg-white  border-indigo-600
         border-2 border-ring-2 sticky top-6">
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold mb-4">Preview</h3>

@@ -120,3 +120,24 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .nb-shadow {
+    /* Offset, hard shadows characteristic of neo-brutalism */
+    box-shadow: 6px 6px 0 0 var(--foreground);
+  }
+  .nb-shadow-sm {
+    box-shadow: 4px 4px 0 0 var(--foreground);
+  }
+  .nb-pressable {
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+  .nb-pressable:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 4px 4px 0 0 var(--foreground);
+  }
+  .nb-pressable:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 0 var(--foreground);
+  }
+}

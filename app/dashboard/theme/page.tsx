@@ -69,13 +69,15 @@ export default function ThemePage() {
           profileimg={profile?.profileimg || ''}
         />
         <main className="flex-1 p-6 overflow-y-auto bg-white dark:bg-black
-         text-[#2c2c2c] dark:text-white transition-colors duration-300">
+         text-[#2c2c2c] dark:text-white transition-colors duration-300 border-l-2 border-foreground">
           <div className="max-w-6xl mx-auto space-y-8">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-2 border-foreground rounded-xl p-4 nb-shadow">
               <h1 className="text-2xl font-semibold">Theme</h1>
               <ThemeToggle />
             </div>
-            <ThemeEditor />
+            <div className="border-2 border-foreground rounded-xl nb-shadow p-2">
+              <ThemeEditor />
+            </div>
           </div>
         </main>
       </div>

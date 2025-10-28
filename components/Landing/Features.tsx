@@ -66,7 +66,7 @@ export default function Features() {
     <section id='features'>
     <div className=" dark:bg-black text-[#2c2c2c] 
     dark:text-white p-10 md:p-20 font-sans
-     min-h-screen transition-colors duration-300">
+     min-h-screen transition-colors duration-300  rounded-xl">
       <motion.div
       initial={{ scale:0.5,}}
       whileInView={{ scale:1, }}
@@ -75,7 +75,7 @@ export default function Features() {
       <div className='text-center  mb-2 '>
       <span className='items-center text-3xl 
             bg-indigo-400 text-white mb-2 
-             mx-auto rounded-full p-2 
+             mx-auto rounded-full p-2 border-2 border-foreground nb-shadow
              hover:bg-indigo-300 hover:scale-105
              transition duration-300
              '>FEATURES
@@ -116,12 +116,13 @@ export default function Features() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       whileHover={{ scale: 1.1, rotate: 2 }}
       >
-        <div className="w-[80%] max-w-sm md:max-w-xs ml-10 lg:max-w-sm">
+        <div className="w-[80%] max-w-sm md:max-w-xs ml-10 lg:max-w-sm  
+          rounded-xl p-2">
             {/* Profile Section */}
             <Image
                   src={FeaturePortrait}
                   alt="Profile"
-                  className="rounded-md "
+                  className="rounded-md"
                 />
         </div>
         </motion.div>

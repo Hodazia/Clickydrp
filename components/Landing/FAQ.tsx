@@ -65,12 +65,13 @@ export default function FAQsection(){
         <section
         id="faqs" 
         className="
-        dark:bg-black text-[#2c2c2c] dark:text-white transition-colors duration-300"
+        dark:bg-black text-[#2c2c2c] dark:text-white transition-colors
+         duration-300  rounded-xl p-2"
         >
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 ">
                 <div className="text-center ">
                     <h2 className="text-3xl md:text-5xl p-2 font-bold
-                     text-indigo-400 dark:text-white">
+                     text-indigo-400 dark:text-white inline-block border-2 border-foreground rounded-xl nb-shadow">
                         Frequently Asked Questions!
                     </h2>
                     <motion.div
@@ -85,8 +86,8 @@ export default function FAQsection(){
                 {faqs.map((item, index) => (
                     <div
                     key={index}
-                    className="border border-[#dcdcdc] dark:border-gray-600 rounded-xl p-6 cursor-pointer
-                     text-white bg-indigo-600 dark:bg-indigo-700 transition-colors duration-300"
+                    className="border-2 border-foreground rounded-xl p-6 cursor-pointer
+                     text-white bg-indigo-600 dark:bg-indigo-700 transition-colors duration-300 nb-pressable nb-shadow"
                     onClick={() => toggleFAQ(index)}
                     >
                     <div className="flex justify-between items-center">

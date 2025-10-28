@@ -36,10 +36,11 @@ export default function Hero()
     return (
         <>
         <div className=" dark:bg-black text-[#2c2c2c] 
-        dark:text-white min-h-screen transition-colors duration-300 py-2">
+        dark:text-white min-h-screen transition-colors duration-300 py-2
+          ">
       {/* Header */}
       <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 
-      flex justify-between items-center">
+      flex justify-between items-center border-2 border-foreground rounded-xl nb-shadow">
         <motion.div
         initial={{opacity:0, scale:0}}
         animate={{ opacity:1, scale:1, transition: {duration: 1}}}
@@ -47,7 +48,7 @@ export default function Hero()
         >
         <div className="flex  
         gap-2 justify-center items-center text-4xl font-bold text-[#e9c882] 
-        dark:text-yellow-100">
+        dark:text-yellow-100 border-2 border-foreground rounded-xl px-3 nb-shadow">
           <Image 
           src={logovector}
           className=""
@@ -58,13 +59,13 @@ export default function Hero()
         <nav className="hidden md:flex space-x-6 text-[#6b6b6b] dark:text-gray-300 font-medium">
           <Link href="#videodemo" 
           className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600
-          hover:text-white p-2 rounded-full">Demo</Link>
+          hover:text-white p-2 rounded-full border-2 border-foreground nb-pressable nb-shadow">Demo</Link>
           <Link href="#features" className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600
-          hover:text-white p-2 rounded-full">Features</Link>
+          hover:text-white p-2 rounded-full border-2 border-foreground nb-pressable nb-shadow">Features</Link>
           <Link href="#dashboard" className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600
-          hover:text-white p-2 rounded-full">Dashboard</Link>
+          hover:text-white p-2 rounded-full border-2 border-foreground nb-pressable nb-shadow">Dashboard</Link>
           <Link href="#faqs" className="hover:text-black dark:hover:text-white transition-colors hover:bg-indigo-600
-          hover:text-white p-2 rounded-full">FAQ&apos;s</Link>
+          hover:text-white p-2 rounded-full border-2 border-foreground nb-pressable nb-shadow">FAQ&apos;s</Link>
 
 
         
@@ -72,14 +73,14 @@ export default function Hero()
           <ThemeToggle />
           <Link href="/signin" className="text-white px-5 py-2 bg-indigo-600 hover:text-indigo-600 
           hover:bg-white rounded-full transition-colors hover:ring-2
-          hover:scale-105 transition duration 800
+          hover:scale-105 transition duration 800 border-2 border-foreground nb-pressable nb-shadow
            "
            >Login</Link>
           <Link href="/signup" className=" text-white px-5 py-2 rounded-full font-semibold 
           transition-colors bg-indigo-600 
           hover:scale-105 transition duration 200
           hover:text-indigo-600 hover:bg-white
-           p-2 rounded-full hover:ring-2"
+           p-2 rounded-full hover:ring-2 border-2 border-foreground nb-pressable nb-shadow"
            >Register</Link>
         </div>
 
@@ -97,7 +98,7 @@ export default function Hero()
 {/* Mobile Menu */}
 {isOpen && (
                 <div className="relative top-0 left-0 w-full h-full bg-[#fffbf0] dark:bg-gray-900 z-50 flex 
-                flex-col items-center justify-start animate-fade-in border-b-indigo-200 dark:border-gray-700 border-2 pb-2 transition-colors duration-300">
+                flex-col items-center justify-start animate-fade-in border-2 border-foreground pb-2 transition-colors duration-300 nb-shadow">
                     <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 text-[#2c2c2c] dark:text-white">
                         <XIcon className="w-8 h-8 text-blue-400" />
                     </button>
@@ -120,19 +121,19 @@ export default function Hero()
                     <div className="flex flex-col items-center space-y-4 mt-8">
                         <Link href="/signin" onClick={() => setIsOpen(false)} 
                         className="text-white px-5 py-2 bg-indigo-600 hover:text-indigo-600 hover:bg-white 
-                        rounded-full transition-colors hover:ring-2 hover:scale-105 duration-300">
+                        rounded-full transition-colors hover:ring-2 hover:scale-105 duration-300 border-2 border-foreground nb-pressable nb-shadow">
                           Login</Link>
                         <Link href="/signup" onClick={() => setIsOpen(false)} 
                         className="text-white px-5 py-2 rounded-full font-semibold transition-colors
                          bg-indigo-600 hover:scale-105 duration-200 hover:text-indigo-600 hover:bg-white p-2 
-                         rounded-full hover:ring-2">Register</Link>
+                         rounded-full hover:ring-2 border-2 border-foreground nb-pressable nb-shadow">Register</Link>
                     </div>
                 </div>
             )}
 
 
       {/* Hero Content */}
-      <main className="text-center grid grid-cols-1 lg:grid-cols-2  px-4 items-center">
+      <main className="text-center grid grid-cols-1 lg:grid-cols-2  px-4 items-center gap-6">
       <motion.div
           initial={{ opacity:0,x:-100}}
           animate={{opacity:1, x:0, scale:1, 
@@ -166,7 +167,7 @@ export default function Hero()
           >
             <div className="bg-indigo-500 
             hover:bg-white hover:text-indigo-500 
-            hover:ring-2 hover:border-indigo-400
+            hover:ring-2 hover:border-indigo-400 border-2 border-foreground nb-pressable nb-shadow
             hover:scale-105 transition duration-400
             flex gap-1 text-white p-2 rounded-full">
             Watch Demo video <span className="text-center">
@@ -192,7 +193,7 @@ export default function Hero()
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
-          <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-full p-2 w-full max-w-sm transition-colors duration-300">
+          <div className="flex items-center bg-white dark:bg-gray-800 border-2 border-foreground rounded-full p-2 w-full max-w-sm transition-colors duration-300 nb-shadow">
             <span className="text-sm sm:text-base text-[#6b6b6b] dark:text-gray-400 pl-3 pr-1 whitespace-nowrap">
                 www.clickydrp.vercel.app/</span>
             <input 
@@ -206,7 +207,7 @@ export default function Hero()
             href="#" 
             className="text-white px-4 py-3 rounded-full 
             font-semibold hover:bg-white hover:text-indigo-600
-            bg-indigo-600 hover:ring-2
+            bg-indigo-600 hover:ring-2 border-2 border-foreground nb-pressable nb-shadow
             hover:scale-105
             transition duration-300
             transition-colors w-full sm:w-auto text-center
@@ -233,7 +234,7 @@ export default function Hero()
                     whileHover={{ scale: 1.1, rotate: 2 }}
                     whileTap={{ scale: 0.95 }}
         >
-        <div className="relative mx-auto mt-8 lg:mt-0">
+        <div className="relative mx-auto mt-8 lg:mt-0 rounded-xl  p-2">
           <Image 
           src={Hroimage}
           alt="hero image"
@@ -253,7 +254,9 @@ export default function Hero()
         <div className="text-center text-white rounded-full p-2
          max-w-4xl text-4xl bg-indigo-400 dark:bg-indigo-600 mx-auto
          hover:bg-indigo-300 dark:hover:bg-indigo-500 hover:scale-105
-         transition duration-300">
+         transition duration-300
+         border-foreground nb-shadow
+         ">
           Create your profile in minutes just like the ones below! 👇
         </div>
         </motion.div>

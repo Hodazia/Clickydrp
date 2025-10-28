@@ -85,15 +85,15 @@ export function ProfileEditModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass-card border-accent/20 max-w-md dark:bg-[#0f0f0f]">
+      <DialogContent className="max-w-md bg-white dark:bg-[#0f0f0f] border-2 border-foreground nb-shadow rounded-xl">
         <DialogHeader className="relative">
-          <DialogTitle className="text-xl font-semibold text-center gradient-text">
+          <DialogTitle className="text-xl font-semibold text-center">
             Edit Profile
           </DialogTitle>
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-0 top-0 hover:bg-accent/20"
+            className="absolute right-0 top-0 border-2 border-foreground nb-pressable nb-shadow bg-white dark:bg-[#1a1a1a]"
             onClick={onClose}
           >
             {/* <X className="h-4 w-4" /> */}
@@ -104,7 +104,7 @@ export function ProfileEditModal({
           {/* Profile Image Upload */}
           <div className="flex flex-col items-center space-y-4">
             <div className="relative">
-              <Avatar className="h-20 w-20 ring-2 ring-accent/30">
+              <Avatar className="h-20 w-20 ring-2 ring-foreground border-2 border-foreground nb-shadow">
                 <AvatarImage 
                   src={formData.profileimg} 
                 />
@@ -114,14 +114,14 @@ export function ProfileEditModal({
                 </AvatarFallback>
               </Avatar>
               <label htmlFor="profileimage" className="absolute bottom-0 right-0 p-1 
-              rounded-full bg-primary hover:bg-primary/90 cursor-pointer glow-shadow">
+              rounded-full bg-primary hover:bg-primary/90 cursor-pointer border-2 border-foreground nb-shadow">
                 <Upload className="h-3 w-3 text-primary-foreground" />
               </label>
               <input
                 id="profileimage"
                 type="file"
                 accept="image/*"
-                className="hidden border-indigo-600 "
+                className="hidden"
                 onChange={handleFileUpload}
               />
             </div>
@@ -137,7 +137,7 @@ export function ProfileEditModal({
               type="text"
               value={formData.username}
               onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
-              className="glass-card border-indigo-200 "
+              className="border-2 border-foreground nb-shadow-sm bg-white dark:bg-[#1a1a1a]"
               placeholder="Enter your username"
               required
             />
@@ -153,7 +153,7 @@ export function ProfileEditModal({
               type="email"
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              className="glass-card border-indigo-200 "
+              className="border-2 border-foreground nb-shadow-sm bg-white dark:bg-[#1a1a1a]"
               placeholder="Enter your email"
               required
             />
@@ -168,7 +168,7 @@ export function ProfileEditModal({
               type="text"
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="glass-card border-indigo-200"
+              className="border-2 border-foreground nb-shadow-sm bg-white dark:bg-[#1a1a1a]"
               placeholder="Write something about yourself"
               required
             />
@@ -177,9 +177,7 @@ export function ProfileEditModal({
           <Button
             type="submit"
             className="w-full py-2.5 font-semibold
-            bg-indigo-600 text-white  hover:bg-gray-100
-          hover:ring-2 hover:ring-indigo-600 hover:text-black
-            "
+            bg-indigo-600 text-white hover:bg-white hover:text-indigo-600 border-2 border-foreground nb-pressable nb-shadow"
           >
             Save Changes
           </Button>

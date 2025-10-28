@@ -7,12 +7,12 @@
 
 export function VideoDemo() {
     return (
-      <section id="videodemo" className="p-2 pb-3  dark:bg-black ">
+      <section id="videodemo" className="p-2 pb-3 dark:bg-black  rounded-xl">
         {/* Heading Section */}
         <div className=" dark:bg-black text-center py-6 transition-colors duration-300">
           <div className="flex flex-col items-center gap-4">
-            <h2 className="text-lg md:text-5xl text-indigo-400 dark:text-indigo-500
-             max-w-6xl mx-auto">
+            <h2 className="text-lg md:text-4xl text-indigo-400 dark:text-indigo-500
+             max-w-6xl mx-auto inline-block border-2 border-foreground rounded-xl px-3 nb-shadow">
               Want to see how ClickDrp works? Check out this video 👇
             </h2>
           </div>
@@ -34,7 +34,7 @@ export function VideoDemo() {
         {/* Video Section */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative w-full max-w-4xl mx-auto">
-          <div className="relative  aspect-video w-full rounded-xl overflow-hidden shadow-2xl bg-black">
+          <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black border-2 border-foreground nb-shadow">
             <iframe
               className="absolute inset-0 w-full h-full border-0"
               src="https://www.youtube.com/embed/XsMQob-xO5Q?si=e7ybEvdujDVbjzNH"

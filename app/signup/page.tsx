@@ -102,14 +102,14 @@ export default function Signup() {
     
 
     return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="min-h-screen bg-gray-50 dark:bg-black flex items-center justify-center p-4">
             <div className="w-full max-w-6xl 
             dark:bg-black
-            mx-auto bg-[#fffbf0] rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+            mx-auto bg-[#fffbf0] rounded-3xl overflow-hidden flex flex-col lg:flex-row border-2 border-foreground nb-shadow">
                 {/* Left Side: Signup Form */}
                 <div className="flex-1 p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
                     {/* Logo and Title */}
-                    <div className="flex flex-col mb-8 sm:mb-12">
+                    <div className="flex flex-col mb-8 sm:mb-12 border-2 border-foreground rounded-xl p-4 nb-shadow">
                         <span>
                         <ThemeToggle />
                         </span>
@@ -126,7 +126,7 @@ export default function Signup() {
                     <div className="flex flex-col gap-4 mb-6">
                         <button
                             onClick={handleGoogleRegister}
-                            className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                            className="w-full flex items-center justify-center gap-3 py-3 px-4 border-2 border-foreground rounded-xl text-gray-700 hover:bg-white transition-colors duration-200 nb-pressable nb-shadow"
                         >
                             <FcGoogle className="h-6 w-6" />
                             <span className="font-semibold  dark:text-white dark:hover:text-black ">Sign up with Google</span>
@@ -134,8 +134,8 @@ export default function Signup() {
                         <button
                             onClick={handleGitHubRegister}
                             className="w-full flex items-center justify-center gap-3 py-3 px-4 
-                            border border-gray-300 rounded-xl shadow-sm text-gray-700 
-                            hover:bg-gray-50 transition-colors duration-200"
+                            border-2 border-foreground rounded-xl text-gray-700 
+                            hover:bg-white transition-colors duration-200 nb-pressable nb-shadow"
                         >
                             <SiGithub className="h-6 w-6" />
                             <span className="font-semibold  dark:text-white dark:hover:text-black ">Sign up with GitHub</span>
@@ -143,9 +143,9 @@ export default function Signup() {
                     </div>
 
                     <div className="relative flex items-center py-5">
-                        <div className="flex-grow border-t border-gray-300"></div>
+                        <div className="flex-grow border-t border-foreground"></div>
                         <span className="flex-shrink mx-4 text-gray-400">or continue with</span>
-                        <div className="flex-grow border-t border-gray-300"></div>
+                        <div className="flex-grow border-t border-foreground"></div>
                     </div>
 
                     {/* Form */}
@@ -156,7 +156,7 @@ export default function Signup() {
                             placeholder="Username"
                             value={formData.username}
                             onChange={handleChange}
-                            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
+                            className="w-full px-5 py-3 border-2 border-foreground rounded-xl transition-colors duration-200 nb-shadow-sm bg-white dark:bg-input/30"
                             required
                         />
                         <input
@@ -165,7 +165,7 @@ export default function Signup() {
                             placeholder="Email Address"
                             value={formData.email}
                             onChange={handleChange}
-                            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
+                            className="w-full px-5 py-3 border-2 border-foreground rounded-xl transition-colors duration-200 nb-shadow-sm bg-white dark:bg-input/30"
                             required
                         />
                         <input
@@ -174,12 +174,12 @@ export default function Signup() {
                             placeholder="Password"
                             value={formData.password}
                             onChange={handleChange}
-                            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200"
+                            className="w-full px-5 py-3 border-2 border-foreground rounded-xl transition-colors duration-200 nb-shadow-sm bg-white dark:bg-input/30"
                             required
                         />
                         <button
                             type="submit"
-                            className="w-full py-4 text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105"
+                            className="w-full py-4 text-lg font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 border-2 border-foreground nb-pressable nb-shadow"
                         >
                             Sign Up
                         </button>
