@@ -343,31 +343,67 @@ export default function Dashboard() {
     dark:bg-black text-[#2c2c2c] dark:text-white transition-colors duration-300 border-l-2 border-foreground">
       <div className="max-w-7xl mx-auto px-6 py-6 md:py-8 space-y-6">
         {/* Header with hierarchy */}
-        <div className="space-y-4">
-          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between border-2 border-foreground rounded-xl p-4 nb-shadow">
-            <div className="space-y-1">
-              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Profile</h1>
-              <p className="text-muted-foreground">Manage your profile and social presence</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              <Button
-                onClick={() => setIsEditModalOpen(true)}
-                className="bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white border-2 border-foreground nb-pressable nb-shadow px-5"
-              >
-                <Edit className="h-4 w-4 mr-2" /> Edit profile
-              </Button>
-              <Button
-              onClick={() => setisshare(true)}
-              className="bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white border-2 border-foreground nb-pressable nb-shadow px-5">
-                <Share /> Share your clickydrop
-              </Button>
-            </div>
-          </div>
 
-          <Separator className="bg-indigo-100 dark:bg-gray-700" />
-        </div>
 
+<div className="space-y-4">
+  <div
+    className="
+      flex flex-col gap-4
+      md:flex-row md:items-end md:justify-between
+      border-2 border-foreground rounded-xl p-4 nb-shadow
+    "
+  >
+    <div className="space-y-1 min-w-0">
+      <h1 className="text-3xl md:text-4xl font-semibold tracking-tight truncate">Profile</h1>
+      <p className="text-muted-foreground truncate">Manage your profile and social presence</p>
+    </div>
+
+    {/** Buttons / controls container
+        - flex-wrap so items won't overflow
+        - on small screens we stack them vertically (items stretch full width)
+        - on md+ keep them on one row and right-aligned
+    */}
+    <div className="flex w-full md:w-auto flex-wrap items-center gap-3 justify-end">
+      <div className="flex-shrink-0">
+        <ThemeToggle />
+      </div>
+
+      {/** Edit button: full width on very small screens, auto on sm/md+ */}
+      <div className="w-full sm:w-auto min-w-0">
+        <Button
+          onClick={() => setIsEditModalOpen(true)}
+          className="
+            w-full sm:w-auto
+            min-w-0
+            bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white
+            border-2 border-foreground nb-pressable nb-shadow px-5
+            flex items-center justify-center gap-2
+          "
+        >
+          <Edit className="h-4 w-4" />
+          <span className="truncate">Edit profile</span>
+        </Button>
+      </div>
+
+      {/** Share button: same responsive behavior */}
+      <div className="w-full sm:w-auto min-w-0">
+        <Button
+          onClick={() => setisshare(true)}
+          className="
+            w-full sm:w-auto
+            min-w-0
+            bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white
+            border-2 border-foreground nb-pressable nb-shadow px-5
+            flex items-center justify-center gap-2
+          "
+        >
+          <Share />
+          <span className="truncate">Share your clickydrop</span>
+        </Button>
+      </div>
+    </div>
+  </div>
+</div>
         {/* Main grid */}
         <div className="grid grid-cols-1 gap-6">
           {/* Profile Section (denser) */}

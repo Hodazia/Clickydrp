@@ -124,16 +124,15 @@ export default function Username() {
         <>
             <div
                 className="relative min-h-screen w-full flex
-                 flex-col items-center justify-start px-4 py-3"
+                 flex-col items-center justify-start px-3 sm:px-4 py-3"
                 style={viewportBgStyle}
             >
                 {/* readability overlay over the background */}
                 <div className="pointer-events-none absolute inset-0 bg-black/20" />
                 {/* Card container */}
                 <div
-                    className="relative w-full max-w-md flex flex-col 
-                    items-center rounded-3xl pt-2 md:pt-3 pb-6  md:max-w-xl
-                     "
+                    className="relative w-full max-w-md sm:max-w-lg md:max-w-xl flex flex-col 
+                    items-center rounded-3xl pt-2 md:pt-3 pb-6"
                     style={cardStyle}
                 >
                     {/* Header Section (Profile, Description, Socials) */}
@@ -150,13 +149,13 @@ export default function Username() {
                         />
 
                         {/* Username + description */}
-                        <h1 className="mt-4 text-2xl md:text-5xl font-semibold tracking-tight text-gray-900/90"
+                        <h1 className="mt-4 text-2xl sm:text-3xl md:text-5xl font-semibold tracking-tight text-gray-900/90"
                         style={{
                             color:theme?.bioFontColor || '#ffffff'
                         }}>
                             @{usermeta.username}
                         </h1>
-                        <div className="mt-2 text-center  max-w-prose"
+                        <div className="mt-2 text-center max-w-prose px-2"
                         style={{
                             color:theme?.bioFontColor || '#ffffff',
                             fontSize:theme?.bioFontSize || "20px"
@@ -201,7 +200,7 @@ export default function Username() {
 
                     {/* Scrollable Links Section */}
                     <div className="w-full mt-6 space-y-4 flex flex-col 
-                    flex-grow pb-20">
+                    flex-grow pb-24 sm:pb-20">
                         {usermeta.links?.map((link, idx) => (
                             <Link
                                 key={link.description}
@@ -211,8 +210,8 @@ export default function Username() {
                                 onMouseEnter={() => setHoveredLinkIdx(idx)}
                                 onMouseLeave={() => setHoveredLinkIdx(null)}
                                 className="w-full flex items-center  gap-4 p-3
-                                 font-medium transition-all rounded-full 
-                                 shadow-md hover:shadow-lg hover:scale-[1.02] text-white"
+                                 font-medium transition-all rounded-full border-2 nb-shadow 
+                                 hover:shadow-lg hover:scale-[1.02] text-white border-black"
                                 style={{
                                     color: theme?.linksFontColor || '#ffffff',
                                     background: hoveredLinkIdx === idx ? (theme?.linksHoverColor || '#1f2937') :
@@ -222,7 +221,7 @@ export default function Username() {
                                 }}
                             >
                                 <div className="flex gap-10">
-                                <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-200/80 flex-shrink-0 md:w-16 md:h-16">
+                                <div className="w-12 h-12 rounded-md overflow-hidden border-2 nb-shadow border-black bg-gray-200/80 flex-shrink-0 sm:w-14 sm:h-14 md:w-16 md:h-16">
                                         {link.linkThumbnail ? (
                                             <Image src={link.linkThumbnail} alt="Link Thumbnail"
                                             className="w-full h-full object-cover" 
@@ -244,10 +243,10 @@ export default function Username() {
      
             </div>
             {/* Claim your own clickydrop div - Positioned fixed at the bottom */}
-            <div className="fixed bottom-0 left-0 right-0 p-2 w-full flex justify-center items-center bg-transparent z-50">
+            <div className="fixed bottom-0 left-0 right-0 p-2 w-full flex justify-center items-center  z-50">
                 <Link
                     href="/signin" 
-                    className="text-white px-4 py-3 rounded-full 
+                    className="text-white px-4 py-3 rounded-full border-2  nb-shadow
                     font-semibold hover:bg-white hover:text-indigo-600
                     bg-indigo-600 hover:ring-2 transition-colors w-full sm:w-auto text-center
                     flex justify-center items-center gap-2 shadow-xl"

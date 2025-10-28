@@ -4,8 +4,6 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { FcGoogle } from "react-icons/fc";
-import { SiGithub } from "react-icons/si";
 import { toast } from "sonner";
 import { signinSchema } from "@/lib/schema";
 import Image from 'next/image'; // Import the Image component
@@ -96,29 +94,13 @@ export default function Signin() {
                         </p>
                     </div>
 
-                    {/* Social Login Buttons */}
-                    <div className="flex flex-col gap-4 mb-6">
-                        <button
-                            onClick={handleGoogleLogin}
-                            className="w-full flex items-center justify-center gap-3 py-3 px-4 border-2 border-foreground rounded-xl text-gray-700 hover:bg-white transition-colors duration-200 nb-pressable nb-shadow"
-                        >
-                            <FcGoogle className="h-6 w-6" />
-                            <span className="font-semibold dark:text-white dark:hover:text-black ">Sign in with Google</span>
-                        </button>
-                        <button
-                            onClick={handleGitHubLogin}
-                            className="w-full flex items-center justify-center gap-3 py-3 px-4 border-2 border-foreground rounded-xl text-gray-700 hover:bg-white transition-colors duration-200 nb-pressable nb-shadow"
-                        >
-                            <SiGithub className="h-6 w-6" />
-                            <span className="font-semibold dark:text-white dark:hover:text-black ">Sign in with GitHub</span>
-                        </button>
-                    </div>
+                    {/* Social login removed per request */}
 
-                    <div className="relative flex items-center py-5">
+                    {/* <div className="relative flex items-center py-5">
                         <div className="flex-grow border-t border-foreground"></div>
                         <span className="flex-shrink mx-4 text-gray-400">or continue with</span>
                         <div className="flex-grow border-t border-foreground"></div>
-                    </div>
+                    </div> */}
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
