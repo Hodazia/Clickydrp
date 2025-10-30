@@ -4,7 +4,6 @@ import { Github, MenuIcon, XIcon,Play } from "lucide-react"
 import { useRouter } from "next/navigation"
 import logovector from "@/public/assets/Vector.svg"; 
 import Image from "next/image";
-import Hroimage from "@/public/assets/left-herosection.png"
 import bdbarbie from "@/public/assets/bad-barbie.png"
 import ishowspeed from "@/public/assets/ishow-speed.png"
 import ronaldo from "@/public/assets/rnld-portrait.png"
@@ -12,6 +11,7 @@ import prfl from "@/public/assets/centerfeature-port.png"
 import {motion} from "framer-motion"
 import { useEffect, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
+import homeland from "@/public/assets/updated-v2/homeland.png"
 
 
 export default function Hero()
@@ -236,7 +236,7 @@ export default function Hero()
         >
         <div className="relative mx-auto mt-8 lg:mt-0 rounded-xl  p-2">
           <Image 
-          src={Hroimage}
+          src={homeland}
           alt="hero image"
           className="w-full h-auto max-h-[600px] object-contain mx-auto"
           />
